@@ -263,3 +263,5 @@ https://github.com/CiriloDevelope/Tele-Severino
 ### Clonar o repositório
 ```bash
 git clone git@github.com:CiriloDevelope/Tele-Severino.git
+
+.....................................................................................
