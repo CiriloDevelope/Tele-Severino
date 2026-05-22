@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}Pagamento - Tele Severino{% endblock %}
+{% block content %}
+  <main class="phone-page payment-page">
+    <header class="simple-header">
+      <h1>Confirmar pagamento</h1>
+      <p>Revise os detalhes da sua consulta</p>
+    </header>
+
+    <section class="white-card payment-card">
+      <h2>Resumo da consulta</h2>
+
+      <div class="summary-row">
+        <span class="summary-icon">♙</span>
+        <div>
+          <p>Especialista</p>
+          <strong>{{ specialist.name }}</strong>
+        </div>
+      </div>
+
+      <div class="summary-row">
+        <span class="summary-icon">◷</span>
+        <div>
+          <p>Tempo total</p>
+          <strong>00:00:15</strong>
+        </div>
+      </div>
+
+      <div class="summary-row">
+        <span class="summary-icon">$</span>
+        <div>
+          <p>Valor por minuto</p>
+          <strong>R$ {{ specialist.price }}</strong>
+        </div>
+      </div>
+
+      <div class="total-row">
+        <strong>Total</strong>
+        <strong>R$ 1.25</strong>
+      </div>
+    </section>
+
+    <section class="white-card">
+      <h2>Forma de pagamento</h2>
+
+      <label class="payment-option active">
+        <span class="summary-icon">▭</span>
+        <div>
+          <strong>Cartão crédito</strong>
+          <p>•••• 4532</p>
+        </div>
+        <input type="radio" checked>
+      </label>
+
+      <label class="payment-option">
+        <span class="summary-icon gray-icon">$</span>
+        <div>
+          <strong>PIX</strong>
+          <p>Pagamento instantâneo</p>
+        </div>
+        <input type="radio">
+      </label>
+    </section>
+
+    <div class="bottom-action">
+      <a class="primary-button" href="{{ url_for('review.avaliacao', specialist_id=specialist.id) }}">Confirmar pagamento</a>
+    </div>
+  </main>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% from "components.html" import logo_box %}
+{% block title %}Cadastro - Tele Severino{% endblock %}
+{% block content %}
+  <main class="auth-wrapper">
+    <form class="auth-card register-card" method="POST">
+      {{ logo_box() }}
+      <h1>Criar conta</h1>
+      <p>Preencha seus dados</p>
+
+      <label>Nome completo</label>
+      <input name="name" type="text" placeholder="Seu nome" required />
+
+      <label>E-mail</label>
+      <input name="email" type="email" placeholder="seu@email.com" required />
+
+      <label>Senha</label>
+      <input name="password" type="password" placeholder="••••••••" required />
+
+      <label>Confirmar senha</label>
+      <input name="confirm_password" type="password" placeholder="••••••••" required />
+
+      <label>Tipo de conta</label>
+      <div class="account-tabs">
+        <label class="tab-option active">
+          <input type="radio" name="account_type" value="user" checked>
+          Sou usuário
+        </label>
+        <label class="tab-option">
+          <input type="radio" name="account_type" value="specialist">
+          Sou especialista
+        </label>
+      </div>
+
+      <button type="submit" class="primary-button">Cadastrar</button>
+
+      <span class="helper-text">Já tem uma conta? <a href="{{ url_for('auth.login') }}">Entrar</a></span>
+    </form>
+  </main>
+{% endblock %}

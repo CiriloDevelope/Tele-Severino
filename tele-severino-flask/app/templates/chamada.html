@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% from "components.html" import avatar %}
+{% block title %}Chamada - {{ specialist.name }}{% endblock %}
+{% block body_class %}call-body{% endblock %}
+{% block content %}
+  <main class="call-screen">
+    <section class="call-phone">
+      <div class="call-status-card">
+        <h1>{{ specialist.name }}</h1>
+        <p><span></span> Em atendimento</p>
+        <strong id="callTimer">00:00:00</strong>
+        <small id="callValue">R$ 0.00</small>
+      </div>
+
+      <div class="call-avatar-wrap">
+        {{ avatar(specialist, "xl") }}
+      </div>
+    </section>
+
+    <section class="call-controls">
+      <button>♬</button>
+      <a class="end-call" href="{{ url_for('payment.pagamento', specialist_id=specialist.id) }}">☎</a>
+      <button>▣</button>
+    </section>
+    <p class="call-help">Toque no telefone vermelho para encerrar</p>
+  </main>
+{% endblock %}

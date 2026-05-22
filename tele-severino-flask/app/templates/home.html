@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% from "components.html" import avatar %}
+{% block title %}Home - Tele Severino{% endblock %}
+{% block content %}
+  <main class="phone-page">
+    <section class="home-hero">
+      <div>
+        <h1>Olá, como podemos ajudar?</h1>
+        <p>Encontre especialistas disponíveis agora</p>
+      </div>
+      <a href="{{ url_for('brand.personalizacao') }}" class="settings-button">⚙</a>
+
+      <div class="search-box">
+        <span>⌕</span>
+        <input placeholder="Digite sua dúvida">
+      </div>
+    </section>
+
+    <section class="section-block">
+      <h2>Categorias</h2>
+      <div class="category-grid">
+        {% for category in categories %}
+          <a href="{{ url_for('specialist.especialistas', categoria=category.slug) }}" class="category-card">
+            <span class="category-icon {{ category.tone }}">{{ category.icon }}</span>
+            <strong>{{ category.name }}</strong>
+          </a>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="section-block">
+      <div class="section-title-row">
+        <h2>Especialistas online agora</h2>
+        <a href="{{ url_for('specialist.especialistas') }}">Ver todos</a>
+      </div>
+
+      {% for specialist in specialists %}
+        <a class="compact-specialist-card" href="{{ url_for('specialist.especialista', specialist_id=specialist.id) }}">
+          {{ avatar(specialist) }}
+          <div class="grow">
+            <h3>{{ specialist.name }}</h3>
+            <p>{{ specialist.role }}</p>
+          </div>
+          <div class="price">
+            <strong>R$ {{ specialist.price }}</strong>
+            <span>por minuto</span>
+          </div>
+        </a>
+      {% endfor %}
+    </section>
+  </main>
+{% endblock %}

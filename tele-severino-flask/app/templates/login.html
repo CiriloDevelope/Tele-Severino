@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% from "components.html" import logo_box %}
+{% block title %}Login - Tele Severino{% endblock %}
+{% block content %}
+  <main class="auth-wrapper">
+    <form class="auth-card" method="POST">
+      {{ logo_box() }}
+      <h1>Bem-vindo</h1>
+      <p>Entre para começar</p>
+
+      <label>E-mail</label>
+      <input name="email" type="email" placeholder="seu@email.com" required />
+
+      <label>Senha</label>
+      <input name="password" type="password" placeholder="••••••••" required />
+
+      <a class="right-link" href="#">Esqueci minha senha</a>
+
+      <button type="submit" class="primary-button">Entrar</button>
+
+      <span class="helper-text">Não tem uma conta? <a href="{{ url_for('auth.cadastro') }}">Criar conta</a></span>
+    </form>
+  </main>
+{% endblock %}

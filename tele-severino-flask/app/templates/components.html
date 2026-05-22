@@ -1,0 +1,24 @@
+{% macro avatar(person, size='md') %}
+  <div class="avatar {{ person.avatar_class }} avatar-{{ size }}">
+    <span>{{ person.initials }}</span>
+  </div>
+{% endmacro %}
+
+{% macro logo_box() %}
+  <div class="brand-logo">
+    <span class="headphone">⌕</span>
+    <span class="bolt">ϟ</span>
+  </div>
+{% endmacro %}
+
+{% macro header(title, subtitle='') %}
+  <header class="page-header">
+    <a class="back-button" href="javascript:history.back()">‹</a>
+    <div>
+      <h1>{{ title }}</h1>
+      {% if subtitle %}
+        <p>{{ subtitle }}</p>
+      {% endif %}
+    </div>
+  </header>
+{% endmacro %}

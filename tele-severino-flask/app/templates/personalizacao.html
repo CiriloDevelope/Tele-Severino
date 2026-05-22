@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% from "components.html" import logo_box, header %}
+{% block title %}Personalização - Tele Severino{% endblock %}
+{% block content %}
+  <main class="phone-page">
+    {{ header("Personalização da Marca", "Customize a identidade visual da sua plataforma") }}
+
+    <section class="section-block">
+      <h2>Pré-visualização</h2>
+      <div class="preview-card">
+        {{ logo_box() }}
+        <h3>Tele Severino</h3>
+        <p>Conhecimento sob demanda</p>
+      </div>
+    </section>
+
+    <section class="form-section">
+      <h2>Nome da plataforma</h2>
+      <input value="Tele Severino">
+    </section>
+
+    <section class="form-section">
+      <h2>Logo da plataforma</h2>
+      <div class="upload-box">
+        <span>⇧</span>
+        <strong>Clique para fazer upload</strong>
+        <p>PNG, JPG ou SVG (máx. 2MB)</p>
+      </div>
+    </section>
+
+    <section class="form-section color-section">
+      <h2>Cor principal</h2>
+      <label>Selecione a cor</label>
+      <div class="color-row">
+        <div class="selected-color"></div>
+        <input value="#F97316">
+        <span class="color-dot orange-dot"></span>
+        <span class="color-dot blue-dot"></span>
+        <span class="color-dot green-dot"></span>
+        <span class="color-dot purple-dot"></span>
+        <span class="color-dot red-dot"></span>
+      </div>
+    </section>
+
+    <div class="bottom-action">
+      <button class="primary-button">Salvar personalização</button>
+    </div>
+  </main>
+{% endblock %}

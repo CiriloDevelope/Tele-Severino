@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% from "components.html" import logo_box %}
+{% block title %}Carregando - Tele Severino{% endblock %}
+{% block body_class %}splash-page{% endblock %}
+{% block content %}
+  <main class="splash-screen" data-next="{{ next_url }}">
+    <div class="splash-center">
+      {{ logo_box() }}
+      <h1>Tele Severino</h1>
+      <p>Conhecimento sob demanda</p>
+      <div class="loading-line"></div>
+    </div>
+  </main>
+{% endblock %}

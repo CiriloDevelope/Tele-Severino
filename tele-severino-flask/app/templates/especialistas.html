@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% from "components.html" import avatar, header %}
+{% block title %}Especialistas - Tele Severino{% endblock %}
+{% block content %}
+  <main class="phone-page">
+    {{ header(title, subtitle) }}
+
+    <section class="list-section">
+      {% for specialist in specialists %}
+        <article class="specialist-card">
+          {{ avatar(specialist) }}
+          <div class="specialist-info">
+            <h2>{{ specialist.name }}</h2>
+            <p>{{ specialist.role }}</p>
+            <div class="rating">★ <strong>{{ specialist.rating }}</strong> <span>({{ specialist.reviews }} avaliações)</span></div>
+            <strong class="orange-price">R$ {{ specialist.price }}</strong>
+            <small>por minuto</small>
+          </div>
+          <a class="small-button" href="{{ url_for('specialist.especialista', specialist_id=specialist.id) }}">Ver perfil</a>
+        </article>
+      {% endfor %}
+    </section>
+  </main>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Avaliação - Tele Severino{% endblock %}
+{% block content %}
+  <main class="auth-wrapper">
+    <form class="auth-card review-form" method="POST">
+      <div class="success-icon">✓</div>
+      <h1>Como foi sua experiência?</h1>
+      <p>Sua opinião nos ajuda a melhorar</p>
+
+      <label class="center-label">Avalie o atendimento</label>
+
+      <div class="star-input">
+        <input id="s5" type="radio" name="rating" value="5">
+        <label for="s5">☆</label>
+        <input id="s4" type="radio" name="rating" value="4">
+        <label for="s4">☆</label>
+        <input id="s3" type="radio" name="rating" value="3">
+        <label for="s3">☆</label>
+        <input id="s2" type="radio" name="rating" value="2">
+        <label for="s2">☆</label>
+        <input id="s1" type="radio" name="rating" value="1">
+        <label for="s1">☆</label>
+      </div>
+
+      <label>Comentário (opcional)</label>
+      <textarea name="comment" placeholder="Compartilhe sua experiência..."></textarea>
+
+      <button type="submit" class="primary-button disabled-look">Enviar avaliação</button>
+
+      <span class="helper-text">Obrigado por usar o <strong>Tele Severino!</strong></span>
+    </form>
+  </main>
+{% endblock %}

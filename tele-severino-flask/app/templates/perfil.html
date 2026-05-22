@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% from "components.html" import avatar, header %}
+{% block title %}Perfil - {{ specialist.name }}{% endblock %}
+{% block content %}
+  <main class="phone-page profile-page">
+    {{ header("Perfil do especialista") }}
+
+    <section class="profile-hero">
+      {{ avatar(specialist, "xl") }}
+      <h1>{{ specialist.name }}</h1>
+      <p>{{ specialist.role }}</p>
+      <div class="rating center-rating">★ <strong>{{ specialist.rating }}</strong> <span>({{ specialist.reviews }} avaliações)</span></div>
+      <div class="profile-price">
+        <strong>R$ {{ specialist.price }}</strong>
+        <span>por minuto</span>
+      </div>
+    </section>
+
+    <section class="white-card">
+      <h2>Sobre</h2>
+      <p>{{ specialist.about }}</p>
+
+      <h2>Especialidades</h2>
+      <div class="tag-list">
+        {% for tag in specialist.tags %}
+          <span>☑ {{ tag }}</span>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="white-card reviews-card">
+      <div class="section-title-row">
+        <h2>Avaliações</h2>
+        <span>★ {{ specialist.rating }} ({{ specialist.reviews }})</span>
+      </div>
+
+      <div class="review-item">
+        <div class="mini-avatar">P</div>
+        <div>
+          <strong>Pedro Santos</strong>
+          <div class="stars">★★★★★</div>
+          <p>Atendimento rápido e muito prestativo. Resolveu meu problema em minutos!</p>
+        </div>
+        <small>10/05/2026</small>
+      </div>
+
+      <div class="review-item">
+        <div class="mini-avatar">M</div>
+        <div>
+          <strong>Mariana Costa</strong>
+          <div class="stars">★★★★★</div>
+          <p>Explicou tudo com muita clareza.</p>
+        </div>
+        <small>08/05/2026</small>
+      </div>
+    </section>
+
+    <div class="bottom-action split-action">
+      <a class="primary-button" href="{{ url_for('call.chamada', specialist_id=specialist.id) }}">▣ Iniciar chamada</a>
+      <button class="chat-button">⌕</button>
+    </div>
+  </main>
+{% endblock %}

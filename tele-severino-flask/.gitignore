@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Ambiente virtual
+.venv/
+venv/
+env/
+
+# Variáveis de ambiente
+.env
+
+# macOS
+.DS_Store
+
+# VS Code
+.vscode/
+
+# Backups locais
+app/backups/
+_backup_antes_reorganizacao_*
+
+# Logs
+*.log
