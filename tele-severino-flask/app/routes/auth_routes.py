@@ -34,3 +34,16 @@ def cadastro():
         return redirect(url_for("main.splash", next="/home"))
 
     return render_template("cadastro.html")
+
+
+@auth_bp.route("/logout")
+def logout():
+    # Futuro backend:
+    # Aqui deve limpar sessão/token do usuário.
+    # Exemplo com session:
+    #
+    # from flask import session
+    # session.clear()
+    #
+    # Como o projeto ainda está mockado, apenas redirecionamos para o login.
+    return redirect(url_for("auth.login"))

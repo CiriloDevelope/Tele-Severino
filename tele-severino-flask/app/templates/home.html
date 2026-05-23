@@ -1,52 +1,79 @@
 {% extends "base.html" %}
-{% from "components.html" import avatar %}
-{% block title %}Home - Tele Severino{% endblock %}
+
+{% block title %}Home{% endblock %}
+
 {% block content %}
-  <main class="phone-page">
-    <section class="home-hero">
-      <div>
-        <h1>Olá, como podemos ajudar?</h1>
-        <p>Encontre especialistas disponíveis agora</p>
+<main class="screen screen-home">
+  <section class="home-shell">
+
+    <div class="floating-topbar">
+      <div class="topbar-left">
+        <span class="topbar-brand-dot"></span>
+        <span class="topbar-brand-text">Tele Severino</span>
       </div>
-      <a href="{{ url_for('brand.personalizacao') }}" class="settings-button">⚙</a>
+
+      <div class="topbar-actions">
+        <a href="{{ url_for('brand.personalizacao') }}" class="topbar-icon-btn" title="Personalização">⚙</a>
+        <a href="{{ url_for('auth.logout') }}" class="topbar-logout-btn" title="Sair">Sair</a>
+      </div>
+    </div>
+
+    <section class="hero-card">
+      <h1>Olá, como podemos ajudar?</h1>
+      <p>Encontre especialistas disponíveis agora</p>
 
       <div class="search-box">
-        <span>⌕</span>
-        <input placeholder="Digite sua dúvida">
+        <span class="search-icon">⌕</span>
+        <input type="text" placeholder="Digite sua dúvida" />
       </div>
     </section>
 
-    <section class="section-block">
-      <h2>Categorias</h2>
-      <div class="category-grid">
+    <section class="home-section">
+      <div class="section-header">
+        <h2>Categorias</h2>
+      </div>
+
+      <div class="categories-grid">
         {% for category in categories %}
-          <a href="{{ url_for('specialist.especialistas', categoria=category.slug) }}" class="category-card">
-            <span class="category-icon {{ category.tone }}">{{ category.icon }}</span>
-            <strong>{{ category.name }}</strong>
-          </a>
+        <a href="{{ url_for('specialist.especialistas') }}?categoria={{ category.slug }}" class="category-card">
+          <div class="category-icon tone-{{ category.tone }}">{{ category.icon }}</div>
+          <span>{{ category.name }}</span>
+        </a>
         {% endfor %}
       </div>
     </section>
 
-    <section class="section-block">
-      <div class="section-title-row">
+    <section class="home-section">
+      <div class="section-header">
         <h2>Especialistas online agora</h2>
-        <a href="{{ url_for('specialist.especialistas') }}">Ver todos</a>
+        <a href="{{ url_for('specialist.especialistas') }}" class="see-all-link">Ver todos</a>
       </div>
 
-      {% for specialist in specialists %}
-        <a class="compact-specialist-card" href="{{ url_for('specialist.especialista', specialist_id=specialist.id) }}">
-          {{ avatar(specialist) }}
-          <div class="grow">
-            <h3>{{ specialist.name }}</h3>
-            <p>{{ specialist.role }}</p>
+      <div class="specialists-list">
+        {% for specialist in specialists %}
+        <a href="{{ url_for('specialist.especialista', specialist_id=specialist.id) }}" class="specialist-card">
+          <div class="specialist-avatar {{ specialist.avatar_class }}">
+            {% if specialist.initials %}
+              {{ specialist.initials }}
+            {% else %}
+              {{ specialist.name[:1] }}
+            {% endif %}
           </div>
-          <div class="price">
+
+          <div class="specialist-info">
+            <strong>{{ specialist.name }}</strong>
+            <span>{{ specialist.role }}</span>
+          </div>
+
+          <div class="specialist-price">
             <strong>R$ {{ specialist.price }}</strong>
             <span>por minuto</span>
           </div>
         </a>
-      {% endfor %}
+        {% endfor %}
+      </div>
     </section>
-  </main>
+
+  </section>
+</main>
 {% endblock %}

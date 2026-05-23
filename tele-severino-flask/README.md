@@ -37,10 +37,36 @@ http://127.0.0.1:5000
 O arquivo `app.py` está comentado com os locais onde entram:
 
 - Backend de autenticação
-- Banco PostgreSQL
+- Banco MySQL
 - Cadastro de usuário
 - Lista de categorias
 - Lista de especialistas
 - Pagamento
 - Chamada
 - Avaliação
+
+---
+
+## Documentação para integração backend
+
+Para o dev backend entender onde integrar API e MySQL, ler primeiro:
+
+```text
+docs/MAPA_INTEGRACAO_BACKEND.md
+```
+
+Esse arquivo mostra:
+
+- Onde estão os dados mockados.
+- Quais repositories precisam ser alterados.
+- Quais tabelas são sugeridas.
+- Quais endpoints a API deve fornecer.
+- Qual fluxo cada tela usa.
+- Onde integrar MySQL no código.
+
+Documentação complementar:
+
+```text
+docs/BACKEND_INTEGRATION.md
+docs/GUIA_BACKEND_JUNIOR.md
+```
