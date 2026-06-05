@@ -1,0 +1,179 @@
+{
+    "database": "tele_severino",
+    "tables": [
+        {
+            "name": "usuarios",
+            "columns": [
+                {
+                    "name": "id_usuario",
+                    "type": "INT",
+                    "primary_key": true,
+                    "auto_increment": true
+                },
+                {
+                    "name": "nome",
+                    "type": "VARCHAR(100)",
+                    "nullable": false
+                },
+                {
+                    "name": "email",
+                    "type": "VARCHAR(100)",
+                    "unique": true,
+                    "nullable": false
+                },
+                {
+                    "name": "tipo",
+                    "type": "ENUM('CLIENTE', 'ESPECIALISTA')",
+                    "nullable": false
+                },
+                {
+                    "name": "data_criacao",
+                    "type": "TIMESTAMP",
+                    "default": "CURRENT_TIMESTAMP"
+                }
+            ]
+        },
+        {
+            "name": "especialistas",
+            "columns": [
+                {
+                    "name": "id_especialista",
+                    "type": "INT",
+                    "primary_key": true
+                },
+                {
+                    "name": "valor_minuto",
+                    "type": "DECIMAL(10,2)",
+                    "nullable": false
+                },
+                {
+                    "name": "especialista",
+                    "type": "VARCHAR(50)"
+                }
+            ],
+            "foreign_keys": [
+                {
+                    "column": "id_especialista",
+                    "references": "usuarios(id_usuario)"
+                }
+            ]
+        },
+        {
+            "name": "categorias",
+            "columns": [
+                {
+                    "name": "id_categoria",
+                    "type": "INT",
+                    "primary_key": true,
+                    "auto_increment": true
+                },
+                {
+                    "name": "nome_categoria",
+                    "type": "VARCHAR(50)",
+                    "nullable": false
+                }
+            ]
+        },
+        {
+            "name": "consultorias",
+            "columns": [
+                {
+                    "name": "id_consultoria",
+                    "type": "INT",
+                    "primary_key": true,
+                    "auto_increment": true
+                },
+                {
+                    "name": "id_cliente",
+                    "type": "INT"
+                },
+                {
+                    "name": "id_especialista",
+                    "type": "INT"
+                },
+                {
+                    "name": "id_categoria",
+                    "type": "INT"
+                },
+                {
+                    "name": "inicio_sessao",
+                    "type": "DATETIME"
+                },
+                {
+                    "name": "fim_sessao",
+                    "type": "DATETIME"
+                },
+                {
+                    "name": "valor_total",
+                    "type": "DECIMAL(10,2)"
+                }
+            ],
+            "foreign_keys": [
+                {
+                    "column": "id_cliente",
+                    "references": "usuarios(id_usuario)"
+                },
+                {
+                    "column": "id_especialista",
+                    "references": "especialistas(id_especialista)"
+                },
+                {
+                    "column": "id_categoria",
+                    "references": "categorias(id_categoria)"
+                }
+            ]
+        },
+        {
+            "name": "avaliacoes",
+            "columns": [
+                {
+                    "name": "id_avaliacao",
+                    "type": "INT",
+                    "primary_key": true,
+                    "auto_increment": true
+                },
+                {
+                    "name": "id_consultoria",
+                    "type": "INT"
+                },
+                {
+                    "name": "nota",
+                    "type": "INT",
+                    "check": "nota BETWEEN 1 AND 5"
+                },
+                {
+                    "name": "comentario",
+                    "type": "TEXT"
+                }
+            ],
+            "foreign_keys": [
+                {
+                    "column": "id_consultoria",
+                    "references": "consultorias(id_consultoria)"
+                }
+            ]
+        },
+        {
+            "name": "produtos",
+            "columns": [
+                {
+                    "name": "id",
+                    "type": "INT",
+                    "primary_key": true,
+                    "auto_increment": true
+                },
+                {
+                    "name": "nome",
+                    "type": "VARCHAR(100)",
+                    "nullable": false
+                },
+                {
+                    "name": "detalhes",
+                    "type": "JSON",
+                    "nullable": false
+                }
+            ]
+        }
+    ]
+}
+  
