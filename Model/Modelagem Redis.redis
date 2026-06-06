@@ -1,0 +1,8 @@
+Chave: sessao:ativa:482
+Campos (Fields) e Valores:
+  ├── id_cliente: "12"
+  ├── id_especialista: "5"
+  ├── valor_minuto: "3.50"
+  ├── inicio_sessao: "1717621200" (Timestamp Unix)
+  └── acumulado_atual: "10.50";
+  
