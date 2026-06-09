@@ -54,3 +54,34 @@ def consultar_usuarios(email):
     finally:
         if conexao:
             conexao.close()
+
+def atualizar_dados(id, nome, email, senha, tipo):
+    conexao = None
+    try:
+        conexao = conectar_banco()
+        cursor = conexao.cursor()  #
+
+        sql = """
+        UPDATE usuarios SET nome = %s, email = %s, senha = %s, tipo = %s WHERE id_usuario = %s;
+        """
+        
+        # CORRIGIDO: Passando os valores com a senha já criptografada
+        valores = (nome, email, senha_hash(senha), tipo, id)
+        
+        cursor.execute(sql, valores)
+        conexao.commit()  
+
+        #Rowcount me fala quantas linhas foram afetadas, assim fica mais facil de debugar.
+        if cursor.rowcount == 0:
+            return {"erro": "Usuario nao encontrado para o ID informado"}
+
+        return {"sucesso": "Dados atualizados com sucesso"}
+
+    except Exception as erro:
+        return {"erro": str(erro)}
+        
+    finally:
+        if conexao:
+            conexao.close()
+
+#atualizar_dados("6","Luciano gay","gluglu@gmail.com","123")
