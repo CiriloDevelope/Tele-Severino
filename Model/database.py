@@ -5,7 +5,7 @@ def conectar_banco():
         # Cria a conexão com o banco de dados
         cnx = mysql.connector.connect(
             user='root', 
-            password='admin123', 
+            password='', 
             host='localhost', 
             database='tele_severino'  
         )

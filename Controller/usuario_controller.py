@@ -4,6 +4,7 @@ from Model.usuario_model import cadastrar_usuario
 from Model.usuario_model import consultar_usuarios
 from Model.usuario_model import senha_hash
 from Model.usuario_model import atualizar_dados
+from Model.usuario_model import excluir_usuario
 
 router = APIRouter()
 
@@ -50,6 +51,19 @@ def atualizar_usuario(id: int, dados: UsuarioCadastro):
         raise HTTPException(status_code=404, detail=resultado["erro"])
 
     return {"mensagem": "Usuário atualizado com sucesso!"}
+
+
+@router.delete("/delete_usuario/{id}")
+def deletar_usuario(id: int):
+
+    resultado = excluir_usuario(id)
+
+    if "erro" in resultado:
+        raise HTTPException(status_code=404, detail=resultado["erro"])
+        
+
+    return resultado
+
     
 
 

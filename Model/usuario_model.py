@@ -84,4 +84,28 @@ def atualizar_dados(id, nome, email, senha, tipo):
         if conexao:
             conexao.close()
 
-#atualizar_dados("6","Luciano gay","gluglu@gmail.com","123")
+def excluir_usuario(id):
+    try:
+        conexao = conectar_banco()
+        cursor = conexao.cursor()
+
+        sql = """
+            DELETE FROM usuarios WHERE id_usuario = %s
+        """
+
+        valores = (id,)
+
+        cursor.execute(sql, valores)
+        conexao.commit()
+
+        if cursor.rowcount == 0:
+            return {"erro": "Usuario nao encontrado para o ID informado"}
+
+        return {"sucesso": "Usuario DELETADO!"}
+
+    except Exception as erro:
+        return {"erro": str(erro)}
+        
+    finally:
+        if conexao:
+            conexao.close()
