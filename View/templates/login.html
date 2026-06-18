@@ -3,10 +3,14 @@
 {% block title %}Login - Tele Severino{% endblock %}
 {% block content %}
   <main class="auth-wrapper">
-    <form class="auth-card" action="/home" method="GET">
+    <form class="auth-card" action="/login-web" method="POST">
       {{ logo_box() }}
       <h1>Bem-vindo</h1>
       <p>Entre para começar</p>
+
+      {% if erro %}
+        <div class="form-error">{{ erro }}</div>
+      {% endif %}
 
       <label>E-mail</label>
       <input name="email" type="email" placeholder="seu@email.com" required />

@@ -45,3 +45,28 @@ if (timer && value) {
     value.textContent = `R$ ${total.toFixed(2)}`;
   }, 1000);
 }
+
+
+// Cadastro: mostra campos de especialista somente quando "Sou especialista" estiver selecionado.
+const accountTypeInputs = document.querySelectorAll('input[name="account_type"]');
+const specialistFields = document.querySelector(".specialist-fields");
+
+function updateSpecialistFields() {
+  if (!accountTypeInputs.length || !specialistFields) return;
+
+  const selected = document.querySelector('input[name="account_type"]:checked');
+  const isSpecialist = selected && selected.value === "specialist";
+
+  specialistFields.style.display = isSpecialist ? "block" : "none";
+
+  document.querySelectorAll(".tab-option").forEach((option) => {
+    const input = option.querySelector('input[name="account_type"]');
+    option.classList.toggle("active", input && input.checked);
+  });
+}
+
+accountTypeInputs.forEach((input) => {
+  input.addEventListener("change", updateSpecialistFields);
+});
+
+updateSpecialistFields();

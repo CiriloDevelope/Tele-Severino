@@ -3,10 +3,14 @@
 {% block title %}Cadastro - Tele Severino{% endblock %}
 {% block content %}
   <main class="auth-wrapper">
-    <form class="auth-card register-card" action="/home" method="GET">
+    <form class="auth-card register-card" action="/cadastro" method="POST">
       {{ logo_box() }}
       <h1>Criar conta</h1>
       <p>Preencha seus dados</p>
+
+      {% if erro %}
+        <div class="form-error">{{ erro }}</div>
+      {% endif %}
 
       <label>Nome completo</label>
       <input name="name" type="text" placeholder="Seu nome" required />
@@ -30,6 +34,14 @@
           <input type="radio" name="account_type" value="specialist">
           Sou especialista
         </label>
+      </div>
+
+      <div class="specialist-fields">
+        <label>Especialidade</label>
+        <input name="especialidade" type="text" placeholder="Ex: Elétrica, Tecnologia, Culinária" />
+
+        <label>Valor por minuto</label>
+        <input name="valor_minuto" type="text" placeholder="Ex: 2.50" />
       </div>
 
       <button type="submit" class="primary-button">Cadastrar</button>

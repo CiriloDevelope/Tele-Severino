@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Form
 from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -8,6 +8,8 @@ from fastapi.templating import Jinja2Templates
 from Controller.usuario_controller import router as usuario_router
 from Controller.especialista_controller import router as especialista_router
 from Controller.ia_controller import router as ia_router
+from Model.database import conectar_banco
+from Model.usuario_model import senha_hash, consultar_usuarios
 
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -107,6 +109,67 @@ def get_specialist(specialist_id: int):
     )
 
 
+def cadastrar_usuario_frontend(nome: str, email: str, senha: str, tipo: str):
+    conexao = None
+    try:
+        conexao = conectar_banco()
+        cursor = conexao.cursor()
+
+        sql = """
+        INSERT INTO usuarios (nome, email, senha, tipo)
+        VALUES (%s, %s, %s, %s)
+        """
+
+        valores = (nome, email, senha_hash(senha), tipo)
+        cursor.execute(sql, valores)
+        conexao.commit()
+
+        return {
+            "sucesso": True,
+            "id_usuario": cursor.lastrowid
+        }
+
+    except Exception as erro:
+        return {
+            "sucesso": False,
+            "erro": str(erro)
+        }
+
+    finally:
+        if conexao:
+            conexao.close()
+
+
+def cadastrar_especialista_frontend(id_usuario: int, especialidade: str, valor_minuto: float):
+    conexao = None
+    try:
+        conexao = conectar_banco()
+        cursor = conexao.cursor()
+
+        sql = """
+        INSERT INTO especialistas (id_especialista, especialidade, valor_minuto)
+        VALUES (%s, %s, %s)
+        """
+
+        valores = (id_usuario, especialidade, valor_minuto)
+        cursor.execute(sql, valores)
+        conexao.commit()
+
+        return {
+            "sucesso": True
+        }
+
+    except Exception as erro:
+        return {
+            "sucesso": False,
+            "erro": str(erro)
+        }
+
+    finally:
+        if conexao:
+            conexao.close()
+
+
 @app.get("/", name="splash")
 def splash(request: Request):
     return templates.TemplateResponse(
@@ -123,7 +186,8 @@ def login(request: Request):
     return templates.TemplateResponse(
         "login.html",
         {
-            "request": request
+            "request": request,
+            "erro": None
         }
     )
 
@@ -133,7 +197,146 @@ def cadastro(request: Request):
     return templates.TemplateResponse(
         "cadastro.html",
         {
-            "request": request
+            "request": request,
+            "erro": None
+        }
+    )
+
+
+@app.post("/cadastro")
+def cadastro_post(
+    request: Request,
+    name: str = Form(...),
+    email: str = Form(...),
+    password: str = Form(...),
+    confirm_password: str = Form(...),
+    account_type: str = Form(...),
+    especialidade: str = Form(""),
+    valor_minuto: str = Form("0")
+):
+    if password != confirm_password:
+        return templates.TemplateResponse(
+            "cadastro.html",
+            {
+                "request": request,
+                "erro": "As senhas não conferem."
+            }
+        )
+
+    tipo = "ESPECIALISTA" if account_type == "specialist" else "CLIENTE"
+
+    if tipo == "ESPECIALISTA":
+        if not especialidade.strip():
+            return templates.TemplateResponse(
+                "cadastro.html",
+                {
+                    "request": request,
+                    "erro": "Informe a especialidade do especialista."
+                }
+            )
+
+        try:
+            valor_float = float(valor_minuto.replace(",", "."))
+        except ValueError:
+            return templates.TemplateResponse(
+                "cadastro.html",
+                {
+                    "request": request,
+                    "erro": "Informe um valor por minuto válido."
+                }
+            )
+    else:
+        valor_float = 0
+
+    resultado_usuario = cadastrar_usuario_frontend(name, email, password, tipo)
+
+    if not resultado_usuario["sucesso"]:
+        return templates.TemplateResponse(
+            "cadastro.html",
+            {
+                "request": request,
+                "erro": f"Não foi possível cadastrar: {resultado_usuario['erro']}"
+            }
+        )
+
+    id_usuario = resultado_usuario["id_usuario"]
+
+    if tipo == "ESPECIALISTA":
+        resultado_especialista = cadastrar_especialista_frontend(
+            id_usuario,
+            especialidade,
+            valor_float
+        )
+
+        if not resultado_especialista["sucesso"]:
+            return templates.TemplateResponse(
+                "cadastro.html",
+                {
+                    "request": request,
+                    "erro": f"Usuário criado, mas houve erro ao cadastrar especialista: {resultado_especialista['erro']}"
+                }
+            )
+
+        return RedirectResponse(
+            f"/especialista/dashboard?usuario_id={id_usuario}",
+            status_code=303
+        )
+
+    return RedirectResponse(
+        f"/home?usuario_id={id_usuario}",
+        status_code=303
+    )
+
+
+@app.post("/login-web")
+def login_web(
+    request: Request,
+    email: str = Form(...),
+    password: str = Form(...)
+):
+    usuario = consultar_usuarios(email)
+
+    if usuario is None or isinstance(usuario, dict):
+        return templates.TemplateResponse(
+            "login.html",
+            {
+                "request": request,
+                "erro": "Usuário não encontrado."
+            }
+        )
+
+    id_usuario = usuario[0]
+    senha_banco = usuario[3]
+    tipo_usuario = usuario[4]
+
+    if senha_banco != senha_hash(password):
+        return templates.TemplateResponse(
+            "login.html",
+            {
+                "request": request,
+                "erro": "E-mail ou senha inválidos."
+            }
+        )
+
+    if tipo_usuario == "ESPECIALISTA":
+        return RedirectResponse(
+            f"/especialista/dashboard?usuario_id={id_usuario}",
+            status_code=303
+        )
+
+    return RedirectResponse(
+        f"/home?usuario_id={id_usuario}",
+        status_code=303
+    )
+
+
+@app.get("/especialista/dashboard", name="specialist.dashboard")
+def especialista_dashboard(request: Request, usuario_id: int = 0):
+    return templates.TemplateResponse(
+        "especialista_dashboard.html",
+        {
+            "request": request,
+            "usuario_id": usuario_id
         }
     )
 

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% from "components.html" import logo_box %}
+{% block title %}Dashboard Especialista - Tele Severino{% endblock %}
+{% block content %}
+  <main class="home-wrapper">
+    <section class="hero-card">
+      {{ logo_box() }}
+      <h1>Área do Especialista</h1>
+      <p>Seu cadastro foi identificado como especialista.</p>
+      <p>ID do usuário: {{ usuario_id }}</p>
+    </section>
+
+    <section class="section-block">
+      <h2>Resumo profissional</h2>
+      <div class="specialist-card">
+        <div>
+          <h3>Meu perfil</h3>
+          <p>Aqui o especialista poderá acompanhar atendimentos, avaliações e valor por minuto.</p>
+        </div>
+      </div>
+    </section>
+
+    <a class="primary-button" href="{{ url_for('auth.logout') }}">Sair</a>
+  </main>
+{% endblock %}
