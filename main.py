@@ -102,10 +102,71 @@ specialists = [
 ]
 
 
+def format_price(value):
+    try:
+        return f"{float(value):.2f}".replace(".", ",")
+    except Exception:
+        return "0,00"
+
+
+def get_db_specialists():
+    conexao = None
+    try:
+        conexao = conectar_banco()
+        cursor = conexao.cursor(dictionary=True)
+
+        sql = """
+        SELECT
+            u.id_usuario,
+            u.nome,
+            e.especialidade,
+            e.valor_minuto
+        FROM especialistas e
+        INNER JOIN usuarios u
+            ON u.id_usuario = e.id_especialista
+        WHERE u.tipo = 'ESPECIALISTA'
+        ORDER BY u.id_usuario DESC
+        """
+
+        cursor.execute(sql)
+        rows = cursor.fetchall()
+
+        db_specialists = []
+
+        for row in rows:
+            nome = row["nome"]
+            initials = "".join([parte[0] for parte in nome.split()[:2]]).upper()
+
+            db_specialists.append({
+                "id": row["id_usuario"],
+                "name": nome,
+                "initials": initials,
+                "role": row["especialidade"],
+                "price": format_price(row["valor_minuto"]),
+                "rating": "5.0",
+                "reviews": 0,
+                "avatar_class": "avatar-orange",
+                "about": f"{nome} atende na área de {row['especialidade']} pelo Tele Severino.",
+                "tags": [row["especialidade"], "Atendimento online", "Consultoria por minuto"]
+            })
+
+        return db_specialists
+
+    except Exception as erro:
+        print(f"Erro ao buscar especialistas do banco: {erro}")
+        return specialists
+
+    finally:
+        if conexao:
+            conexao.close()
+
+
 def get_specialist(specialist_id: int):
+    db_specialists = get_db_specialists()
+
     return next(
-        (item for item in specialists if item["id"] == specialist_id),
-        specialists[0]
+        (item for item in db_specialists if item["id"] == specialist_id),
+        db_specialists[0] if db_specialists else specialists[0]
     )
 
 
@@ -168,6 +229,28 @@ def cadastrar_especialista_frontend(id_usuario: int, especialidade: str, valor_m
     finally:
         if conexao:
             conexao.close()
+
+
+def usuario_logado(request: Request):
+    usuario_id = request.cookies.get("usuario_id")
+    usuario_tipo = request.cookies.get("usuario_tipo")
+
+    if not usuario_id or not usuario_tipo:
+        return None
+
+    return {
+        "id": usuario_id,
+        "tipo": usuario_tipo
+    }
+
+
+def exigir_login(request: Request):
+    usuario = usuario_logado(request)
+
+    if not usuario:
+        return RedirectResponse("/login", status_code=303)
+
+    return usuario
 
 
 @app.get("/", name="splash")
@@ -277,15 +360,21 @@ def cadastro_post(
                 }
             )
 
-        return RedirectResponse(
+        response = RedirectResponse(
             f"/especialista/dashboard?usuario_id={id_usuario}",
             status_code=303
         )
+        response.set_cookie("usuario_id", str(id_usuario))
+        response.set_cookie("usuario_tipo", "ESPECIALISTA")
+        return response
 
-    return RedirectResponse(
+    response = RedirectResponse(
         f"/home?usuario_id={id_usuario}",
         status_code=303
     )
+    response.set_cookie("usuario_id", str(id_usuario))
+    response.set_cookie("usuario_tipo", "CLIENTE")
+    return response
 
 
 @app.post("/login-web")
@@ -319,41 +408,69 @@ def login_web(
         )
 
     if tipo_usuario == "ESPECIALISTA":
-        return RedirectResponse(
+        response = RedirectResponse(
             f"/especialista/dashboard?usuario_id={id_usuario}",
             status_code=303
         )
+        response.set_cookie("usuario_id", str(id_usuario))
+        response.set_cookie("usuario_tipo", "ESPECIALISTA")
+        return response
 
-    return RedirectResponse(
+    response = RedirectResponse(
         f"/home?usuario_id={id_usuario}",
         status_code=303
     )
+    response.set_cookie("usuario_id", str(id_usuario))
+    response.set_cookie("usuario_tipo", "CLIENTE")
+    return response
 
 
 @app.get("/especialista/dashboard", name="specialist.dashboard")
 def especialista_dashboard(request: Request, usuario_id: int = 0):
+    usuario = exigir_login(request)
+
+    if isinstance(usuario, RedirectResponse):
+        return usuario
+
+    if usuario["tipo"] != "ESPECIALISTA":
+        return RedirectResponse("/home", status_code=303)
+
     return templates.TemplateResponse(
         "especialista_dashboard.html",
         {
             "request": request,
-            "usuario_id": usuario_id
+            "usuario_id": usuario["id"]
         }
     )
 
 
 @app.get("/logout", name="auth.logout")
 def logout():
-    return RedirectResponse("/login")
+    response = RedirectResponse("/login", status_code=303)
+    response.delete_cookie("usuario_id")
+    response.delete_cookie("usuario_tipo")
+    return response
 
 
 @app.get("/home", name="home")
 def home(request: Request):
+    usuario = exigir_login(request)
+
+    if isinstance(usuario, RedirectResponse):
+        return usuario
+
+    if usuario["tipo"] == "ESPECIALISTA":
+        return RedirectResponse(
+            f"/especialista/dashboard?usuario_id={usuario['id']}",
+            status_code=303
+        )
+
     return templates.TemplateResponse(
         "home.html",
         {
             "request": request,
             "categories": categories,
-            "specialists": specialists
+            "specialists": get_db_specialists()
         }
     )
 
@@ -366,7 +483,7 @@ def especialistas_page(request: Request):
             "request": request,
             "title": "Especialistas",
             "subtitle": "Escolha um profissional disponível",
-            "specialists": specialists
+            "specialists": get_db_specialists()
         }
     )
 
