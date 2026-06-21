@@ -3717,54 +3717,7 @@ textarea:focus {
   width: 100%;
   height: 100%;
   object-fit: cover;
-}
-
-.perfil-vitrine-upload {
-  display: grid;
-  gap: 12px;
-}
-
-.perfil-vitrine-upload label {
-  display: block;
-  border: 1px solid rgba(15, 23, 42, 0.10);
-  border-radius: 18px;
-  padding: 14px;
-  background: rgba(255, 255, 255, 0.76);
-  cursor: pointer;
-}
-
-.perfil-vitrine-upload label span {
-  display: block;
-  color: #0f172a;
-  font-size: 14px;
-  font-weight: 800;
-  margin-bottom: 4px;
-}
-
-.perfil-vitrine-upload label small {
-  display: block;
-  color: #64748b;
-  font-size: 12px;
-  line-height: 1.35;
-  margin-bottom: 10px;
-}
-
-.perfil-vitrine-upload input[type="file"] {
-  width: 100%;
-  font-size: 12px;
-}
-
-.perfil-vitrine-upload button {
-  min-height: 44px;
-  border: 0;
-  border-radius: 16px;
-  background: linear-gradient(135deg, #ff7a18, #ff4d00);
-  color: #fff;
-  font-weight: 800;
-  cursor: pointer;
-}
-
-.perfil-vitrine-conteudo {
+}.perfil-vitrine-conteudo {
   min-width: 0;
 }
 
@@ -3953,24 +3906,7 @@ textarea:focus {
 
 .perfil-photo-area .perfil-area-label {
   margin-bottom: 12px;
-}
-
-.perfil-vitrine-clean .perfil-vitrine-upload {
-  gap: 12px;
-}
-
-.perfil-vitrine-clean .perfil-vitrine-upload label {
-  padding: 14px;
-  border-radius: 18px;
-  background: #fff;
-}
-
-.perfil-vitrine-clean .perfil-vitrine-upload button {
-  min-height: 44px;
-  border-radius: 16px;
-}
-
-.perfil-photo-helper {
+}.perfil-photo-helper {
   margin: 12px 0 0;
   color: #64748b;
   font-size: 12px;
@@ -4014,221 +3950,9 @@ textarea:focus {
 
 .perfil-vitrine-clean .perfil-vitrine-metricas {
   max-width: 760px;
-}
-
-/* Foto dentro do modal Editar perfil */
-.modal-profile-photo-section {
-  display: grid;
-  grid-template-columns: 96px minmax(0, 1fr);
-  gap: 18px;
-  align-items: center;
-  margin: 18px 0 24px;
-  padding: 16px;
-  border: 1px solid rgba(15, 23, 42, 0.08);
-  border-radius: 22px;
-  background: linear-gradient(180deg, #ffffff, #fffaf7);
-}
-
-.modal-profile-photo-preview {
-  width: 96px;
-  height: 96px;
-  border-radius: 24px;
-  overflow: hidden;
-  background: #f1f5f9;
-  display: grid;
-  place-items: center;
-  color: #0f172a;
-  font-size: 28px;
-  font-weight: 800;
-  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.10);
-}
-
-.modal-profile-photo-preview img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.modal-profile-photo-info strong {
-  display: block;
-  color: #0f172a;
-  font-size: 16px;
-  margin-bottom: 4px;
-}
-
-.modal-profile-photo-info p {
-  color: #64748b;
-  font-size: 13px;
-  margin: 0 0 12px;
-}
-
-.modal-profile-photo-form {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.modal-profile-photo-form label {
-  flex: 1;
-  min-width: 220px;
-  display: block;
-  border: 1px solid rgba(15, 23, 42, 0.10);
-  border-radius: 16px;
-  padding: 10px 12px;
-  background: #fff;
-}
-
-.modal-profile-photo-form label span {
-  display: block;
-  color: #0f172a;
-  font-size: 12px;
-  font-weight: 800;
-  margin-bottom: 6px;
-}
-
-.modal-profile-photo-form input[type="file"] {
-  width: 100%;
-  font-size: 12px;
-}
-
-.modal-profile-photo-form button {
-  min-height: 42px;
-  padding: 0 18px;
-  border: 0;
-  border-radius: 14px;
-  background: linear-gradient(135deg, #ff7a18, #ff4d00);
-  color: #fff;
-  font-weight: 800;
-  cursor: pointer;
-}
-
-@media (max-width: 720px) {
-  .modal-profile-photo-section {
+}@media (max-width: 720px) {.perfil-vitrine-clean .perfil-preview-main {
     grid-template-columns: 1fr;
-  }
-
-  .perfil-vitrine-clean .perfil-preview-main {
-    grid-template-columns: 1fr;
-  }
-
-  .modal-profile-photo-form {
-    display: grid;
-  }
-
-  .modal-profile-photo-form label {
-    min-width: 0;
-  }
-}
-
-/* Foto dentro do modal Editar perfil */
-.modal-profile-photo-section {
-  display: grid;
-  grid-template-columns: 88px minmax(0, 1fr);
-  gap: 16px;
-  align-items: center;
-  margin: 18px 0 24px;
-  padding: 16px;
-  border: 1px solid rgba(15, 23, 42, 0.08);
-  border-radius: 22px;
-  background: linear-gradient(180deg, #ffffff, #fffaf7);
-}
-
-.modal-profile-photo-preview {
-  width: 88px;
-  height: 88px;
-  border-radius: 24px;
-  overflow: hidden;
-  background: #f1f5f9;
-  display: grid;
-  place-items: center;
-  color: #0f172a;
-  font-size: 28px;
-  font-weight: 800;
-  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.10);
-}
-
-.modal-profile-photo-preview img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.modal-profile-photo-info strong {
-  display: block;
-  color: #0f172a;
-  font-size: 16px;
-  margin-bottom: 4px;
-}
-
-.modal-profile-photo-info p {
-  color: #64748b;
-  font-size: 13px;
-  margin: 0 0 12px;
-}
-
-.modal-profile-photo-form {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.modal-profile-photo-form label {
-  flex: 1;
-  min-width: 220px;
-  border: 1px solid rgba(15, 23, 42, 0.10);
-  border-radius: 16px;
-  padding: 10px 12px;
-  background: #fff;
-}
-
-.modal-profile-photo-form label span {
-  display: block;
-  color: #0f172a;
-  font-size: 12px;
-  font-weight: 800;
-  margin-bottom: 6px;
-}
-
-.modal-profile-photo-form input[type="file"] {
-  width: 100%;
-  font-size: 12px;
-}
-
-.modal-profile-photo-form button {
-  min-height: 42px;
-  padding: 0 18px;
-  border: 0;
-  border-radius: 14px;
-  background: linear-gradient(135deg, #ff7a18, #ff4d00);
-  color: #fff;
-  font-weight: 800;
-  cursor: pointer;
-}
-
-@media (max-width: 720px) {
-  .modal-profile-photo-section {
-    grid-template-columns: 1fr;
-  }
-
-  .modal-profile-photo-form {
-    display: grid;
-  }
-
-  .modal-profile-photo-form label {
-    min-width: 0;
-  }
-}
-
-/* Foto editável por hover */
-.profile-photo-auto-form {
-  margin: 0;
-  padding: 0;
-  width: fit-content;
-}
-
-.editable-photo-trigger {
+  }}@media (max-width: 720px) {}.editable-photo-trigger {
   position: relative;
   cursor: pointer;
 }
@@ -4267,20 +3991,7 @@ textarea:focus {
   font-size: 12px;
   font-weight: 800;
   letter-spacing: -0.1px;
-}
-
-/* Remove qualquer respiro antigo do bloco de foto no modal, se sobrar */
-.modal-profile-photo-section {
-  display: none !important;
-}
-
-/* Foto editável na vitrine profissional */
-.profile-photo-auto-form {
-  margin: 0;
-  width: fit-content;
-}
-
-.editable-photo-trigger {
+}.editable-photo-trigger {
   position: relative;
   cursor: pointer;
 }
@@ -4552,16 +4263,7 @@ textarea:focus {
 
 .profile-photo-modal-header button:hover {
   background: rgba(255, 255, 255, 0.10);
-}
-
-.profile-photo-modal-body {
-  display: grid;
-  place-items: center;
-  min-height: 360px;
-  padding: 34px 24px;
-}
-
-.profile-photo-modal-image {
+}.profile-photo-modal-image {
   width: 260px;
   height: 260px;
   border-radius: 999px;
@@ -4585,40 +4287,11 @@ textarea:focus {
   align-items: center;
   gap: 28px;
   padding: 18px 22px 24px;
-}
-
-.profile-photo-modal-upload {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 42px;
-  padding: 0 18px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.10);
-  color: #fff;
-  font-size: 14px;
-  font-weight: 800;
-  cursor: pointer;
-}
-
-.profile-photo-modal-upload:hover {
-  background: rgba(255, 255, 255, 0.18);
-}
-
-.profile-photo-modal-upload input {
-  display: none;
-}
-
-body.modal-open {
+}body.modal-open {
   overflow: hidden;
 }
 
-@media (max-width: 640px) {
-  .profile-photo-modal-body {
-    min-height: 280px;
-  }
-
-  .profile-photo-modal-image {
+@media (max-width: 640px) {.profile-photo-modal-image {
     width: 200px;
     height: 200px;
   }
@@ -4917,38 +4590,11 @@ body.modal-open {
 .perfil-vitrine-clean .perfil-vitrine-metricas strong,
 .profile-plan-panel .profile-info-grid strong {
   font-size: 15px;
-}
-
-/* Visualizar e recortar foto */
-.tele-photo-preview-editor {
-  display: grid;
-  grid-template-columns: 120px minmax(0, 1fr);
-  gap: 16px;
-  align-items: center;
-  margin: 16px 0 18px;
-}
-
-.tele-photo-modal .profile-photo-modal-image.preview {
+}.tele-photo-modal .profile-photo-modal-image.preview {
   width: 120px !important;
   height: 120px !important;
   border-radius: 28px !important;
-}
-
-.tele-photo-preview-note strong {
-  display: block;
-  color: #0f172a;
-  font-size: 15px;
-  margin-bottom: 4px;
-}
-
-.tele-photo-preview-note span {
-  display: block;
-  color: #64748b;
-  font-size: 13px;
-  line-height: 1.4;
-}
-
-.tele-photo-crop-card {
+}.tele-photo-crop-card {
   align-items: start;
 }
 
@@ -4997,13 +4643,7 @@ body.modal-open {
   margin-top: 4px;
 }
 
-@media (max-width: 640px) {
-  .tele-photo-preview-editor,
-  .tele-photo-crop-card {
-    grid-template-columns: 1fr;
-  }
-
-  .tele-photo-crop-controls .tele-photo-primary-button {
+@media (max-width: 640px) {.tele-photo-crop-controls .tele-photo-primary-button {
     width: 100%;
   }
 }
@@ -5144,21 +4784,7 @@ body.modal-open {
   line-height: 1.25 !important;
   letter-spacing: -0.2px !important;
   font-weight: 800 !important;
-}
-
-.tele-photo-modal .profile-photo-modal-header p,
-.tele-photo-update-card p,
-.tele-photo-confirm-card p,
-.tele-photo-preview-note span {
-  font-size: 13px !important;
-  line-height: 1.55 !important;
-  letter-spacing: 0 !important;
-  font-weight: 500 !important;
-  color: #64748b !important;
-  max-width: 520px;
-}
-
-.tele-photo-update-card h3,
+}.tele-photo-update-card h3,
 .tele-photo-confirm-card h3 {
   font-size: 18px !important;
   line-height: 1.3 !important;
@@ -5196,15 +4822,7 @@ body.modal-open {
   line-height: 1.2 !important;
   letter-spacing: 0 !important;
   font-weight: 800 !important;
-}
-
-.tele-photo-preview-note strong {
-  font-size: 15px !important;
-  line-height: 1.35 !important;
-  letter-spacing: -0.1px !important;
-}
-
-/* Ajuste de largura e quebra de textos no Perfil público */
+}/* Ajuste de largura e quebra de textos no Perfil público */
 .perfil-vitrine-clean,
 .profile-plan-panel {
   width: 100%;
@@ -5293,58 +4911,48 @@ body.modal-open {
   }
 }
 
-/* Ajuste do subtítulo do topo das páginas do especialista */
-.specialist-hero,
-.specialist-page-hero {
-  align-items: flex-start !important;
+
+/* Topo final do painel especialista */
+.specialist-app-topbar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
 }
 
-.specialist-hero p,
-.specialist-page-hero p {
-  max-width: 620px !important;
-  margin-top: 10px !important;
-  font-size: 14px !important;
-  line-height: 1.45 !important;
-  color: #64748b !important;
-  font-weight: 500 !important;
-  letter-spacing: 0 !important;
-}
-
-.specialist-hero h1,
-.specialist-page-hero h1 {
-  margin-bottom: 0 !important;
-}
-
-@media (max-width: 900px) {
-  .specialist-hero p,
-  .specialist-page-hero p {
-    font-size: 13px !important;
-    max-width: 100% !important;
-  }
-}
-
-/* Ajuste final do subtítulo do topo especialista */
-.specialist-hero,
-.specialist-page-hero {
+.specialist-app-topbar > div:first-child {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 6px;
+  gap: 8px;
+  min-width: 0;
 }
 
-.specialist-hero h1,
-.specialist-page-hero h1 {
-  margin-bottom: 0;
+.specialist-app-topbar h1 {
+  margin: 0;
+  line-height: 1.05;
 }
 
-.specialist-hero p,
-.specialist-page-hero p {
-  display: block;
-  width: 100%;
-  max-width: 720px;
+.specialist-app-topbar p {
+  max-width: 680px;
   margin: 0;
   color: #64748b;
   font-size: 14px;
   line-height: 1.5;
   font-weight: 500;
+}
+
+.specialist-app-topbar .profile-status {
+  flex-shrink: 0;
+  margin-top: 18px;
+}
+
+@media (max-width: 900px) {
+  .specialist-app-topbar {
+    flex-direction: column;
+  }
+
+  .specialist-app-topbar .profile-status {
+    margin-top: 0;
+  }
 }
