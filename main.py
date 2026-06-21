@@ -1,6 +1,7 @@
+import uuid
 from pathlib import Path
 
-from fastapi import FastAPI, Request, Form
+from fastapi import FastAPI, Request, Form, UploadFile, File
 from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -120,7 +121,13 @@ def get_db_specialists():
             u.id_usuario,
             u.nome,
             e.especialidade,
-            e.valor_minuto
+            e.valor_minuto,
+            e.foto_perfil,
+            e.categoria,
+            e.descricao,
+            e.tempo_medio,
+            e.indicacao,
+            e.tags
         FROM especialistas e
         INNER JOIN usuarios u
             ON u.id_usuario = e.id_especialista
@@ -251,6 +258,125 @@ def exigir_login(request: Request):
         return RedirectResponse("/login", status_code=303)
 
     return usuario
+
+
+def consultar_cadastro_complementar(id_usuario: int):
+    conexao = None
+    try:
+        conexao = conectar_banco()
+        cursor = conexao.cursor(dictionary=True)
+
+        sql = """
+        SELECT *
+        FROM cadastros_complementares
+        WHERE id_usuario = %s
+        """
+
+        cursor.execute(sql, (id_usuario,))
+        return cursor.fetchone()
+
+    except Exception as erro:
+        print(f"Erro ao consultar cadastro complementar: {erro}")
+        return None
+
+    finally:
+        if conexao:
+            conexao.close()
+
+
+def salvar_cadastro_complementar(
+    id_usuario: int,
+    tipo_usuario: str,
+    cpf_cnpj: str,
+    telefone: str = "",
+    forma_pagamento: str = "",
+    apelido_pagamento: str = "",
+    chave_pix: str = "",
+    banco: str = "",
+    tipo_conta: str = ""
+):
+    conexao = None
+    try:
+        conexao = conectar_banco()
+        cursor = conexao.cursor(dictionary=True)
+
+        cadastro_existente = consultar_cadastro_complementar(id_usuario)
+
+        if cadastro_existente:
+            sql = """
+            UPDATE cadastros_complementares
+            SET
+                telefone = %s,
+                forma_pagamento = %s,
+                apelido_pagamento = %s,
+                chave_pix = %s,
+                banco = %s,
+                tipo_conta = %s
+            WHERE id_usuario = %s
+            """
+
+            valores = (
+                telefone,
+                forma_pagamento,
+                apelido_pagamento,
+                chave_pix,
+                banco,
+                tipo_conta,
+                id_usuario
+            )
+
+            cursor.execute(sql, valores)
+            conexao.commit()
+
+            return {
+                "sucesso": True,
+                "mensagem": "Cadastro complementar atualizado com sucesso. CPF/CNPJ mantido sem alteração."
+            }
+
+        sql = """
+        INSERT INTO cadastros_complementares (
+            id_usuario,
+            tipo_usuario,
+            cpf_cnpj,
+            telefone,
+            forma_pagamento,
+            apelido_pagamento,
+            chave_pix,
+            banco,
+            tipo_conta
+        )
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """
+
+        valores = (
+            id_usuario,
+            tipo_usuario,
+            cpf_cnpj,
+            telefone,
+            forma_pagamento,
+            apelido_pagamento,
+            chave_pix,
+            banco,
+            tipo_conta
+        )
+
+        cursor.execute(sql, valores)
+        conexao.commit()
+
+        return {
+            "sucesso": True,
+            "mensagem": "Cadastro complementar salvo com sucesso."
+        }
+
+    except Exception as erro:
+        return {
+            "sucesso": False,
+            "erro": str(erro)
+        }
+
+    finally:
+        if conexao:
+            conexao.close()
 
 
 @app.get("/", name="splash")
@@ -436,11 +562,60 @@ def especialista_dashboard(request: Request, usuario_id: int = 0):
         return RedirectResponse("/home", status_code=303)
 
     return templates.TemplateResponse(
-        "especialista_dashboard.html",
+        "especialista_resumo.html",
         {
             "request": request,
-            "usuario_id": usuario["id"]
+            "usuario_id": usuario["id"],
+            "cadastro_complementar": consultar_cadastro_complementar(int(usuario["id"])),
+            "especialista": consultar_especialista_por_usuario(int(usuario["id"])),
+            "active_page": "resumo"
         }
+    )
+
+
+@app.post("/cadastro-complementar")
+def cadastro_complementar_post(
+    request: Request,
+    cpf_cnpj: str = Form(...),
+    telefone: str = Form(""),
+    forma_pagamento: str = Form(""),
+    apelido_pagamento: str = Form(""),
+    chave_pix: str = Form(""),
+    banco: str = Form(""),
+    tipo_conta: str = Form("")
+):
+    usuario = exigir_login(request)
+
+    if isinstance(usuario, RedirectResponse):
+        return usuario
+
+    id_usuario = int(usuario["id"])
+    tipo_usuario = usuario["tipo"]
+
+    resultado = salvar_cadastro_complementar(
+        id_usuario=id_usuario,
+        tipo_usuario=tipo_usuario,
+        cpf_cnpj=cpf_cnpj,
+        telefone=telefone,
+        forma_pagamento=forma_pagamento,
+        apelido_pagamento=apelido_pagamento,
+        chave_pix=chave_pix,
+        banco=banco,
+        tipo_conta=tipo_conta
+    )
+
+    if not resultado["sucesso"]:
+        print(f"Erro ao salvar cadastro complementar: {resultado['erro']}")
+
+    if tipo_usuario == "ESPECIALISTA":
+        return RedirectResponse(
+            f"/especialista/dashboard?usuario_id={id_usuario}",
+            status_code=303
+        )
+
+    return RedirectResponse(
+        f"/home?usuario_id={id_usuario}",
+        status_code=303
     )
 
 
@@ -470,7 +645,8 @@ def home(request: Request):
         {
             "request": request,
             "categories": categories,
-            "specialists": get_db_specialists()
+            "specialists": get_db_specialists(),
+            "cadastro_complementar": consultar_cadastro_complementar(int(usuario["id"]))
         }
     )
 
@@ -545,3 +721,260 @@ def personalizacao(request: Request):
             "request": request
         }
     )
+
+@app.get("/especialista/assinatura")
+def especialista_assinatura(request: Request):
+    usuario = exigir_login(request)
+
+    if isinstance(usuario, RedirectResponse):
+        return usuario
+
+    if usuario["tipo"] != "ESPECIALISTA":
+        return RedirectResponse("/home", status_code=303)
+
+    return templates.TemplateResponse(
+        "especialista_assinatura.html",
+        {
+            "request": request,
+            "usuario_id": usuario["id"],
+            "cadastro_complementar": consultar_cadastro_complementar(int(usuario["id"])),
+            "especialista": consultar_especialista_por_usuario(int(usuario["id"])),
+            "active_page": "assinatura"
+        }
+    )
+
+def render_especialista_page(request: Request, template_name: str, active_page: str):
+    usuario = exigir_login(request)
+
+    if isinstance(usuario, RedirectResponse):
+        return usuario
+
+    if usuario["tipo"] != "ESPECIALISTA":
+        return RedirectResponse("/home", status_code=303)
+
+    return templates.TemplateResponse(
+        template_name,
+        {
+            "request": request,
+            "usuario_id": usuario["id"],
+            "cadastro_complementar": consultar_cadastro_complementar(int(usuario["id"])),
+            "especialista": consultar_especialista_por_usuario(int(usuario["id"])),
+            "active_page": active_page
+        }
+    )
+
+
+@app.get("/especialista/cupons")
+def especialista_cupons(request: Request):
+    return render_especialista_page(request, "especialista_cupons.html", "cupons")
+
+
+@app.get("/especialista/perfil")
+def especialista_perfil(request: Request):
+    return render_especialista_page(request, "especialista_perfil.html", "perfil")
+
+
+@app.get("/especialista/ganhos")
+def especialista_ganhos(request: Request):
+    return render_especialista_page(request, "especialista_ganhos.html", "ganhos")
+
+
+@app.get("/especialista/agenda")
+def especialista_agenda(request: Request):
+    return render_especialista_page(request, "especialista_agenda.html", "agenda")
+
+
+@app.get("/especialista/notificacoes")
+def especialista_notificacoes(request: Request):
+    return render_especialista_page(request, "especialista_notificacoes.html", "notificacoes")
+
+
+@app.get("/especialista/mensagens")
+def especialista_mensagens(request: Request):
+    return render_especialista_page(request, "especialista_mensagens.html", "mensagens")
+
+
+@app.get("/especialista/recebimento")
+def especialista_recebimento(request: Request):
+    return render_especialista_page(request, "especialista_recebimento.html", "recebimento")
+
+def consultar_especialista_por_usuario(id_usuario: int):
+    conexao = None
+    try:
+        conexao = conectar_banco()
+        cursor = conexao.cursor(dictionary=True)
+
+        sql = """
+        SELECT
+            e.id_especialista,
+            e.especialidade,
+            e.valor_minuto,
+            e.foto_perfil,
+            e.categoria,
+            e.descricao,
+            e.tempo_medio,
+            e.indicacao,
+            e.tags,
+            u.nome
+        FROM especialistas e
+        INNER JOIN usuarios u
+            ON u.id_usuario = e.id_especialista
+        WHERE e.id_especialista = %s
+        """
+
+        cursor.execute(sql, (id_usuario,))
+        return cursor.fetchone()
+
+    except Exception as erro:
+        print(f"Erro ao consultar especialista: {erro}")
+        return None
+
+    finally:
+        if conexao:
+            conexao.close()
+
+
+def salvar_foto_perfil_especialista(id_usuario: int, foto_perfil: str):
+    conexao = None
+    try:
+        conexao = conectar_banco()
+        cursor = conexao.cursor()
+
+        sql = """
+        UPDATE especialistas
+        SET foto_perfil = %s
+        WHERE id_especialista = %s
+        """
+
+        cursor.execute(sql, (foto_perfil, id_usuario))
+        conexao.commit()
+        return True
+
+    except Exception as erro:
+        print(f"Erro ao salvar foto do especialista: {erro}")
+        return False
+
+    finally:
+        if conexao:
+            conexao.close()
+
+
+@app.post("/especialista/perfil/foto")
+async def especialista_upload_foto(request: Request, foto_perfil: UploadFile = File(...)):
+    usuario = exigir_login(request)
+
+    if isinstance(usuario, RedirectResponse):
+        return usuario
+
+    if usuario["tipo"] != "ESPECIALISTA":
+        return RedirectResponse("/home", status_code=303)
+
+    extensoes_permitidas = {
+        "image/jpeg": ".jpg",
+        "image/png": ".png",
+        "image/webp": ".webp"
+    }
+
+    if foto_perfil.content_type not in extensoes_permitidas:
+        return RedirectResponse("/especialista/perfil?erro=tipo_arquivo", status_code=303)
+
+    extensao = extensoes_permitidas[foto_perfil.content_type]
+    nome_arquivo = f"especialista_{usuario['id']}_{uuid.uuid4().hex}{extensao}"
+
+    pasta_upload = Path("View/static/uploads/perfis")
+    pasta_upload.mkdir(parents=True, exist_ok=True)
+
+    caminho_arquivo = pasta_upload / nome_arquivo
+
+    conteudo = await foto_perfil.read()
+
+    limite_mb = 8 * 1024 * 1024
+    if len(conteudo) > limite_mb:
+        return RedirectResponse("/especialista/perfil?erro=tamanho_arquivo", status_code=303)
+
+    caminho_arquivo.write_bytes(conteudo)
+
+    caminho_publico = f"/static/uploads/perfis/{nome_arquivo}"
+    salvar_foto_perfil_especialista(int(usuario["id"]), caminho_publico)
+
+    return RedirectResponse("/especialista/perfil", status_code=303)
+
+@app.post("/especialista/perfil/dados")
+def especialista_salvar_perfil_dados(
+    request: Request,
+    nome: str = Form(...),
+    categoria: str = Form(""),
+    especialidade: str = Form(...),
+    descricao: str = Form(""),
+    tempo_medio: str = Form(""),
+    indicacao: str = Form(""),
+    tags: str = Form(""),
+    valor_minuto: str = Form(...)
+):
+    usuario = exigir_login(request)
+
+    if isinstance(usuario, RedirectResponse):
+        return usuario
+
+    if usuario["tipo"] != "ESPECIALISTA":
+        return RedirectResponse("/home", status_code=303)
+
+    valor_minuto_normalizado = str(valor_minuto).replace(",", ".")
+
+    conexao = None
+    try:
+        conexao = conectar_banco()
+        cursor = conexao.cursor()
+
+        sql_usuario = """
+        UPDATE usuarios
+        SET nome = %s
+        WHERE id_usuario = %s
+        """
+
+        cursor.execute(sql_usuario, (nome, usuario["id"]))
+
+        sql_especialista = """
+        UPDATE especialistas
+        SET categoria = %s,
+            especialidade = %s,
+            descricao = %s,
+            tempo_medio = %s,
+            indicacao = %s,
+            tags = %s,
+            valor_minuto = %s
+        WHERE id_especialista = %s
+        """
+
+        cursor.execute(
+            sql_especialista,
+            (
+                categoria,
+                especialidade,
+                descricao,
+                tempo_medio,
+                indicacao,
+                tags,
+                valor_minuto_normalizado,
+                usuario["id"]
+            )
+        )
+
+        conexao.commit()
+
+    except Exception as erro:
+        print(f"Erro ao salvar perfil do especialista: {erro}")
+
+    finally:
+        if conexao:
+            conexao.close()
+
+    return RedirectResponse("/especialista/perfil", status_code=303)
+@app.get("/especialista/financeiro")
+def especialista_financeiro(request: Request):
+    return render_especialista_page(request, "especialista_financeiro.html", "financeiro")
+
+
+@app.get("/especialista/operacao")
+def especialista_operacao(request: Request):
+    return render_especialista_page(request, "especialista_operacao.html", "operacao")

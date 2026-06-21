@@ -53,7 +53,9 @@
         {% for specialist in specialists %}
         <a href="{{ url_for('specialist.especialista', specialist_id=specialist.id) }}" class="specialist-card">
           <div class="specialist-avatar {{ specialist.avatar_class }}">
-            {% if specialist.initials %}
+            {% if specialist.photo %}
+              <img src="{{ specialist.photo }}" alt="Foto de {{ specialist.name }}">
+            {% elif specialist.initials %}
               {{ specialist.initials }}
             {% else %}
               {{ specialist.name[:1] }}
@@ -75,5 +77,52 @@
     </section>
 
   </section>
+
+  {% if not cadastro_complementar %}
+  <div class="flow-modal-backdrop" data-modal="cliente-cadastro">
+    <form class="flow-modal" action="/cadastro-complementar" method="POST">
+      <button class="flow-modal-close" type="button" data-close-modal>×</button>
+
+      <span class="flow-badge">Cadastro básico</span>
+      <h2>Complete seu cadastro</h2>
+      <p class="flow-modal-text">
+        Antes de iniciar uma consultoria, complete seus dados básicos e uma forma de pagamento.
+      </p>
+      <p class="flow-modal-note">
+        Para fins de teste, os dados informados não precisam ser verdadeiros neste momento.
+      </p>
+
+      <div class="flow-form-grid">
+        <label>
+          CPF
+          <input name="cpf_cnpj" type="text" placeholder="000.000.000-00" required>
+        </label>
+
+        <label>
+          Telefone
+          <input name="telefone" type="text" placeholder="(11) 99999-9999">
+        </label>
+
+        <label>
+          Forma de pagamento
+          <select name="forma_pagamento">
+            <option>Cartão de crédito</option>
+            <option>PIX</option>
+          </select>
+        </label>
+
+        <label>
+          Identificação do pagamento
+          <input name="apelido_pagamento" type="text" placeholder="Ex: PIX pessoal ou cartão principal">
+        </label>
+      </div>
+
+      <button class="primary-button flow-modal-action" type="submit">
+        Salvar dados simulados
+      </button>
+    </form>
+  </div>
+  {% endif %}
+
 </main>
 {% endblock %}

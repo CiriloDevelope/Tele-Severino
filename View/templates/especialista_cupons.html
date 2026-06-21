@@ -1,0 +1,42 @@
+{% extends "especialista_base.html" %}
+
+{% block specialist_title %}Cupons{% endblock %}
+{% block specialist_subtitle %}
+Use cupons de aquisição para atrair os primeiros clientes e ganhar visibilidade.
+{% endblock %}
+
+{% block specialist_content %}
+<section class="apple-panel">
+  <div class="section-header">
+    <div>
+      <h2>Cupons disponíveis</h2>
+      <p>Benefícios vinculados ao seu plano atual.</p>
+    </div>
+    <a class="small-link" href="#">Criar campanha</a>
+  </div>
+
+  <div class="coupon-panel">
+    <div>
+      <span>Cupom inicial</span>
+      <strong>BEMVINDO10</strong>
+      <p>3 cupons disponíveis para atrair novos clientes.</p>
+    </div>
+
+    <div class="coupon-usage">
+      <span>Uso dos cupons</span>
+      <strong>0 de 3 usados</strong>
+      <div class="progress-bar">
+        <span style="width: 0%"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="apple-panel">
+  <h2>Regra comercial</h2>
+  <p class="empty-state">
+    Os cupons fazem parte do plano do especialista. O desconto é usado como estratégia de aquisição,
+    não como custo direto do Tele Severino.
+  </p>
+</section>
+{% endblock %}

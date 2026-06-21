@@ -1,0 +1,85 @@
+{% extends "especialista_base.html" %}
+
+{% block specialist_title %}Operação{% endblock %}
+{% block specialist_subtitle %}
+Gerencie agenda, mensagens e notificações do atendimento.
+{% endblock %}
+
+{% block specialist_content %}
+<section class="apple-dashboard-grid">
+  <div class="apple-panel">
+    <div class="section-header">
+      <div>
+        <h2>Agenda</h2>
+        <p>Horários disponíveis e próximos atendimentos.</p>
+      </div>
+      <a class="small-link" href="#">Configurar agenda</a>
+    </div>
+
+    <div class="timeline-list">
+      <div>
+        <span>14:00</span>
+        <strong>Horário disponível</strong>
+        <p>Aguardando solicitação de cliente.</p>
+      </div>
+      <div>
+        <span>16:30</span>
+        <strong>Bloqueado</strong>
+        <p>Horário ocupado.</p>
+      </div>
+      <div>
+        <span>18:00</span>
+        <strong>Disponível</strong>
+        <p>Atendimento por chamada, voz ou mensagem.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="apple-panel">
+    <div class="section-header">
+      <div>
+        <h2>Mensagens</h2>
+        <p>Conversas com clientes antes ou depois do atendimento.</p>
+      </div>
+      <a class="small-link" href="#">Nova mensagem</a>
+    </div>
+
+    <div class="message-list">
+      <div>
+        <strong>Cliente teste</strong>
+        <p>Tenho uma dúvida sobre instalação de tomada...</p>
+        <span>Entrada • 10:32</span>
+      </div>
+      <div>
+        <strong>Mensagem enviada</strong>
+        <p>Posso te orientar por chamada rápida.</p>
+        <span>Enviada • ontem</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="apple-panel">
+  <div class="section-header">
+    <div>
+      <h2>Notificações</h2>
+      <p>Eventos importantes do seu perfil e operação.</p>
+    </div>
+  </div>
+
+  <div class="notification-list">
+    <div>
+      <strong>Perfil público</strong>
+      <p>Mantenha tags, descrição e valor por minuto atualizados.</p>
+    </div>
+    <div>
+      <strong>Plano atual</strong>
+      <p>Você está no plano Free. Recursos pagos podem ser solicitados em assinatura.</p>
+    </div>
+    <div>
+      <strong>Recebimento</strong>
+      <p>Confira seus dados bancários na área financeira.</p>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "especialista_base.html" %}
+
+{% block specialist_title %}Ganhos{% endblock %}
+{% block specialist_subtitle %}
+Acompanhe ganhos estimados, repasses e evolução dos atendimentos.
+{% endblock %}
+
+{% block specialist_content %}
+<section class="apple-panel">
+  <div class="section-header">
+    <div>
+      <h2>Ganhos e repasses</h2>
+      <p>Resumo financeiro dos atendimentos realizados.</p>
+    </div>
+    <a class="small-link" href="#">Ver detalhes</a>
+  </div>
+
+  <div class="earnings-card">
+    <div>
+      <span>Hoje</span>
+      <strong>R$ 0,00</strong>
+    </div>
+    <div>
+      <span>Semana</span>
+      <strong>R$ 0,00</strong>
+    </div>
+    <div>
+      <span>Mês</span>
+      <strong>R$ 0,00</strong>
+    </div>
+  </div>
+
+  <div class="fake-chart">
+    <span style="height: 30%"></span>
+    <span style="height: 45%"></span>
+    <span style="height: 25%"></span>
+    <span style="height: 70%"></span>
+    <span style="height: 55%"></span>
+    <span style="height: 85%"></span>
+    <span style="height: 40%"></span>
+  </div>
+</section>
+{% endblock %}

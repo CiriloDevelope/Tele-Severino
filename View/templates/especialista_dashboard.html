@@ -1,25 +1,399 @@
 {% extends "base.html" %}
-{% from "components.html" import logo_box %}
 {% block title %}Dashboard Especialista - Tele Severino{% endblock %}
 {% block content %}
-  <main class="home-wrapper">
-    <section class="hero-card">
-      {{ logo_box() }}
-      <h1>Área do Especialista</h1>
-      <p>Seu cadastro foi identificado como especialista.</p>
-      <p>ID do usuário: {{ usuario_id }}</p>
-    </section>
+<main class="home-wrapper specialist-dashboard">
 
-    <section class="section-block">
-      <h2>Resumo profissional</h2>
-      <div class="specialist-card">
-        <div>
-          <h3>Meu perfil</h3>
-          <p>Aqui o especialista poderá acompanhar atendimentos, avaliações e valor por minuto.</p>
-        </div>
+  <header class="top-bar specialist-topbar">
+    <a class="profile-entry" href="#">
+      <div class="top-avatar">EN</div>
+      <div>
+        <strong>Especialista Navegador</strong>
+        <span>Elétrica Residencial • Plano Profissional</span>
       </div>
-    </section>
+    </a>
 
-    <a class="primary-button" href="{{ url_for('auth.logout') }}">Sair</a>
-  </main>
+    <div class="top-actions">
+      <a class="icon-button" href="#" title="Notificações">🔔</a>
+      <a class="icon-button" href="#" title="Calendário">📅</a>
+      <a class="outline-button" href="{{ url_for('auth.logout') }}">Sair</a>
+    </div>
+  </header>
+
+  <section class="specialist-hero-card">
+    <div>
+      <span class="flow-badge">Dashboard SaaS</span>
+      <h1>Central do especialista</h1>
+      <p>
+        Gerencie sua assinatura, perfil público, agenda, mensagens, cupons,
+        atendimentos e ganhos em um só lugar.
+      </p>
+    </div>
+
+    {% if cadastro_complementar %}
+      <div class="profile-status status-complete">Pronto para atender</div>
+    {% else %}
+      <div class="profile-status status-pending">Cadastro pendente</div>
+    {% endif %}
+  </section>
+
+  {% if not cadastro_complementar %}
+  <section class="warning-card">
+    <strong>Complete seus dados de recebimento</strong>
+    <p>Para ficar disponível na plataforma, informe CPF/CNPJ, chave PIX, banco e tipo de conta.</p>
+  </section>
+  {% endif %}
+
+  <section class="specialist-shell">
+    <aside class="specialist-sidebar">
+      <strong>Painel</strong>
+      <nav>
+        <a href="#resumo">Resumo</a>
+        <a href="#assinatura">Assinatura</a>
+        <a href="#cupons">Cupons</a>
+        <a href="#perfil-publico">Perfil público</a>
+        <a href="#ganhos">Ganhos</a>
+        <a href="#agenda">Agenda</a>
+        <a href="#notificacoes">Notificações</a>
+        <a href="#mensagens">Mensagens</a>
+        <a href="#recebimento">Recebimento</a>
+      </nav>
+    </aside>
+
+    <div class="specialist-content">
+
+  <section id="resumo" class="dashboard-grid compact-metrics">
+    <article class="metric-card">
+      <span>Atendimentos hoje</span>
+      <strong>0</strong>
+      <p>Nenhuma chamada iniciada</p>
+    </article>
+
+    <article class="metric-card">
+      <span>Avaliação ponderada</span>
+      <strong>4.8</strong>
+      <p>Baseada em nota + volume</p>
+    </article>
+
+    <article class="metric-card">
+      <span>Valor por minuto</span>
+      <strong>R$ 4,50</strong>
+      <p>Pode subir com reputação</p>
+    </article>
+
+    <article class="metric-card">
+      <span>Ganhos do mês</span>
+      <strong>R$ 0,00</strong>
+      <p>Simulação inicial</p>
+    </article>
+  </section>
+
+  <section class="dashboard-layout">
+
+    <div class="dashboard-main-column">
+
+      <section id="assinatura" class="section-block dashboard-section">
+        <div class="section-header">
+          <div>
+            <h2>Minha assinatura</h2>
+            <p>Plano contratado para usar o Tele Severino como especialista.</p>
+          </div>
+          <a class="small-link" href="#">Gerenciar plano</a>
+        </div>
+
+        <div class="subscription-card clean-card-grid">
+          <div>
+            <span>Plano atual</span>
+            <strong>Profissional</strong>
+            <p>Para especialistas que querem atender online.</p>
+          </div>
+
+          <div>
+            <span>Valor</span>
+            <strong>R$ 49,90/mês</strong>
+            <p>Configurável futuramente pelo admin.</p>
+          </div>
+
+          <div>
+            <span>Ramos do plano</span>
+            <strong>1 de 3 usados</strong>
+            <p>Mais ramos podem alterar a assinatura.</p>
+          </div>
+
+          <div>
+            <span>Status</span>
+            <strong class="positive-text">Ativa</strong>
+            <p>Vencimento: 10/07/2026</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="cupons" class="section-block dashboard-section">
+        <div class="section-header">
+          <div>
+            <h2>Cupons de aquisição</h2>
+            <p>Benefícios do plano para atrair os primeiros clientes.</p>
+          </div>
+          <a class="small-link" href="#">Criar campanha</a>
+        </div>
+
+        <div class="coupon-panel">
+          <div>
+            <span>Cupom inicial</span>
+            <strong>BEMVINDO10</strong>
+            <p>3 cupons disponíveis para novos clientes.</p>
+          </div>
+
+          <div class="coupon-usage">
+            <span>Uso dos cupons</span>
+            <strong>0 de 3 usados</strong>
+            <div class="progress-bar">
+              <span style="width: 0%"></span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="perfil-publico" class="section-block dashboard-section">
+        <div class="section-header">
+          <div>
+            <h2>Meu perfil público</h2>
+            <p>Dados usados na busca e na decisão do usuário comum.</p>
+          </div>
+          <a class="small-link" href="#">Editar perfil</a>
+        </div>
+
+        <div class="specialist-profile-preview">
+          <div class="profile-avatar-large">EN</div>
+
+          <div class="profile-preview-content">
+            <h3>Especialista Navegador</h3>
+            <p class="muted-text">Categoria: Casa e Reparos • Ramo: Elétrica Residencial</p>
+            <p>
+              Atendo dúvidas e orientações na área de elétrica residencial,
+              com foco em suporte online rápido e explicação simples.
+            </p>
+
+            <div class="profile-info-grid">
+              <div>
+                <span>Tempo médio</span>
+                <strong>6 min</strong>
+              </div>
+              <div>
+                <span>Indicação</span>
+                <strong>Boa para dúvidas rápidas</strong>
+              </div>
+              <div>
+                <span>Ramos ativos</span>
+                <strong>1 de 3</strong>
+              </div>
+            </div>
+
+            <div class="tag-row">
+              <span>Elétrica Residencial</span>
+              <span>Chuveiro</span>
+              <span>Tomada</span>
+              <span>Disjuntor</span>
+              <span>Atendimento online</span>
+              <span>Consultoria por minuto</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="ganhos" class="section-block dashboard-section">
+        <div class="section-header">
+          <div>
+            <h2>Ganhos e repasses</h2>
+            <p>Resumo financeiro dos atendimentos realizados.</p>
+          </div>
+          <a class="small-link" href="#">Ver detalhes</a>
+        </div>
+
+        <div class="earnings-card">
+          <div>
+            <span>Hoje</span>
+            <strong>R$ 0,00</strong>
+          </div>
+          <div>
+            <span>Semana</span>
+            <strong>R$ 0,00</strong>
+          </div>
+          <div>
+            <span>Mês</span>
+            <strong>R$ 0,00</strong>
+          </div>
+        </div>
+
+        <div class="fake-chart">
+          <span style="height: 30%"></span>
+          <span style="height: 45%"></span>
+          <span style="height: 25%"></span>
+          <span style="height: 70%"></span>
+          <span style="height: 55%"></span>
+          <span style="height: 85%"></span>
+          <span style="height: 40%"></span>
+        </div>
+      </section>
+
+    </div>
+
+    <aside class="dashboard-side-column">
+
+      <section id="agenda" class="section-block dashboard-section">
+        <div class="section-header compact">
+          <div>
+            <h2>Agenda</h2>
+            <p>Hoje</p>
+          </div>
+          <a class="small-link" href="#">Ver mês</a>
+        </div>
+
+        <div class="timeline-list">
+          <div>
+            <span>14:00</span>
+            <strong>Horário disponível</strong>
+            <p>Aguardando solicitação</p>
+          </div>
+          <div>
+            <span>16:30</span>
+            <strong>Bloqueado</strong>
+            <p>Horário ocupado</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="notificacoes" class="section-block dashboard-section">
+        <div class="section-header compact">
+          <div>
+            <h2>Notificações</h2>
+            <p>Últimas atividades</p>
+          </div>
+        </div>
+
+        <div class="notification-list">
+          <div>
+            <strong>Novo especialista</strong>
+            <p>Complete o perfil para ganhar visibilidade.</p>
+          </div>
+          <div>
+            <strong>Cupom disponível</strong>
+            <p>Você ainda tem 3 cupons para atrair clientes.</p>
+          </div>
+          <div>
+            <strong>Plano ativo</strong>
+            <p>Sua assinatura profissional está ativa.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="mensagens" class="section-block dashboard-section">
+        <div class="section-header compact">
+          <div>
+            <h2>Mensagens</h2>
+            <p>Caixa de entrada</p>
+          </div>
+          <a class="small-link" href="#">Abrir</a>
+        </div>
+
+        <div class="message-list">
+          <div>
+            <strong>Cliente teste</strong>
+            <p>Tenho uma dúvida sobre instalação de tomada...</p>
+            <span>Entrada • 10:32</span>
+          </div>
+          <div>
+            <strong>Mensagem enviada</strong>
+            <p>Posso te orientar por chamada rápida.</p>
+            <span>Enviada • ontem</span>
+          </div>
+        </div>
+      </section>
+
+      <section id="recebimento" class="section-block dashboard-section">
+        <div class="section-header compact">
+          <div>
+            <h2>Dados de recebimento</h2>
+            <p>Repasse simulado</p>
+          </div>
+          <a class="small-link" href="#">Editar</a>
+        </div>
+
+        {% if cadastro_complementar %}
+          <div class="data-list">
+            <div>
+              <span>CPF/CNPJ</span>
+              <strong>{{ cadastro_complementar.cpf_cnpj }}</strong>
+            </div>
+            <div>
+              <span>Chave PIX</span>
+              <strong>{{ cadastro_complementar.chave_pix or "Não informado" }}</strong>
+            </div>
+            <div>
+              <span>Banco</span>
+              <strong>{{ cadastro_complementar.banco or "Não informado" }}</strong>
+            </div>
+            <div>
+              <span>Tipo de conta</span>
+              <strong>{{ cadastro_complementar.tipo_conta or "Não informado" }}</strong>
+            </div>
+          </div>
+        {% else %}
+          <p class="empty-state">Dados de recebimento pendentes.</p>
+        {% endif %}
+      </section>
+
+    </aside>
+  </section>
+
+    </div>
+  </section>
+
+  {% if not cadastro_complementar %}
+  <div class="flow-modal-backdrop" data-modal="especialista-recebimento">
+    <form class="flow-modal" action="/cadastro-complementar" method="POST">
+      <button class="flow-modal-close" type="button" data-close-modal>×</button>
+
+      <span class="flow-badge">Dados de recebimento</span>
+      <h2>Configure como deseja receber</h2>
+      <p class="flow-modal-text">
+        Informe dados de recebimento para simular o repasse dos atendimentos realizados.
+      </p>
+      <p class="flow-modal-note">
+        Para fins de teste, os dados informados não precisam ser verdadeiros neste momento.
+      </p>
+
+      <div class="flow-form-grid">
+        <label>
+          CPF ou CNPJ
+          <input name="cpf_cnpj" type="text" placeholder="CPF ou CNPJ" required>
+        </label>
+
+        <label>
+          Chave PIX
+          <input name="chave_pix" type="text" placeholder="email@exemplo.com">
+        </label>
+
+        <label>
+          Banco
+          <input name="banco" type="text" placeholder="Banco Tele Severino">
+        </label>
+
+        <label>
+          Tipo de conta
+          <select name="tipo_conta">
+            <option>Conta corrente</option>
+            <option>Conta poupança</option>
+            <option>Conta pagamento</option>
+          </select>
+        </label>
+      </div>
+
+      <button class="primary-button flow-modal-action" type="submit">
+        Salvar dados simulados
+      </button>
+    </form>
+  </div>
+  {% endif %}
+
+</main>
 {% endblock %}

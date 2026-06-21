@@ -1,0 +1,36 @@
+{% extends "especialista_base.html" %}
+
+{% block specialist_title %}Agenda{% endblock %}
+{% block specialist_subtitle %}
+Visualize horários disponíveis, ocupados e próximos atendimentos.
+{% endblock %}
+
+{% block specialist_content %}
+<section class="apple-panel">
+  <div class="section-header">
+    <div>
+      <h2>Agenda de hoje</h2>
+      <p>Simulação de disponibilidade do especialista.</p>
+    </div>
+    <a class="small-link" href="#">Ver mês</a>
+  </div>
+
+  <div class="timeline-list">
+    <div>
+      <span>14:00</span>
+      <strong>Horário disponível</strong>
+      <p>Aguardando solicitação de cliente.</p>
+    </div>
+    <div>
+      <span>16:30</span>
+      <strong>Bloqueado</strong>
+      <p>Horário ocupado.</p>
+    </div>
+    <div>
+      <span>18:00</span>
+      <strong>Disponível</strong>
+      <p>Atendimento por chamada, voz ou mensagem.</p>
+    </div>
+  </div>
+</section>
+{% endblock %}

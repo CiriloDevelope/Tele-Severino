@@ -1,0 +1,110 @@
+{% extends "especialista_base.html" %}
+
+{% block specialist_title %}Visão geral{% endblock %}
+{% block specialist_subtitle %}
+Resumo do perfil, assinatura, ganhos e próximos passos.
+{% endblock %}
+
+{% block specialist_content %}
+<section class="apple-grid-metrics">
+  <article>
+    <span>Atendimentos hoje</span>
+    <strong>0</strong>
+    <p>Nenhuma chamada iniciada.</p>
+  </article>
+
+  <article>
+    <span>Avaliação ponderada</span>
+    <strong>4.8</strong>
+    <p>Nota calculada por estrelas e volume.</p>
+  </article>
+
+  <article>
+    <span>Valor por minuto</span>
+    <strong>R$ {{ "%.2f"|format(especialista.valor_minuto if especialista else 0)|replace(".", ",") }}</strong>
+    <p>Configurado no perfil público.</p>
+  </article>
+
+  <article>
+    <span>Ganhos do mês</span>
+    <strong>R$ 0,00</strong>
+    <p>Simulação inicial.</p>
+  </article>
+</section>
+
+<section class="apple-dashboard-grid">
+  <div class="apple-panel">
+    <div class="section-header">
+      <div>
+        <h2>Plano e visibilidade</h2>
+        <p>Status do plano vinculado ao seu perfil público.</p>
+      </div>
+      <a class="small-link" href="/especialista/perfil">Ver no perfil público</a>
+    </div>
+
+    <div class="profile-info-grid">
+      <div>
+        <span>Plano</span>
+        <strong>Free</strong>
+      </div>
+      <div>
+        <span>Ramos</span>
+        <strong>1 de 1 usado</strong>
+      </div>
+      <div>
+        <span>Cupons</span>
+        <strong>0 disponíveis</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="apple-panel">
+    <div class="section-header">
+      <div>
+        <h2>Ganhos</h2>
+        <p>Resumo financeiro rápido.</p>
+      </div>
+      <a class="small-link" href="/especialista/financeiro">Ver financeiro</a>
+    </div>
+
+    <div class="earnings-card">
+      <div>
+        <span>Hoje</span>
+        <strong>R$ 0,00</strong>
+      </div>
+      <div>
+        <span>Semana</span>
+        <strong>R$ 0,00</strong>
+      </div>
+      <div>
+        <span>Mês</span>
+        <strong>R$ 0,00</strong>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="apple-panel">
+  <div class="section-header">
+    <div>
+      <h2>Próximas ações</h2>
+      <p>O que pode melhorar sua visibilidade.</p>
+    </div>
+  </div>
+
+  <div class="notification-list">
+    <div>
+      <strong>Perfil público</strong>
+      <p>Revise foto, tags, descrição e valor por minuto.</p>
+    </div>
+    <div>
+      <strong>Financeiro</strong>
+      <p>Confira dados de recebimento, ganhos e cupons.</p>
+    </div>
+    <div>
+      <strong>Operação</strong>
+      <p>Acompanhe agenda, mensagens e notificações.</p>
+    </div>
+  </div>
+</section>
+{% endblock %}

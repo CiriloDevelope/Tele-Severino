@@ -1,0 +1,31 @@
+{% extends "especialista_base.html" %}
+
+{% block specialist_title %}Mensagens{% endblock %}
+{% block specialist_subtitle %}
+Caixa de entrada para conversar com clientes antes ou depois do atendimento.
+{% endblock %}
+
+{% block specialist_content %}
+<section class="apple-panel">
+  <div class="section-header">
+    <div>
+      <h2>Caixa de entrada</h2>
+      <p>Mensagens simuladas de clientes.</p>
+    </div>
+    <a class="small-link" href="#">Nova mensagem</a>
+  </div>
+
+  <div class="message-list">
+    <div>
+      <strong>Cliente teste</strong>
+      <p>Tenho uma dúvida sobre instalação de tomada...</p>
+      <span>Entrada • 10:32</span>
+    </div>
+    <div>
+      <strong>Mensagem enviada</strong>
+      <p>Posso te orientar por chamada rápida.</p>
+      <span>Enviada • ontem</span>
+    </div>
+  </div>
+</section>
+{% endblock %}
