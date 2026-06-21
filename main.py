@@ -978,3 +978,9 @@ def especialista_financeiro(request: Request):
 @app.get("/especialista/operacao")
 def especialista_operacao(request: Request):
     return render_especialista_page(request, "especialista_operacao.html", "operacao")
+
+
+@app.get("/favicon.ico", include_in_schema=False)
+def favicon_ico():
+    return RedirectResponse(url="/static/favicon.svg")
+
