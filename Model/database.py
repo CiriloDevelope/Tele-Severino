@@ -9,7 +9,6 @@ def conectar_banco():
             host='localhost', 
             database='tele_severino'  
         )
-        print("Conexão feita AI PAPAI!")
         return cnx
         
     except mysql.connector.Error as erro:
