@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block title %}Painel Especialista - Tele Severino{% endblock %}
+{% block content %}
+<main class="specialist-app-shell">
+
+  <aside class="specialist-app-sidebar">
+    <div class="specialist-brand">
+      <form class="sidebar-photo-form" action="/especialista/perfil/foto" method="POST" enctype="multipart/form-data">
+        <label class="top-avatar sidebar-photo-edit">
+          {% if especialista and especialista.foto_perfil %}
+            <img src="{{ especialista.foto_perfil }}" alt="Foto do especialista">
+          {% else %}
+            <span>EN</span>
+          {% endif %}
+          <input type="file" name="foto_perfil" accept="image/jpeg,image/png,image/webp" onchange="this.form.submit()">
+          <span class="sidebar-photo-overlay">Editar</span>
+        </label>
+      </form>
+
+      <a class="specialist-brand-info" href="/especialista/dashboard">
+        <strong>{{ especialista.nome if especialista else "Especialista Navegador" }}</strong>
+        <span>Plano Free</span>
+      </a>
+    </div>
+
+    <nav class="specialist-menu">
+      <a class="{% if active_page == 'resumo' %}active{% endif %}" href="/especialista/dashboard">Visão geral</a>
+      <a class="{% if active_page == 'financeiro' %}active{% endif %}" href="/especialista/financeiro">Financeiro</a>
+      <a class="{% if active_page == 'operacao' %}active{% endif %}" href="/especialista/operacao">Operação</a>
+      <a class="{% if active_page == 'perfil' %}active{% endif %}" href="/especialista/perfil">Perfil público</a>
+    </nav>
+
+    <a class="specialist-logout" href="{{ url_for('auth.logout') }}">Sair</a>
+  </aside>
+
+  <section class="specialist-app-content">
+    <header class="specialist-app-topbar">
+      <div>
+        <span class="flow-badge">Painel do especialista</span>
+        <h1>{% block specialist_title %}{% endblock %}</h1>
+        <p>{% block specialist_subtitle %}{% endblock %}</p>
+      </div>
+
+      {% if cadastro_complementar %}
+        <div class="profile-status status-complete">Pronto para atender</div>
+      {% else %}
+        <div class="profile-status status-pending">Cadastro pendente</div>
+      {% endif %}
+    </header>
+
+    {% if not cadastro_complementar %}
+    <section class="warning-card">
+      <strong>Complete seus dados de recebimento</strong>
+      <p>Para ficar disponível na plataforma, informe CPF/CNPJ, chave PIX, banco e tipo de conta.</p>
+    </section>
+    {% endif %}
+
+    {% block specialist_content %}{% endblock %}
+  </section>
+
+  {% if not cadastro_complementar %}
+  <div class="flow-modal-backdrop" data-modal="especialista-recebimento">
+    <form class="flow-modal" action="/cadastro-complementar" method="POST">
+      <button class="flow-modal-close" type="button" data-close-modal>×</button>
+
+      <span class="flow-badge">Dados de recebimento</span>
+      <h2>Configure como deseja receber</h2>
+      <p class="flow-modal-text">
+        Informe dados de recebimento para simular o repasse dos atendimentos realizados.
+      </p>
+      <p class="flow-modal-note">
+        Para fins de teste, os dados informados não precisam ser verdadeiros neste momento.
+      </p>
+
+      <div class="flow-form-grid">
+        <label>
+          CPF ou CNPJ
+          <input name="cpf_cnpj" type="text" placeholder="CPF ou CNPJ" required>
+        </label>
+
+        <label>
+          Chave PIX
+          <input name="chave_pix" type="text" placeholder="email@exemplo.com">
+        </label>
+
+        <label>
+          Banco
+          <input name="banco" type="text" placeholder="Banco Tele Severino">
+        </label>
+
+        <label>
+          Tipo de conta
+          <select name="tipo_conta" data-apple-select>
+            <option>Conta corrente</option>
+            <option>Conta poupança</option>
+            <option>Conta pagamento</option>
+          </select>
+        </label>
+      </div>
+
+      <button class="primary-button flow-modal-action" type="submit">
+        Salvar dados simulados
+      </button>
+    </form>
+  </div>
+  {% endif %}
+
+</main>
+{% endblock %}

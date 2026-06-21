@@ -1,0 +1,188 @@
+{% extends "especialista_base.html" %}
+
+{% block specialist_title %}Recebimento
+<div class="specialist-modal-backdrop" data-specialist-modal="editar-recebimento">
+  <form class="specialist-modal" action="/cadastro-complementar" method="POST">
+    <div class="specialist-modal-header">
+      <div>
+        <h2>Editar recebimento</h2>
+        <p>Atualize os dados usados para simular o repasse dos atendimentos.</p>
+      </div>
+      <button type="button" class="specialist-modal-close" data-close-specialist-modal>×</button>
+    </div>
+
+    <div class="specialist-modal-form">
+      <label>
+        CPF ou CNPJ
+        <input type="text" value="{{ cadastro_complementar.cpf_cnpj if cadastro_complementar else '' }}" disabled>
+        <input type="hidden" name="cpf_cnpj" value="{{ cadastro_complementar.cpf_cnpj if cadastro_complementar else '' }}">
+      </label>
+
+      <label>
+        Chave PIX
+        <input name="chave_pix" type="text" value="{{ cadastro_complementar.chave_pix if cadastro_complementar else '' }}">
+      </label>
+
+      <label>
+        Banco
+        <input name="banco" type="text" value="{{ cadastro_complementar.banco if cadastro_complementar else '' }}">
+      </label>
+
+      <label>
+        Tipo de conta
+        <select name="tipo_conta" data-apple-select>
+          <option {% if cadastro_complementar and cadastro_complementar.tipo_conta == 'Conta corrente' %}selected{% endif %}>Conta corrente</option>
+          <option {% if cadastro_complementar and cadastro_complementar.tipo_conta == 'Conta poupança' %}selected{% endif %}>Conta poupança</option>
+          <option {% if cadastro_complementar and cadastro_complementar.tipo_conta == 'Conta pagamento' %}selected{% endif %}>Conta pagamento</option>
+        </select>
+      </label>
+
+      <input type="hidden" name="telefone" value="{{ cadastro_complementar.telefone if cadastro_complementar else '' }}">
+      <input type="hidden" name="forma_pagamento" value="{{ cadastro_complementar.forma_pagamento if cadastro_complementar else '' }}">
+      <input type="hidden" name="apelido_pagamento" value="{{ cadastro_complementar.apelido_pagamento if cadastro_complementar else '' }}">
+    </div>
+
+    <div class="specialist-modal-actions">
+      <button type="button" class="specialist-modal-secondary" data-close-specialist-modal>Cancelar</button>
+      <button type="submit" class="specialist-modal-primary">Salvar dados</button>
+    </div>
+  </form>
+</div>
+
+{% endblock %}
+{% block specialist_subtitle %}
+Consulte os dados usados para simular o repasse dos seus atendimentos.
+
+<div class="specialist-modal-backdrop" data-specialist-modal="editar-recebimento">
+  <form class="specialist-modal" action="/cadastro-complementar" method="POST">
+    <div class="specialist-modal-header">
+      <div>
+        <h2>Editar recebimento</h2>
+        <p>Atualize os dados usados para simular o repasse dos atendimentos.</p>
+      </div>
+      <button type="button" class="specialist-modal-close" data-close-specialist-modal>×</button>
+    </div>
+
+    <div class="specialist-modal-form">
+      <label>
+        CPF ou CNPJ
+        <input type="text" value="{{ cadastro_complementar.cpf_cnpj if cadastro_complementar else '' }}" disabled>
+        <input type="hidden" name="cpf_cnpj" value="{{ cadastro_complementar.cpf_cnpj if cadastro_complementar else '' }}">
+      </label>
+
+      <label>
+        Chave PIX
+        <input name="chave_pix" type="text" value="{{ cadastro_complementar.chave_pix if cadastro_complementar else '' }}">
+      </label>
+
+      <label>
+        Banco
+        <input name="banco" type="text" value="{{ cadastro_complementar.banco if cadastro_complementar else '' }}">
+      </label>
+
+      <label>
+        Tipo de conta
+        <select name="tipo_conta" data-apple-select>
+          <option {% if cadastro_complementar and cadastro_complementar.tipo_conta == 'Conta corrente' %}selected{% endif %}>Conta corrente</option>
+          <option {% if cadastro_complementar and cadastro_complementar.tipo_conta == 'Conta poupança' %}selected{% endif %}>Conta poupança</option>
+          <option {% if cadastro_complementar and cadastro_complementar.tipo_conta == 'Conta pagamento' %}selected{% endif %}>Conta pagamento</option>
+        </select>
+      </label>
+
+      <input type="hidden" name="telefone" value="{{ cadastro_complementar.telefone if cadastro_complementar else '' }}">
+      <input type="hidden" name="forma_pagamento" value="{{ cadastro_complementar.forma_pagamento if cadastro_complementar else '' }}">
+      <input type="hidden" name="apelido_pagamento" value="{{ cadastro_complementar.apelido_pagamento if cadastro_complementar else '' }}">
+    </div>
+
+    <div class="specialist-modal-actions">
+      <button type="button" class="specialist-modal-secondary" data-close-specialist-modal>Cancelar</button>
+      <button type="submit" class="specialist-modal-primary">Salvar dados</button>
+    </div>
+  </form>
+</div>
+
+{% endblock %}
+
+{% block specialist_content %}
+<section class="apple-panel">
+  <div class="section-header">
+    <div>
+      <h2>Dados de recebimento</h2>
+      <p>CPF/CNPJ fica bloqueado após o primeiro cadastro.</p>
+    </div>
+    <a class="small-link" href="#" data-open-specialist-modal="editar-recebimento">Editar dados</a>
+  </div>
+
+  {% if cadastro_complementar %}
+    <div class="data-list">
+      <div>
+        <span>CPF/CNPJ</span>
+        <strong>{{ cadastro_complementar.cpf_cnpj }}</strong>
+      </div>
+      <div>
+        <span>Chave PIX</span>
+        <strong>{{ cadastro_complementar.chave_pix or "Não informado" }}</strong>
+      </div>
+      <div>
+        <span>Banco</span>
+        <strong>{{ cadastro_complementar.banco or "Não informado" }}</strong>
+      </div>
+      <div>
+        <span>Tipo de conta</span>
+        <strong>{{ cadastro_complementar.tipo_conta or "Não informado" }}</strong>
+      </div>
+    </div>
+  {% else %}
+    <p class="empty-state">Dados de recebimento pendentes.</p>
+  {% endif %}
+</section>
+
+<div class="specialist-modal-backdrop" data-specialist-modal="editar-recebimento">
+  <form class="specialist-modal" action="/cadastro-complementar" method="POST">
+    <div class="specialist-modal-header">
+      <div>
+        <h2>Editar recebimento</h2>
+        <p>Atualize os dados usados para simular o repasse dos atendimentos.</p>
+      </div>
+      <button type="button" class="specialist-modal-close" data-close-specialist-modal>×</button>
+    </div>
+
+    <div class="specialist-modal-form">
+      <label>
+        CPF ou CNPJ
+        <input type="text" value="{{ cadastro_complementar.cpf_cnpj if cadastro_complementar else '' }}" disabled>
+        <input type="hidden" name="cpf_cnpj" value="{{ cadastro_complementar.cpf_cnpj if cadastro_complementar else '' }}">
+      </label>
+
+      <label>
+        Chave PIX
+        <input name="chave_pix" type="text" value="{{ cadastro_complementar.chave_pix if cadastro_complementar else '' }}">
+      </label>
+
+      <label>
+        Banco
+        <input name="banco" type="text" value="{{ cadastro_complementar.banco if cadastro_complementar else '' }}">
+      </label>
+
+      <label>
+        Tipo de conta
+        <select name="tipo_conta" data-apple-select>
+          <option {% if cadastro_complementar and cadastro_complementar.tipo_conta == 'Conta corrente' %}selected{% endif %}>Conta corrente</option>
+          <option {% if cadastro_complementar and cadastro_complementar.tipo_conta == 'Conta poupança' %}selected{% endif %}>Conta poupança</option>
+          <option {% if cadastro_complementar and cadastro_complementar.tipo_conta == 'Conta pagamento' %}selected{% endif %}>Conta pagamento</option>
+        </select>
+      </label>
+
+      <input type="hidden" name="telefone" value="{{ cadastro_complementar.telefone if cadastro_complementar else '' }}">
+      <input type="hidden" name="forma_pagamento" value="{{ cadastro_complementar.forma_pagamento if cadastro_complementar else '' }}">
+      <input type="hidden" name="apelido_pagamento" value="{{ cadastro_complementar.apelido_pagamento if cadastro_complementar else '' }}">
+    </div>
+
+    <div class="specialist-modal-actions">
+      <button type="button" class="specialist-modal-secondary" data-close-specialist-modal>Cancelar</button>
+      <button type="submit" class="specialist-modal-primary">Salvar dados</button>
+    </div>
+  </form>
+</div>
+
+{% endblock %}

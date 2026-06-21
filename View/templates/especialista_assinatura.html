@@ -1,0 +1,320 @@
+{% extends "especialista_base.html" %}
+
+{% block specialist_title %}Minha assinatura
+<div class="specialist-modal-backdrop" data-specialist-modal="gerenciar-plano">
+  <div class="specialist-modal">
+    <div class="specialist-modal-header">
+      <div>
+        <h2>Gerenciar plano</h2>
+        <p>Veja seu plano atual ou solicite uma mudança de assinatura.</p>
+      </div>
+      <button type="button" class="specialist-modal-close" data-close-specialist-modal>×</button>
+    </div>
+
+    <div class="apple-tabs">
+      <button type="button" class="apple-tab active" data-specialist-tab="plano-atual">Plano atual</button>
+      <button type="button" class="apple-tab" data-specialist-tab="mudar-plano">Solicitar mudança</button>
+    </div>
+
+    <div class="apple-tab-panel active" data-specialist-tab-panel="plano-atual">
+      <div class="plan-detail-card">
+        <span>Plano atual</span>
+        <strong>Free</strong>
+        <p>Você está no plano gratuito inicial para especialistas.</p>
+      </div>
+
+      <div class="profile-info-grid">
+        <div>
+          <span>Mensalidade</span>
+          <strong>R$ 0,00</strong>
+        </div>
+        <div>
+          <span>Ramos liberados</span>
+          <strong>1 ramo</strong>
+        </div>
+        <div>
+          <span>Cupons</span>
+          <strong>0 disponíveis</strong>
+        </div>
+      </div>
+
+      <p class="empty-state">
+        Para liberar mais ramos, cupons, mensagens completas e maior visibilidade,
+        solicite a mudança para um plano pago.
+      </p>
+    </div>
+
+    <div class="apple-tab-panel" data-specialist-tab-panel="mudar-plano">
+      <form class="specialist-modal-form" action="/especialista/assinatura/solicitar-plano" method="POST">
+        <input type="hidden" name="plano_desejado" id="plano_desejado" value="Profissional">
+
+        <div class="plan-admin-message">
+          <span>Planos disponíveis</span>
+          <strong>Escolha o plano ideal para sua operação</strong>
+          <p>Essas opções simulam os planos cadastrados pelo administrador da plataforma.</p>
+        </div>
+
+        <label>
+          Observação
+          <textarea name="observacao" placeholder="Ex: Quero liberar mais categorias para atendimento."></textarea>
+        </label>
+
+        <div class="plan-options-grid">
+          <button type="button" class="plan-option-card active" data-plan-option="Profissional">
+            <span>Profissional</span>
+            <strong>R$ 49,90/mês</strong>
+            <p>Até 3 ramos, mensagens liberadas e 3 cupons iniciais.</p>
+            <small>Indicado para começar a vender consultorias.</small>
+          </button>
+
+          <button type="button" class="plan-option-card" data-plan-option="Premium">
+            <span>Premium</span>
+            <strong>R$ 99,90/mês</strong>
+            <p>Até 10 ramos, mais visibilidade e recursos avançados.</p>
+            <small>Indicado para especialistas com mais áreas de atuação.</small>
+          </button>
+        </div>
+
+        <div class="specialist-modal-actions">
+          <button type="button" class="specialist-modal-secondary" data-close-specialist-modal>Cancelar</button>
+          <button type="submit" class="specialist-modal-primary">Solicitar plano</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+{% block specialist_subtitle %}
+Veja seu plano atual, valor mensal, ramos permitidos e status da assinatura.
+
+<div class="specialist-modal-backdrop" data-specialist-modal="gerenciar-plano">
+  <div class="specialist-modal">
+    <div class="specialist-modal-header">
+      <div>
+        <h2>Gerenciar plano</h2>
+        <p>Veja seu plano atual ou solicite uma mudança de assinatura.</p>
+      </div>
+      <button type="button" class="specialist-modal-close" data-close-specialist-modal>×</button>
+    </div>
+
+    <div class="apple-tabs">
+      <button type="button" class="apple-tab active" data-specialist-tab="plano-atual">Plano atual</button>
+      <button type="button" class="apple-tab" data-specialist-tab="mudar-plano">Solicitar mudança</button>
+    </div>
+
+    <div class="apple-tab-panel active" data-specialist-tab-panel="plano-atual">
+      <div class="plan-detail-card">
+        <span>Plano atual</span>
+        <strong>Free</strong>
+        <p>Você está no plano gratuito inicial para especialistas.</p>
+      </div>
+
+      <div class="profile-info-grid">
+        <div>
+          <span>Mensalidade</span>
+          <strong>R$ 0,00</strong>
+        </div>
+        <div>
+          <span>Ramos liberados</span>
+          <strong>1 ramo</strong>
+        </div>
+        <div>
+          <span>Cupons</span>
+          <strong>0 disponíveis</strong>
+        </div>
+      </div>
+
+      <p class="empty-state">
+        Para liberar mais ramos, cupons, mensagens completas e maior visibilidade,
+        solicite a mudança para um plano pago.
+      </p>
+    </div>
+
+    <div class="apple-tab-panel" data-specialist-tab-panel="mudar-plano">
+      <form class="specialist-modal-form" action="/especialista/assinatura/solicitar-plano" method="POST">
+        <input type="hidden" name="plano_desejado" id="plano_desejado" value="Profissional">
+
+        <div class="plan-admin-message">
+          <span>Planos disponíveis</span>
+          <strong>Escolha o plano ideal para sua operação</strong>
+          <p>Essas opções simulam os planos cadastrados pelo administrador da plataforma.</p>
+        </div>
+
+        <label>
+          Observação
+          <textarea name="observacao" placeholder="Ex: Quero liberar mais categorias para atendimento."></textarea>
+        </label>
+
+        <div class="plan-options-grid">
+          <button type="button" class="plan-option-card active" data-plan-option="Profissional">
+            <span>Profissional</span>
+            <strong>R$ 49,90/mês</strong>
+            <p>Até 3 ramos, mensagens liberadas e 3 cupons iniciais.</p>
+            <small>Indicado para começar a vender consultorias.</small>
+          </button>
+
+          <button type="button" class="plan-option-card" data-plan-option="Premium">
+            <span>Premium</span>
+            <strong>R$ 99,90/mês</strong>
+            <p>Até 10 ramos, mais visibilidade e recursos avançados.</p>
+            <small>Indicado para especialistas com mais áreas de atuação.</small>
+          </button>
+        </div>
+
+        <div class="specialist-modal-actions">
+          <button type="button" class="specialist-modal-secondary" data-close-specialist-modal>Cancelar</button>
+          <button type="submit" class="specialist-modal-primary">Solicitar plano</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block specialist_content %}
+<section class="apple-panel">
+  <div class="section-header">
+    <div>
+      <h2>Plano atual</h2>
+      <p>Plano contratado para utilizar o Tele Severino como especialista.</p>
+    </div>
+    <a class="small-link" href="#" data-open-specialist-modal="gerenciar-plano">Gerenciar plano</a>
+  </div>
+
+  <div class="subscription-card clean-card-grid">
+    <div>
+      <span>Plano</span>
+      <strong>Free</strong>
+      <p>Ideal para especialistas que querem atender online.</p>
+    </div>
+
+    <div>
+      <span>Valor</span>
+      <strong>R$ 0,00/mês</strong>
+      <p>Valor configurável pelo administrador.</p>
+    </div>
+
+    <div>
+      <span>Ramos permitidos</span>
+      <strong>1 ramo</strong>
+      <p>Você está usando o ramo inicial gratuito.</p>
+    </div>
+
+    <div>
+      <span>Status</span>
+      <strong class="positive-text">Plano gratuito</strong>
+      <p>Sem cobrança ativa no momento.</p>
+    </div>
+  </div>
+</section>
+
+<section class="apple-panel">
+  <div class="section-header">
+    <div>
+      <h2>Benefícios do plano</h2>
+      <p>Recursos liberados para seu perfil.</p>
+    </div>
+  </div>
+
+  <div class="profile-info-grid">
+    <div>
+      <span>Cupons iniciais</span>
+      <strong>0 cupons</strong>
+    </div>
+    <div>
+      <span>Visibilidade</span>
+      <strong>Básica</strong>
+    </div>
+    <div>
+      <span>Mensagens</span>
+      <strong>Limitado</strong>
+    </div>
+  </div>
+</section>
+
+<div class="specialist-modal-backdrop" data-specialist-modal="gerenciar-plano">
+  <div class="specialist-modal">
+    <div class="specialist-modal-header">
+      <div>
+        <h2>Gerenciar plano</h2>
+        <p>Veja seu plano atual ou solicite uma mudança de assinatura.</p>
+      </div>
+      <button type="button" class="specialist-modal-close" data-close-specialist-modal>×</button>
+    </div>
+
+    <div class="apple-tabs">
+      <button type="button" class="apple-tab active" data-specialist-tab="plano-atual">Plano atual</button>
+      <button type="button" class="apple-tab" data-specialist-tab="mudar-plano">Solicitar mudança</button>
+    </div>
+
+    <div class="apple-tab-panel active" data-specialist-tab-panel="plano-atual">
+      <div class="plan-detail-card">
+        <span>Plano atual</span>
+        <strong>Free</strong>
+        <p>Você está no plano gratuito inicial para especialistas.</p>
+      </div>
+
+      <div class="profile-info-grid">
+        <div>
+          <span>Mensalidade</span>
+          <strong>R$ 0,00</strong>
+        </div>
+        <div>
+          <span>Ramos liberados</span>
+          <strong>1 ramo</strong>
+        </div>
+        <div>
+          <span>Cupons</span>
+          <strong>0 disponíveis</strong>
+        </div>
+      </div>
+
+      <p class="empty-state">
+        Para liberar mais ramos, cupons, mensagens completas e maior visibilidade,
+        solicite a mudança para um plano pago.
+      </p>
+    </div>
+
+    <div class="apple-tab-panel" data-specialist-tab-panel="mudar-plano">
+      <form class="specialist-modal-form" action="/especialista/assinatura/solicitar-plano" method="POST">
+        <input type="hidden" name="plano_desejado" id="plano_desejado" value="Profissional">
+
+        <div class="plan-admin-message">
+          <span>Planos disponíveis</span>
+          <strong>Escolha o plano ideal para sua operação</strong>
+          <p>Essas opções simulam os planos cadastrados pelo administrador da plataforma.</p>
+        </div>
+
+        <label>
+          Observação
+          <textarea name="observacao" placeholder="Ex: Quero liberar mais categorias para atendimento."></textarea>
+        </label>
+
+        <div class="plan-options-grid">
+          <button type="button" class="plan-option-card active" data-plan-option="Profissional">
+            <span>Profissional</span>
+            <strong>R$ 49,90/mês</strong>
+            <p>Até 3 ramos, mensagens liberadas e 3 cupons iniciais.</p>
+            <small>Indicado para começar a vender consultorias.</small>
+          </button>
+
+          <button type="button" class="plan-option-card" data-plan-option="Premium">
+            <span>Premium</span>
+            <strong>R$ 99,90/mês</strong>
+            <p>Até 10 ramos, mais visibilidade e recursos avançados.</p>
+            <small>Indicado para especialistas com mais áreas de atuação.</small>
+          </button>
+        </div>
+
+        <div class="specialist-modal-actions">
+          <button type="button" class="specialist-modal-secondary" data-close-specialist-modal>Cancelar</button>
+          <button type="submit" class="specialist-modal-primary">Solicitar plano</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

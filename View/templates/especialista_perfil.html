@@ -1,0 +1,274 @@
+{% extends "especialista_base.html" %}
+{% block specialist_title %}Perfil público{% endblock %}
+{% block specialist_subtitle %}Configure como os usuários comuns encontram e avaliam seu atendimento.{% endblock %}
+
+{% block specialist_content %}
+
+<section class="apple-panel perfil-vitrine-unificada perfil-vitrine-clean">
+  <div class="section-header">
+    <div>
+      <h2>Vitrine profissional</h2>
+      <p>Veja como seu perfil aparece para o cliente e mantenha as informações principais atualizadas.</p>
+    </div>
+    <a class="small-link" href="#" data-open-specialist-modal="editar-perfil">Editar informações</a>
+  </div>
+
+  <div class="perfil-clean-grid">
+    <div class="perfil-preview-area">
+      <span class="perfil-area-label">Prévia para o cliente</span>
+
+      <div class="perfil-preview-main">
+        <button type="button" class="perfil-vitrine-avatar profile-photo-modal-open" data-open-profile-photo-modal>
+          {% if especialista and especialista.foto_perfil %}
+            <img src="{{ especialista.foto_perfil }}" alt="Foto de {{ especialista.nome }}">
+          {% else %}
+            <span>{{ especialista.nome[:1] if especialista and especialista.nome else "E" }}</span>
+          {% endif %}
+        </button>
+
+        <div class="perfil-vitrine-identidade">
+          <h3>{{ especialista.nome if especialista else "Especialista" }}</h3>
+          <p class="perfil-category-line">
+            {{ especialista.categoria if especialista and especialista.categoria else "Casa e Reparos" }}
+            •
+            {{ especialista.especialidade if especialista and especialista.especialidade else "Atendimento online" }}
+          </p>
+          <p class="perfil-description-line">
+            {{ especialista.descricao if especialista and especialista.descricao else "Adicione uma descrição clara sobre seu atendimento." }}
+          </p>
+        </div>
+      </div>
+
+      <div class="perfil-vitrine-metricas">
+        <div>
+          <span>Tempo médio</span>
+          <strong>{{ especialista.tempo_medio if especialista and especialista.tempo_medio else "6 min" }}</strong>
+        </div>
+
+        <div>
+          <span>Indicação</span>
+          <strong>{{ especialista.indicacao if especialista and especialista.indicacao else "Boa para dúvidas rápidas" }}</strong>
+        </div>
+
+        <div>
+          <span>Valor por minuto</span>
+          <strong>R$ {{ "%.2f"|format(especialista.valor_minuto if especialista else 0)|replace(".", ",") }}</strong>
+        </div>
+      </div>
+
+      <div class="perfil-vitrine-tags">
+        {% if especialista and especialista.tags %}
+          {% for tag in especialista.tags.split(",") %}
+            <span>{{ tag.strip() }}</span>
+          {% endfor %}
+        {% else %}
+          <span>Atendimento online</span>
+          <span>Consultoria por minuto</span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="apple-panel profile-plan-panel">
+  <div class="section-header">
+    <div>
+      <h2>Plano e visibilidade</h2>
+      <p>Controle como seu perfil aparece para os clientes e quais recursos estão liberados.</p>
+    </div>
+    <a class="small-link" href="/especialista/assinatura">Gerenciar plano</a>
+  </div>
+
+  <div class="profile-info-grid">
+    <div>
+      <span>Plano atual</span>
+      <strong>Free</strong>
+      <p>Plano inicial para testar a plataforma.</p>
+    </div>
+
+    <div>
+      <span>Ramos liberados</span>
+      <strong>1 de 1 usado</strong>
+      <p>Planos pagos liberam mais ramos de atuação.</p>
+    </div>
+
+    <div>
+      <span>Cupons</span>
+      <strong>0 disponíveis</strong>
+      <p>Cupons ficam disponíveis nos planos pagos.</p>
+    </div>
+
+    <div>
+      <span>Visibilidade</span>
+      <strong>Básica</strong>
+      <p>Planos superiores podem aumentar o destaque do perfil.</p>
+    </div>
+  </div>
+</section>
+
+<div class="specialist-modal-backdrop" data-specialist-modal="editar-perfil">
+  <form class="specialist-modal" action="/especialista/perfil/dados" method="POST" enctype="multipart/form-data">
+    <div class="specialist-modal-header">
+      <div>
+        <h2>Editar perfil</h2>
+        <p>Atualize todas as informações que aparecem para o usuário comum.</p>
+      </div>
+      <button type="button" class="specialist-modal-close" data-close-specialist-modal>×</button>
+    </div>
+
+    <div class="specialist-modal-form specialist-profile-edit-grid">
+      <label>
+        Nome público
+        <input name="nome" type="text" value="{{ especialista.nome if especialista else 'Especialista Navegador' }}" required>
+      </label>
+
+      <label>
+        Categoria
+        <input name="categoria" type="text" value="{{ especialista.categoria if especialista and especialista.categoria else 'Casa e Reparos' }}">
+      </label>
+
+      <label>
+        Especialidade / ramo
+        <input name="especialidade" type="text" value="{{ especialista.especialidade if especialista else 'Elétrica Residencial' }}" required>
+      </label>
+
+      <label>
+        Valor por minuto
+        <input name="valor_minuto" type="text" value="{{ "%.2f"|format(especialista.valor_minuto if especialista else 0)|replace(".", ",") }}" required>
+      </label>
+
+      <label>
+        Tempo médio de resolução
+        <input name="tempo_medio" type="text" value="{{ especialista.tempo_medio if especialista and especialista.tempo_medio else '6 min' }}">
+      </label>
+
+      <label>
+        Indicação
+        <input name="indicacao" type="text" value="{{ especialista.indicacao if especialista and especialista.indicacao else 'Boa para dúvidas rápidas' }}">
+      </label>
+
+      <label class="profile-description-field">
+        Descrição pública
+        <textarea name="descricao" placeholder="Descreva como você ajuda os clientes.">{{ especialista.descricao if especialista and especialista.descricao else "Atendo dúvidas e orientações na área de elétrica residencial, com foco em suporte online rápido e explicação simples." }}</textarea>
+      </label>
+
+      <div class="profile-tags-field">
+        <label>Tags de busca</label>
+
+        <div class="tag-editor" data-tag-editor>
+          <div class="tag-editor-list" data-tag-list></div>
+
+          <div class="tag-editor-input-row">
+            <input type="text" data-tag-input placeholder="Digite uma tag e pressione Enter">
+            <button type="button" data-add-tag>Adicionar</button>
+          </div>
+
+          <input type="hidden" name="tags" data-tags-hidden value="{{ especialista.tags if especialista and especialista.tags else 'Elétrica Residencial, Chuveiro, Tomada, Disjuntor, Atendimento online, Consultoria por minuto' }}">
+        </div>
+
+        <small class="tag-helper">Use tags como palavras-chave para o cliente encontrar seu atendimento.</small>
+      </div>
+    </div>
+
+    <div class="specialist-modal-actions">
+      <button type="button" class="specialist-modal-secondary" data-close-specialist-modal>Cancelar</button>
+      <button type="submit" class="specialist-modal-primary">Salvar alterações</button>
+    </div>
+  </form>
+</div>
+
+
+
+  </div>
+</div>
+
+
+
+<div class="profile-photo-modal-backdrop" data-profile-photo-modal>
+  <div class="profile-photo-modal tele-photo-modal">
+    <div class="profile-photo-modal-header">
+      <div>
+        <h2 data-photo-modal-title>Foto do perfil</h2>
+        <p data-photo-modal-subtitle>Veja a foto atual ou envie uma nova imagem para o perfil público.</p>
+      </div>
+      <button type="button" data-close-profile-photo-modal>×</button>
+    </div>
+
+    <div class="tele-photo-modal-content">
+      <div class="tele-photo-panel active" data-photo-panel="view">
+        <div class="profile-photo-modal-image">
+          {% if especialista and especialista.foto_perfil %}
+            <img src="{{ especialista.foto_perfil }}" alt="Foto de {{ especialista.nome }}">
+          {% else %}
+            <span>{{ especialista.nome[:1] if especialista and especialista.nome else "E" }}</span>
+          {% endif %}
+        </div>
+
+        <div class="tele-photo-actions">
+          <button type="button" class="tele-photo-action" data-photo-panel-button="update">Atualizar</button>
+          <button type="button" class="tele-photo-action danger" data-photo-panel-button="delete">Excluir</button>
+        </div>
+      </div>
+
+      <div class="tele-photo-panel" data-photo-panel="update">
+        <div class="tele-photo-update-card tele-photo-crop-card">
+          <div class="tele-photo-crop-preview" data-photo-crop-preview>
+            {% if especialista and especialista.foto_perfil %}
+              <img src="{{ especialista.foto_perfil }}" alt="Foto de {{ especialista.nome }}" data-photo-crop-image>
+            {% else %}
+              <span>{{ especialista.nome[:1] if especialista and especialista.nome else "E" }}</span>
+            {% endif %}
+          </div>
+
+          <div>
+            <h3>Atualizar foto</h3>
+            <p>Escolha uma imagem, ajuste o enquadramento e salve a nova foto.</p>
+
+            <form action="/especialista/perfil/foto" method="POST" enctype="multipart/form-data" data-photo-crop-form>
+              <label class="tele-photo-upload-button">
+                Escolher imagem
+                <input type="file" name="foto_perfil" accept="image/jpeg,image/png,image/webp" data-photo-crop-input>
+              </label>
+
+              <div class="tele-photo-crop-controls" data-photo-crop-controls>
+                <label class="tele-photo-range-label">
+                  <span>Zoom</span>
+                  <div class="tele-photo-range-control">
+                    <button type="button" data-photo-range-step="zoom" data-step="-0.05">−</button>
+                    <input type="range" min="1" max="2.4" step="0.05" value="1" data-photo-zoom>
+                    <button type="button" data-photo-range-step="zoom" data-step="0.05">+</button>
+                  </div>
+                </label>
+
+                <label class="tele-photo-range-label">
+                  <span>Vertical</span>
+                  <div class="tele-photo-range-control">
+                    <button type="button" data-photo-range-step="vertical" data-step="-5">−</button>
+                    <input type="range" min="0" max="0" step="1" value="0" data-photo-position-y>
+                    <button type="button" data-photo-range-step="vertical" data-step="5">+</button>
+                  </div>
+                </label>
+
+                <button type="submit" class="tele-photo-primary-button" data-photo-save-crop>Salvar foto ajustada</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <button type="button" class="tele-photo-secondary" data-photo-panel-button="view">Voltar</button>
+      </div>
+
+      <div class="tele-photo-panel" data-photo-panel="delete">
+        <div class="tele-photo-confirm-card">
+          <h3>Excluir foto?</h3>
+          <p>A foto atual deixará de aparecer para os clientes. Você poderá adicionar outra imagem depois.</p>
+
+          <div class="tele-photo-confirm-actions">
+            <button type="button" class="tele-photo-secondary" data-photo-panel-button="view">Cancelar</button>
+            <button type="button" class="tele-photo-danger-button">Excluir foto</button>
+          </div>
+        </div>
+      </div></div>
+      </div>
+    </div>
+{% endblock %}

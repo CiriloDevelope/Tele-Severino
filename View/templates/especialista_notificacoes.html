@@ -1,0 +1,32 @@
+{% extends "especialista_base.html" %}
+
+{% block specialist_title %}Notificações{% endblock %}
+{% block specialist_subtitle %}
+Acompanhe chamadas, mensagens, agenda, assinatura e oportunidades.
+{% endblock %}
+
+{% block specialist_content %}
+<section class="apple-panel">
+  <div class="section-header">
+    <div>
+      <h2>Últimas atividades</h2>
+      <p>Eventos importantes do seu perfil.</p>
+    </div>
+  </div>
+
+  <div class="notification-list">
+    <div>
+      <strong>Novo especialista</strong>
+      <p>Complete o perfil para ganhar visibilidade.</p>
+    </div>
+    <div>
+      <strong>Cupom disponível</strong>
+      <p>Você ainda tem 3 cupons para atrair clientes.</p>
+    </div>
+    <div>
+      <strong>Plano ativo</strong>
+      <p>Sua assinatura profissional está ativa.</p>
+    </div>
+  </div>
+</section>
+{% endblock %}
