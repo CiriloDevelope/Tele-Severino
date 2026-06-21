@@ -1,6 +1,10 @@
 {% macro avatar(person, size='md') %}
   <div class="avatar {{ person.avatar_class }} avatar-{{ size }}">
-    <span>{{ person.initials }}</span>
+    {% if person.foto_perfil %}
+      <img class="avatar-img" src="{{ person.foto_perfil }}" alt="{{ person.name }}">
+    {% else %}
+      {{ person.initials }}
+    {% endif %}
   </div>
 {% endmacro %}
 

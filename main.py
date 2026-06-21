@@ -110,6 +110,100 @@ def format_price(value):
         return "0,00"
 
 
+
+def normalizar_texto_categoria(valor):
+    import unicodedata
+
+    texto = str(valor or "").strip().lower()
+    texto = unicodedata.normalize("NFKD", texto)
+    texto = "".join(char for char in texto if not unicodedata.combining(char))
+
+    for antigo, novo in {
+        " ": "-",
+        "_": "-",
+        "/": "-",
+        "\\": "-",
+        ",": "-",
+        ".": "",
+    }.items():
+        texto = texto.replace(antigo, novo)
+
+    while "--" in texto:
+        texto = texto.replace("--", "-")
+
+    return texto.strip("-")
+
+
+def separar_tags(tags, especialidade):
+    if tags:
+        return [tag.strip() for tag in str(tags).split(",") if tag.strip()]
+
+    return [especialidade, "Atendimento online", "Consultoria por minuto"]
+
+
+def identificar_categoria_especialista(row):
+    categoria_original = normalizar_texto_categoria(row.get("categoria"))
+
+    categorias_conhecidas = {
+        "casa": "casa",
+        "casa-e-reparos": "casa",
+        "tecnologia": "tecnologia",
+        "culinaria": "culinaria",
+        "estudos": "estudos",
+    }
+
+    if categoria_original in categorias_conhecidas:
+        return categorias_conhecidas[categoria_original]
+
+    especialidade = normalizar_texto_categoria(row.get("especialidade"))
+    descricao = normalizar_texto_categoria(row.get("descricao"))
+    tags = normalizar_texto_categoria(row.get("tags"))
+
+    texto_geral = f"{categoria_original} {especialidade} {descricao} {tags}"
+
+    if any(termo in texto_geral for termo in [
+        "culinaria", "cozinha", "receita", "bolo", "comida", "gastronomia"
+    ]):
+        return "culinaria"
+
+    if any(termo in texto_geral for termo in [
+        "estudos", "faculdade", "escola", "aula", "mentoria", "trabalho",
+        "prova", "academico", "organizacao-de-estudos"
+    ]):
+        return "estudos"
+
+    if any(termo in texto_geral for termo in [
+        "tecnologia", "informatica", "computador", "celular", "internet",
+        "software", "programacao", "front-end", "frontend", "back-end",
+        "backend", "sistema", "automacao", "automatizacao"
+    ]):
+        return "tecnologia"
+
+    if any(termo in texto_geral for termo in [
+        "eletrica", "eletricista", "tomada", "chuveiro", "disjuntor",
+        "casa", "reparo", "reparos", "manutencao", "residencial",
+        "domestica", "consultoria-domestica"
+    ]):
+        return "casa"
+
+    return "casa"
+
+
+def obter_nome_categoria(slug):
+    for categoria in categories:
+        if categoria["slug"] == slug:
+            return categoria["name"]
+
+    nomes = {
+        "casa": "Casa e Reparos",
+        "tecnologia": "Tecnologia",
+        "culinaria": "Culinária",
+        "estudos": "Estudos",
+    }
+
+    return nomes.get(slug, "Especialistas")
+
+
 def get_db_specialists():
     conexao = None
     try:
@@ -144,17 +238,23 @@ def get_db_specialists():
             nome = row["nome"]
             initials = "".join([parte[0] for parte in nome.split()[:2]]).upper()
 
+            categoria_slug = identificar_categoria_especialista(row)
+            descricao = row.get("descricao") or f"{nome} atende na área de {row['especialidade']} pelo Tele Severino."
+
             db_specialists.append({
                 "id": row["id_usuario"],
                 "name": nome,
                 "initials": initials,
                 "role": row["especialidade"],
                 "price": format_price(row["valor_minuto"]),
-                "rating": "5.0",
+                "rating": "0.0",
                 "reviews": 0,
                 "avatar_class": "avatar-orange",
-                "about": f"{nome} atende na área de {row['especialidade']} pelo Tele Severino.",
-                "tags": [row["especialidade"], "Atendimento online", "Consultoria por minuto"]
+                "foto_perfil": row.get("foto_perfil"),
+                "about": descricao,
+                "category": row.get("categoria") or obter_nome_categoria(categoria_slug),
+                "category_slug": categoria_slug,
+                "tags": separar_tags(row.get("tags"), row["especialidade"])
             })
 
         return db_specialists
@@ -379,6 +479,34 @@ def salvar_cadastro_complementar(
             conexao.close()
 
 
+
+def exigir_cliente(request: Request):
+    usuario = exigir_login(request)
+
+    if isinstance(usuario, RedirectResponse):
+        return usuario
+
+    if usuario["tipo"] != "CLIENTE":
+        return RedirectResponse(
+            f"/especialista/dashboard?usuario_id={usuario['id']}",
+            status_code=303
+        )
+
+    return usuario
+
+
+def exigir_especialista(request: Request):
+    usuario = exigir_login(request)
+
+    if isinstance(usuario, RedirectResponse):
+        return usuario
+
+    if usuario["tipo"] != "ESPECIALISTA":
+        return RedirectResponse("/home", status_code=303)
+
+    return usuario
+
+
 @app.get("/", name="splash")
 def splash(request: Request):
     return templates.TemplateResponse(
@@ -553,7 +681,7 @@ def login_web(
 
 @app.get("/especialista/dashboard", name="specialist.dashboard")
 def especialista_dashboard(request: Request, usuario_id: int = 0):
-    usuario = exigir_login(request)
+    usuario = exigir_especialista(request)
 
     if isinstance(usuario, RedirectResponse):
         return usuario
@@ -629,7 +757,7 @@ def logout():
 
 @app.get("/home", name="home")
 def home(request: Request):
-    usuario = exigir_login(request)
+    usuario = exigir_cliente(request)
 
     if isinstance(usuario, RedirectResponse):
         return usuario
@@ -652,20 +780,49 @@ def home(request: Request):
 
 
 @app.get("/especialistas", name="specialist.especialistas")
-def especialistas_page(request: Request):
+def especialistas_page(request: Request, categoria: str = ""):
+    usuario = exigir_cliente(request)
+
+    if isinstance(usuario, RedirectResponse):
+        return usuario
+
+    todos_especialistas = get_db_specialists()
+    categoria_selecionada = normalizar_texto_categoria(categoria)
+
+    if categoria_selecionada:
+        specialists_filtrados = [
+            specialist for specialist in todos_especialistas
+            if specialist.get("category_slug") == categoria_selecionada
+        ]
+
+        nome_categoria = obter_nome_categoria(categoria_selecionada)
+        title = nome_categoria
+        subtitle = f"Especialistas disponíveis em {nome_categoria}"
+    else:
+        specialists_filtrados = todos_especialistas
+        title = "Especialistas"
+        subtitle = "Escolha um profissional disponível"
+
     return templates.TemplateResponse(
         "especialistas.html",
         {
             "request": request,
-            "title": "Especialistas",
-            "subtitle": "Escolha um profissional disponível",
-            "specialists": get_db_specialists()
+            "title": title,
+            "subtitle": subtitle,
+            "specialists": specialists_filtrados,
+            "categories": categories,
+            "categoria_selecionada": categoria_selecionada
         }
     )
 
 
 @app.get("/perfil/{specialist_id}", name="specialist.especialista")
 def perfil(request: Request, specialist_id: int):
+    usuario = exigir_cliente(request)
+
+    if isinstance(usuario, RedirectResponse):
+        return usuario
+
     return templates.TemplateResponse(
         "perfil.html",
         {
@@ -677,6 +834,11 @@ def perfil(request: Request, specialist_id: int):
 
 @app.get("/chamada/{specialist_id}", name="call.chamada")
 def chamada(request: Request, specialist_id: int):
+    usuario = exigir_cliente(request)
+
+    if isinstance(usuario, RedirectResponse):
+        return usuario
+
     return templates.TemplateResponse(
         "chamada.html",
         {
@@ -688,6 +850,11 @@ def chamada(request: Request, specialist_id: int):
 
 @app.get("/pagamento/{specialist_id}", name="payment.pagamento")
 def pagamento(request: Request, specialist_id: int):
+    usuario = exigir_cliente(request)
+
+    if isinstance(usuario, RedirectResponse):
+        return usuario
+
     return templates.TemplateResponse(
         "pagamento.html",
         {
@@ -699,6 +866,11 @@ def pagamento(request: Request, specialist_id: int):
 
 @app.get("/avaliacao/{specialist_id}", name="review.avaliacao")
 def avaliacao(request: Request, specialist_id: int):
+    usuario = exigir_cliente(request)
+
+    if isinstance(usuario, RedirectResponse):
+        return usuario
+
     return templates.TemplateResponse(
         "avaliacao.html",
         {
@@ -709,7 +881,12 @@ def avaliacao(request: Request, specialist_id: int):
 
 
 @app.post("/avaliacao/{specialist_id}")
-def enviar_avaliacao(specialist_id: int):
+def enviar_avaliacao(request: Request, specialist_id: int):
+    usuario = exigir_cliente(request)
+
+    if isinstance(usuario, RedirectResponse):
+        return usuario
+
     return RedirectResponse("/home", status_code=303)
 
 
@@ -744,7 +921,7 @@ def especialista_assinatura(request: Request):
     )
 
 def render_especialista_page(request: Request, template_name: str, active_page: str):
-    usuario = exigir_login(request)
+    usuario = exigir_especialista(request)
 
     if isinstance(usuario, RedirectResponse):
         return usuario
@@ -861,7 +1038,7 @@ def salvar_foto_perfil_especialista(id_usuario: int, foto_perfil: str):
 
 @app.post("/especialista/perfil/foto")
 async def especialista_upload_foto(request: Request, foto_perfil: UploadFile = File(...)):
-    usuario = exigir_login(request)
+    usuario = exigir_especialista(request)
 
     if isinstance(usuario, RedirectResponse):
         return usuario
@@ -911,7 +1088,7 @@ def especialista_salvar_perfil_dados(
     tags: str = Form(""),
     valor_minuto: str = Form(...)
 ):
-    usuario = exigir_login(request)
+    usuario = exigir_especialista(request)
 
     if isinstance(usuario, RedirectResponse):
         return usuario

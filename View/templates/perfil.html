@@ -9,7 +9,16 @@
       {{ avatar(specialist, "xl") }}
       <h1>{{ specialist.name }}</h1>
       <p>{{ specialist.role }}</p>
-      <div class="rating center-rating">★ <strong>{{ specialist.rating }}</strong> <span>({{ specialist.reviews }} avaliações)</span></div>
+      {% if specialist.reviews and specialist.reviews > 0 %}
+        <div class="rating center-rating">
+          <strong>{{ specialist.rating }}</strong>
+          <span>({{ specialist.reviews }} avaliações)</span>
+        </div>
+      {% else %}
+        <div class="rating center-rating">
+          <span>Sem avaliações ainda</span>
+        </div>
+      {% endif %}
       <div class="profile-price">
         <strong>R$ {{ specialist.price }}</strong>
         <span>por minuto</span>
@@ -27,32 +36,30 @@
         {% endfor %}
       </div>
     </section>
-
     <section class="white-card reviews-card">
-      <div class="section-title-row">
+      <div class="reviews-header">
         <h2>Avaliações</h2>
-        <span>★ {{ specialist.rating }} ({{ specialist.reviews }})</span>
+        {% if specialist.reviews and specialist.reviews > 0 %}
+          <span>{{ specialist.rating }} ({{ specialist.reviews }})</span>
+        {% else %}
+          <span>0 avaliações</span>
+        {% endif %}
       </div>
 
-      <div class="review-item">
-        <div class="mini-avatar">P</div>
-        <div>
-          <strong>Pedro Santos</strong>
-          <div class="stars">★★★★★</div>
-          <p>Atendimento rápido e muito prestativo. Resolveu meu problema em minutos!</p>
+      {% if specialist.reviews and specialist.reviews > 0 %}
+        <article class="review-item">
+          <div class="review-avatar">A</div>
+          <div>
+            <strong>Cliente</strong>
+            <p>Avaliação registrada após atendimento.</p>
+          </div>
+        </article>
+      {% else %}
+        <div class="empty-state-card">
+          <strong>Sem avaliações ainda</strong>
+          <p>As avaliações aparecerão aqui após os atendimentos finalizados.</p>
         </div>
-        <small>10/05/2026</small>
-      </div>
-
-      <div class="review-item">
-        <div class="mini-avatar">M</div>
-        <div>
-          <strong>Mariana Costa</strong>
-          <div class="stars">★★★★★</div>
-          <p>Explicou tudo com muita clareza.</p>
-        </div>
-        <small>08/05/2026</small>
-      </div>
+      {% endif %}
     </section>
 
     <div class="bottom-action split-action">
