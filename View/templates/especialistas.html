@@ -15,7 +15,13 @@
           autocomplete="off"
         >
 
-        <button type="button" id="clearSpecialistSearch" class="clear-search-button">
+        <button
+          type="button"
+          id="clearSpecialistSearch"
+          class="clear-search-button"
+          data-clear-url="{{ url_for('specialist.especialistas') }}"
+          data-has-category="{% if categoria_selecionada %}true{% else %}false{% endif %}"
+        >
           Limpar
         </button>
       </div>
@@ -32,13 +38,24 @@
         </button>
       </div>
 
+      <div class="apple-filter-tabs status-filter-tabs" id="statusFilterTabs">
+        <button type="button" data-status="" class="active">
+          Todos
+        </button>
+        <button type="button" data-status="online">
+          Online
+        </button>
+        <button type="button" data-status="offline">
+          Offline
+        </button>
+      </div>
+
       <p class="search-result-counter" id="specialistResultCounter">
         Mostrando especialistas disponíveis
       </p>
     </section>
-
     {% if categories %}
-      <section class="client-category-filter">
+      <section class="client-category-filter touch-category-filter" aria-label="Filtro por categoria">
         <a
           href="{{ url_for('specialist.especialistas') }}"
           class="client-filter-chip {% if not categoria_selecionada %}active{% endif %}"
@@ -64,6 +81,7 @@
             class="client-specialist-card {% if not specialist.is_online %}offline{% endif %}"
             data-search="{{ specialist.name }} {{ specialist.role }} {{ specialist.about }} {{ specialist.category }} {{ specialist.tags|join(' ') }}"
             data-price="{{ specialist.price_value }}"
+            data-online="{% if specialist.is_online %}true{% else %}false{% endif %}"
           >
             <div class="client-specialist-avatar">
               {{ avatar(specialist) }}

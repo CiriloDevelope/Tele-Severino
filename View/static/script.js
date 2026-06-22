@@ -1034,6 +1034,14 @@ confirmScheduleButton?.addEventListener("click", () => {
   searchInput.addEventListener("input", applySearchAndSort);
 
   clearButton?.addEventListener("click", () => {
+    const hasCategory = clearButton.dataset.hasCategory === "true";
+    const clearUrl = clearButton.dataset.clearUrl || "/especialistas";
+
+    if (hasCategory) {
+      window.location.href = clearUrl;
+      return;
+    }
+
     searchInput.value = "";
 
     filterTabs?.querySelectorAll("button").forEach((button) => {
@@ -1057,3 +1065,126 @@ confirmScheduleButton?.addEventListener("click", () => {
 
   applySearchAndSort();
 })();
+
+
+// ONLINE OFFLINE FILTER EXTENSION
+document.addEventListener("DOMContentLoaded", () => {
+  const searchInput = document.getElementById("specialistLiveSearch");
+  const clearButton = document.getElementById("clearSpecialistSearch");
+  const priceTabs = document.getElementById("priceFilterTabs");
+  const statusTabs = document.getElementById("statusFilterTabs");
+  const counter = document.getElementById("specialistResultCounter");
+
+  const cards = Array.from(document.querySelectorAll(".client-specialist-card"));
+
+  if (!cards.length || !statusTabs) {
+    return;
+  }
+
+  const normalize = (value) => {
+    return String(value || "")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .trim();
+  };
+
+  const getActiveSort = () => {
+    return priceTabs?.querySelector("button.active")?.dataset.sort || "";
+  };
+
+  const getActiveStatus = () => {
+    return statusTabs?.querySelector("button.active")?.dataset.status || "";
+  };
+
+  const applyAllSpecialistFilters = () => {
+    const query = normalize(searchInput?.value || "");
+    const activeSort = getActiveSort();
+    const activeStatus = getActiveStatus();
+
+    let visibleCards = [];
+
+    cards.forEach((card) => {
+      const searchableText = normalize(card.dataset.search || card.textContent);
+      const isOnline = card.dataset.online === "true";
+
+      const matchesSearch = !query || searchableText.includes(query);
+      const matchesStatus =
+        !activeStatus ||
+        (activeStatus === "online" && isOnline) ||
+        (activeStatus === "offline" && !isOnline);
+
+      const shouldShow = matchesSearch && matchesStatus;
+
+      card.classList.toggle("is-hidden-by-search", !shouldShow);
+
+      if (shouldShow) {
+        visibleCards.push(card);
+      }
+    });
+
+    if (activeSort) {
+      visibleCards
+        .sort((a, b) => {
+          const priceA = Number(a.dataset.price || 0);
+          const priceB = Number(b.dataset.price || 0);
+
+          if (activeSort === "menor_preco") {
+            return priceA - priceB;
+          }
+
+          if (activeSort === "maior_preco") {
+            return priceB - priceA;
+          }
+
+          return 0;
+        })
+        .forEach((card) => {
+          card.parentElement.appendChild(card);
+        });
+    }
+
+    if (counter) {
+      if (!visibleCards.length) {
+        counter.textContent = "Nenhum especialista encontrado";
+      } else if (visibleCards.length === 1) {
+        counter.textContent = "Mostrando 1 especialista";
+      } else {
+        counter.textContent = `Mostrando ${visibleCards.length} especialistas`;
+      }
+    }
+  };
+
+  statusTabs.querySelectorAll("button").forEach((button) => {
+    button.addEventListener("click", () => {
+      statusTabs.querySelectorAll("button").forEach((item) => {
+        item.classList.remove("active");
+      });
+
+      button.classList.add("active");
+      applyAllSpecialistFilters();
+    });
+  });
+
+  searchInput?.addEventListener("input", () => {
+    requestAnimationFrame(applyAllSpecialistFilters);
+  });
+
+  priceTabs?.querySelectorAll("button").forEach((button) => {
+    button.addEventListener("click", () => {
+      requestAnimationFrame(applyAllSpecialistFilters);
+    });
+  });
+
+  clearButton?.addEventListener("click", () => {
+    requestAnimationFrame(() => {
+      statusTabs.querySelectorAll("button").forEach((button) => {
+        button.classList.toggle("active", button.dataset.status === "");
+      });
+
+      applyAllSpecialistFilters();
+    });
+  });
+
+  applyAllSpecialistFilters();
+});

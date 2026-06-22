@@ -621,6 +621,34 @@ def get_db_specialists():
             conexao.close()
 
 
+
+def montar_categorias_dinamicas(especialistas):
+    categorias_base = []
+    slugs_adicionados = set()
+
+    for categoria in categories:
+        categorias_base.append(categoria)
+        slugs_adicionados.add(categoria["slug"])
+
+    for especialista in especialistas:
+        slug = especialista.get("category_slug")
+        nome = especialista.get("category")
+
+        if not slug or slug in slugs_adicionados:
+            continue
+
+        categorias_base.append({
+            "name": nome or obter_nome_categoria(slug),
+            "slug": slug,
+            "icon": "•",
+            "tone": "blue"
+        })
+
+        slugs_adicionados.add(slug)
+
+    return categorias_base
+
+
 def get_specialist(specialist_id: int):
     db_specialists = get_db_specialists()
 
@@ -1125,7 +1153,7 @@ def home(request: Request):
         "home.html",
         {
             "request": request,
-            "categories": categories,
+            "categories": categorias_dinamicas,
             "specialists": get_db_specialists(),
             "cadastro_complementar": consultar_cadastro_complementar(int(usuario["id"]))
         }
@@ -1145,6 +1173,7 @@ def especialistas_page(
         return usuario
 
     todos_especialistas = get_db_specialists()
+    categorias_dinamicas = montar_categorias_dinamicas(todos_especialistas)
     categoria_selecionada = normalizar_texto_categoria(categoria)
     termo_busca = str(q or "").strip()
     termo_normalizado = normalizar_texto_categoria(termo_busca)
