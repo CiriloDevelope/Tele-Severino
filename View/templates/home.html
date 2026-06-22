@@ -51,10 +51,10 @@
 
       <div class="specialists-list">
         {% for specialist in specialists %}
-        <a href="{{ url_for('specialist.especialista', specialist_id=specialist.id) }}" class="specialist-card">
+        <a href="{{ url_for('specialist.especialista', specialist_id=specialist.id) }}" class="specialist-card {% if not specialist.is_online %}offline{% endif %}">
           <div class="specialist-avatar {{ specialist.avatar_class }}">
-            {% if specialist.photo %}
-              <img src="{{ specialist.photo }}" alt="Foto de {{ specialist.name }}">
+            {% if specialist.foto_perfil %}
+              <img src="{{ specialist.foto_perfil }}" alt="Foto de {{ specialist.name }}">
             {% elif specialist.initials %}
               {{ specialist.initials }}
             {% else %}
@@ -65,6 +65,10 @@
           <div class="specialist-info">
             <strong>{{ specialist.name }}</strong>
             <span>{{ specialist.role }}</span>
+
+            <small class="home-status-pill {% if specialist.is_online %}online{% else %}offline{% endif %}">
+              {{ specialist.status_label }}
+            </small>
           </div>
 
           <div class="specialist-price">

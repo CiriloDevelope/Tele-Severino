@@ -1,3 +1,5 @@
+from datetime import date
+import calendar
 import uuid
 from pathlib import Path
 
@@ -70,8 +72,8 @@ specialists = [
         "initials": "BO",
         "role": "Consultora doméstica",
         "price": "2,50",
-        "rating": "4.9",
-        "reviews": 128,
+        "rating": "0.0",
+        "reviews": 0,
         "avatar_class": "avatar-orange",
         "about": "Ajuda com organização residencial, rotina doméstica e pequenas dúvidas do dia a dia.",
         "tags": ["Organização", "Casa", "Atendimento rápido"]
@@ -82,8 +84,8 @@ specialists = [
         "initials": "CS",
         "role": "Técnico de informática",
         "price": "3,00",
-        "rating": "4.8",
-        "reviews": 97,
+        "rating": "0.0",
+        "reviews": 0,
         "avatar_class": "avatar-blue",
         "about": "Suporte rápido para computador, celular, internet e configurações básicas.",
         "tags": ["Informática", "Celular", "Internet"]
@@ -94,8 +96,8 @@ specialists = [
         "initials": "AS",
         "role": "Mentora de estudos",
         "price": "2,00",
-        "rating": "5.0",
-        "reviews": 75,
+        "rating": "0.0",
+        "reviews": 0,
         "avatar_class": "avatar-purple",
         "about": "Ajuda estudantes a organizarem tarefas, trabalhos e rotina de estudos.",
         "tags": ["Estudos", "Organização", "Faculdade"]
@@ -206,6 +208,272 @@ def obter_nome_categoria(slug):
 
 
 
+
+def garantir_tabela_avaliacoes():
+    conexao = None
+    try:
+        conexao = conectar_banco()
+        cursor = conexao.cursor(dictionary=True)
+
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS avaliacoes (
+                id_avaliacao INT AUTO_INCREMENT PRIMARY KEY,
+                id_consultoria INT NULL,
+                id_cliente INT NULL,
+                id_especialista INT NULL,
+                nota INT NULL,
+                comentario TEXT,
+                data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+
+        cursor.execute("SHOW COLUMNS FROM avaliacoes")
+        colunas = {row["Field"] for row in cursor.fetchall()}
+
+        if "id_cliente" not in colunas:
+            cursor.execute("ALTER TABLE avaliacoes ADD COLUMN id_cliente INT NULL DEFAULT NULL")
+
+        if "id_especialista" not in colunas:
+            cursor.execute("ALTER TABLE avaliacoes ADD COLUMN id_especialista INT NULL DEFAULT NULL")
+
+        if "data_criacao" not in colunas:
+            cursor.execute("ALTER TABLE avaliacoes ADD COLUMN data_criacao TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP")
+
+        if "id_consultoria" in colunas:
+            cursor.execute("ALTER TABLE avaliacoes MODIFY COLUMN id_consultoria INT NULL DEFAULT NULL")
+
+        conexao.commit()
+    finally:
+        if conexao:
+            conexao.close()
+
+
+def consultar_resumo_avaliacoes(id_especialista):
+    garantir_tabela_avaliacoes()
+
+    conexao = None
+    try:
+        conexao = conectar_banco()
+        cursor = conexao.cursor(dictionary=True)
+
+        cursor.execute(
+            """
+            SELECT
+                COUNT(*) AS total,
+                COALESCE(AVG(nota), 0) AS media
+            FROM avaliacoes
+            WHERE id_especialista = %s
+            """,
+            (id_especialista,)
+        )
+
+        row = cursor.fetchone() or {"total": 0, "media": 0}
+
+        return {
+            "rating": f"{float(row['media']):.1f}",
+            "reviews": int(row["total"] or 0)
+        }
+
+    finally:
+        if conexao:
+            conexao.close()
+
+
+def consultar_avaliacoes_especialista(id_especialista, limite=5):
+    garantir_tabela_avaliacoes()
+
+    conexao = None
+    try:
+        conexao = conectar_banco()
+        cursor = conexao.cursor(dictionary=True)
+
+        cursor.execute(
+            """
+            SELECT
+                a.nota,
+                a.comentario,
+                DATE_FORMAT(a.data_criacao, '%d/%m/%Y') AS data,
+                COALESCE(u.nome, 'Cliente') AS cliente
+            FROM avaliacoes a
+            LEFT JOIN usuarios u
+                ON u.id_usuario = a.id_cliente
+            WHERE a.id_especialista = %s
+            ORDER BY a.data_criacao DESC
+            LIMIT %s
+            """,
+            (id_especialista, limite)
+        )
+
+        rows = cursor.fetchall()
+
+        return [
+            {
+                "nota": int(row["nota"]),
+                "comentario": row.get("comentario") or "",
+                "data": row.get("data") or "",
+                "cliente": row.get("cliente") or "Cliente",
+                "estrelas": "★" * int(row["nota"])
+            }
+            for row in rows
+        ]
+
+    finally:
+        if conexao:
+            conexao.close()
+
+
+def salvar_avaliacao_especialista(id_cliente, id_especialista, nota, comentario):
+    garantir_tabela_avaliacoes()
+
+    conexao = None
+    try:
+        nota = int(nota)
+        nota = max(1, min(nota, 5))
+
+        conexao = conectar_banco()
+        cursor = conexao.cursor()
+
+        cursor.execute(
+            """
+            INSERT INTO avaliacoes (
+                id_cliente,
+                id_especialista,
+                nota,
+                comentario
+            )
+            VALUES (%s, %s, %s, %s)
+            """,
+            (id_cliente, id_especialista, nota, comentario)
+        )
+
+        conexao.commit()
+        return True
+
+    except Exception as erro:
+        print(f"Erro ao salvar avaliação: {erro}")
+        return False
+
+    finally:
+        if conexao:
+            conexao.close()
+
+
+
+def obter_plano_label(plano):
+    plano = str(plano or "FREE").upper()
+
+    if plano == "PROFISSIONAL":
+        return "Profissional"
+
+    if plano == "PLUS":
+        return "Plus"
+
+    return "Free"
+
+
+def obter_status_label(status):
+    status = str(status or "ONLINE").upper()
+
+    if status == "OFFLINE":
+        return {
+            "status": "OFFLINE",
+            "label": "Offline",
+            "is_online": False
+        }
+
+    return {
+        "status": "ONLINE",
+        "label": "Online agora",
+        "is_online": True
+    }
+
+
+def montar_agenda_disponibilidade(plano):
+    plano = str(plano or "FREE").upper()
+    hoje = date.today()
+    total_dias = calendar.monthrange(hoje.year, hoje.month)[1]
+
+    nomes_semana = {
+        0: "Seg",
+        1: "Ter",
+        2: "Qua",
+        3: "Qui",
+        4: "Sex",
+        5: "Sáb",
+        6: "Dom"
+    }
+
+    meses = {
+        1: "Janeiro",
+        2: "Fevereiro",
+        3: "Março",
+        4: "Abril",
+        5: "Maio",
+        6: "Junho",
+        7: "Julho",
+        8: "Agosto",
+        9: "Setembro",
+        10: "Outubro",
+        11: "Novembro",
+        12: "Dezembro"
+    }
+
+    dias = []
+
+    for numero_dia in range(1, total_dias + 1):
+        data_dia = date(hoje.year, hoje.month, numero_dia)
+        semana = data_dia.weekday()
+        fim_de_semana = semana >= 5
+        passado = data_dia < hoje
+
+        slots = []
+        bloqueado = ""
+
+        if passado:
+            bloqueado = "Data passada"
+        elif plano == "FREE":
+            if fim_de_semana:
+                bloqueado = "Finais de semana não liberados no plano Free"
+            else:
+                slots = ["18:30", "19:30", "20:30"]
+        elif plano == "PROFISSIONAL":
+            if semana == 6:
+                bloqueado = "Domingo disponível apenas no plano Plus"
+            elif semana == 5:
+                slots = ["09:00", "11:00"]
+            else:
+                slots = ["09:00", "10:30", "14:00", "18:30", "20:00"]
+        elif plano == "PLUS":
+            if fim_de_semana:
+                slots = ["09:00", "11:00", "15:00"]
+            else:
+                slots = ["08:00", "10:00", "14:00", "18:30", "20:30"]
+
+        dias.append({
+            "dia": numero_dia,
+            "semana": nomes_semana[semana],
+            "is_today": data_dia == hoje,
+            "is_available": bool(slots),
+            "slots": slots,
+            "slots_text": ",".join(slots),
+            "bloqueado": bloqueado
+        })
+
+    regras = {
+        "FREE": "segunda a sexta, somente pós-comercial. Sábado e domingo bloqueados.",
+        "PROFISSIONAL": "segunda a sexta com horário comercial e pós-comercial. Sábado limitado. Domingo bloqueado.",
+        "PLUS": "agenda liberada de segunda a domingo, com mais horários disponíveis."
+    }
+
+    return {
+        "plano": plano,
+        "plano_label": obter_plano_label(plano),
+        "mes_label": f"{meses[hoje.month]} {hoje.year}",
+        "regras": regras.get(plano, regras["FREE"]),
+        "dias": dias
+    }
+
+
 def payment_cookie_name(usuario_id, specialist_id):
     return f"pagamento_aprovado_{usuario_id}_{specialist_id}"
 
@@ -296,7 +564,7 @@ def get_db_specialists():
             e.descricao,
             e.tempo_medio,
             e.indicacao,
-            e.tags
+            e.tags, e.status_atendimento, e.plano_disponibilidade
         FROM especialistas e
         INNER JOIN usuarios u
             ON u.id_usuario = e.id_especialista
@@ -315,6 +583,9 @@ def get_db_specialists():
 
             categoria_slug = identificar_categoria_especialista(row)
             descricao = row.get("descricao") or f"{nome} atende na área de {row['especialidade']} pelo Tele Severino."
+            resumo_avaliacao = consultar_resumo_avaliacoes(row["id_usuario"])
+            status_info = obter_status_label(row.get("status_atendimento"))
+            plano = row.get("plano_disponibilidade") or "FREE"
 
             db_specialists.append({
                 "id": row["id_usuario"],
@@ -323,13 +594,19 @@ def get_db_specialists():
                 "role": row["especialidade"],
                 "price": format_price(row["valor_minuto"]),
                 "price_value": float(row["valor_minuto"] or 0),
-                "rating": "0.0",
-                "reviews": 0,
+                "rating": resumo_avaliacao["rating"],
+                "reviews": resumo_avaliacao["reviews"],
                 "avatar_class": "avatar-orange",
                 "foto_perfil": row.get("foto_perfil"),
+                "status_atendimento": status_info["status"],
+                "status_label": status_info["label"],
+                "is_online": status_info["is_online"],
+                "plano_disponibilidade": plano,
+                "plano_label": obter_plano_label(plano),
                 "about": descricao,
                 "category": row.get("categoria") or obter_nome_categoria(categoria_slug),
                 "category_slug": categoria_slug,
+                "reviews_list": consultar_avaliacoes_especialista(row["id_usuario"]),
                 "tags": separar_tags(row.get("tags"), row["especialidade"])
             })
 
@@ -337,7 +614,7 @@ def get_db_specialists():
 
     except Exception as erro:
         print(f"Erro ao buscar especialistas do banco: {erro}")
-        return specialists
+        return []
 
     finally:
         if conexao:
@@ -349,7 +626,7 @@ def get_specialist(specialist_id: int):
 
     return next(
         (item for item in db_specialists if item["id"] == specialist_id),
-        db_specialists[0] if db_specialists else specialists[0]
+        None
     )
 
 
@@ -899,11 +1176,17 @@ def perfil(request: Request, specialist_id: int):
     if isinstance(usuario, RedirectResponse):
         return usuario
 
+    specialist = get_specialist(specialist_id)
+
+    if not specialist:
+        return RedirectResponse("/especialistas", status_code=303)
+
     return templates.TemplateResponse(
         "perfil.html",
         {
             "request": request,
-            "specialist": get_specialist(specialist_id)
+            "specialist": specialist,
+            "agenda": montar_agenda_disponibilidade(specialist.get("plano_disponibilidade"))
         }
     )
 
@@ -915,11 +1198,16 @@ def chamada(request: Request, specialist_id: int):
     if isinstance(usuario, RedirectResponse):
         return usuario
 
+    specialist = get_specialist(specialist_id)
+
+    if not specialist:
+        return RedirectResponse("/especialistas", status_code=303)
+
     return templates.TemplateResponse(
         "chamada.html",
         {
             "request": request,
-            "specialist": get_specialist(specialist_id)
+            "specialist": specialist
         }
     )
 
@@ -932,6 +1220,10 @@ def pagamento(request: Request, specialist_id: int, tempo: int = 15):
         return usuario
 
     specialist = get_specialist(specialist_id)
+
+    if not specialist:
+        return RedirectResponse("/especialistas", status_code=303)
+
     payment_summary = montar_resumo_pagamento(specialist, tempo)
     payment_profile = get_fake_payment_profile(usuario)
 
@@ -961,6 +1253,10 @@ def confirmar_pagamento(
         return usuario
 
     specialist = get_specialist(specialist_id)
+
+    if not specialist:
+        return RedirectResponse("/especialistas", status_code=303)
+
     payment_summary = montar_resumo_pagamento(specialist, duration_seconds)
     payment_profile = get_fake_payment_profile(usuario)
 
@@ -1036,17 +1332,27 @@ def avaliacao(request: Request, specialist_id: int):
     if not pagamento_cookie:
         return RedirectResponse(f"/pagamento/{specialist_id}", status_code=303)
 
+    specialist = get_specialist(specialist_id)
+
+    if not specialist:
+        return RedirectResponse("/especialistas", status_code=303)
+
     return templates.TemplateResponse(
         "avaliacao.html",
         {
             "request": request,
-            "specialist": get_specialist(specialist_id)
+            "specialist": specialist
         }
     )
 
 
 @app.post("/avaliacao/{specialist_id}")
-def enviar_avaliacao(request: Request, specialist_id: int):
+def enviar_avaliacao(
+    request: Request,
+    specialist_id: int,
+    rating: int = Form(...),
+    comment: str = Form("")
+):
     usuario = exigir_cliente(request)
 
     if isinstance(usuario, RedirectResponse):
@@ -1056,6 +1362,13 @@ def enviar_avaliacao(request: Request, specialist_id: int):
 
     if not pagamento_cookie:
         return RedirectResponse(f"/pagamento/{specialist_id}", status_code=303)
+
+    salvar_avaliacao_especialista(
+        id_cliente=int(usuario["id"]),
+        id_especialista=int(specialist_id),
+        nota=int(rating),
+        comentario=comment.strip()
+    )
 
     response = RedirectResponse("/home", status_code=303)
     response.delete_cookie(payment_cookie_name(usuario["id"], specialist_id))

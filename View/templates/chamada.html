@@ -16,23 +16,53 @@
         <small id="callValue">R$ 0,00</small>
       </div>
 
-      <div class="call-avatar-wrap">
+      <div class="call-avatar-wrap is-speaking">
+        <div class="voice-ring"></div>
         {{ avatar(specialist, "xl") }}
+        <div class="voice-bars">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
       </div>
     </section>
 
-    <section class="call-controls">
-      <button type="button">Audio</button>
+    <section class="call-controls client-call-controls">
+      <button type="button" id="muteCallButton" class="call-side-button">
+        <strong>Mudo</strong>
+        <small>Microfone ativo</small>
+      </button>
+
       <a
-        class="end-call"
+        class="end-call call-end-button"
         id="endCallLink"
         href="{{ url_for('payment.pagamento', specialist_id=specialist.id) }}?tempo=15"
         aria-label="Encerrar chamada"
       >
-        Encerrar
+        Fim
       </a>
-      <button type="button">Video</button>
+
+      <button type="button" id="videoCallButton" class="call-side-button">
+        <strong>Vídeo</strong>
+        <small>Câmera desligada</small>
+      </button>
     </section>
-    <p class="call-help">Toque em encerrar para finalizar a chamada e seguir para o pagamento.</p>
+
+    <p class="call-help">Toque em Fim para encerrar a chamada e seguir para o pagamento.</p>
+
+    <div class="payment-modal-backdrop is-hidden" id="videoConfirmModal">
+      <div class="payment-modal">
+        <h2>Ligar câmera?</h2>
+        <p>Essa ação vai simular a ativação da câmera durante a chamada.</p>
+
+        <button type="button" class="primary-button" id="confirmVideoButton">
+          Ligar câmera
+        </button>
+
+        <button type="button" class="secondary-button" id="cancelVideoButton">
+          Agora não
+        </button>
+      </div>
+    </div>
   </main>
 {% endblock %}

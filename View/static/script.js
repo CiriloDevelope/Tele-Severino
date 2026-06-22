@@ -691,3 +691,238 @@ document.querySelectorAll('input[name="payment_method"]').forEach((input) => {
     }
   });
 });
+
+
+
+// Avaliação: habilita envio somente após selecionar uma estrela.
+// Comentário é opcional.
+const reviewSubmitButton = document.getElementById("reviewSubmitButton");
+const reviewRatingInputs = document.querySelectorAll('.star-input input[name="rating"]');
+
+function updateReviewSubmitState() {
+  if (!reviewSubmitButton || !reviewRatingInputs.length) return;
+
+  const hasRating = Boolean(document.querySelector('.star-input input[name="rating"]:checked'));
+
+  reviewSubmitButton.disabled = !hasRating;
+  reviewSubmitButton.classList.toggle("disabled-look", !hasRating);
+}
+
+reviewRatingInputs.forEach((input) => {
+  input.addEventListener("change", updateReviewSubmitState);
+});
+
+updateReviewSubmitState();
+
+
+
+// Controles fake da chamada.
+const muteCallButton = document.getElementById("muteCallButton");
+const videoCallButton = document.getElementById("videoCallButton");
+const videoConfirmModal = document.getElementById("videoConfirmModal");
+const confirmVideoButton = document.getElementById("confirmVideoButton");
+const cancelVideoButton = document.getElementById("cancelVideoButton");
+
+muteCallButton?.addEventListener("click", () => {
+  const isMuted = muteCallButton.classList.toggle("is-muted");
+  const label = muteCallButton.querySelector("small");
+
+  if (label) {
+    label.textContent = isMuted ? "Microfone mudo" : "Microfone ativo";
+  }
+});
+
+videoCallButton?.addEventListener("click", () => {
+  videoConfirmModal?.classList.remove("is-hidden");
+});
+
+cancelVideoButton?.addEventListener("click", () => {
+  videoConfirmModal?.classList.add("is-hidden");
+});
+
+confirmVideoButton?.addEventListener("click", () => {
+  videoConfirmModal?.classList.add("is-hidden");
+  videoCallButton?.classList.add("is-active");
+
+  const label = videoCallButton?.querySelector("small");
+  if (label) {
+    label.textContent = "Câmera ligada";
+  }
+});
+
+
+
+// Perfil público: modal fake de disponibilidade.
+const openScheduleModal = document.getElementById("openScheduleModal");
+const closeScheduleModal = document.getElementById("closeScheduleModal");
+const scheduleModal = document.getElementById("scheduleModal");
+const scheduleSuccess = document.getElementById("scheduleSuccess");
+
+openScheduleModal?.addEventListener("click", () => {
+  scheduleModal?.classList.remove("is-hidden");
+});
+
+closeScheduleModal?.addEventListener("click", () => {
+  scheduleModal?.classList.add("is-hidden");
+});
+
+document.querySelectorAll(".schedule-grid button").forEach((button) => {
+  button.addEventListener("click", () => {
+    document.querySelectorAll(".schedule-grid button").forEach((item) => {
+      item.classList.remove("active");
+    });
+
+    button.classList.add("active");
+    scheduleSuccess?.classList.remove("is-hidden");
+  });
+});
+
+
+
+// CALENDARIO_MENSAL_DISPONIBILIDADE
+(() => {
+  const openScheduleModal = document.getElementById("openScheduleModal");
+  const closeScheduleModal = document.getElementById("closeScheduleModal");
+  const scheduleModal = document.getElementById("scheduleModal");
+  const scheduleSuccess = document.getElementById("scheduleSuccess");
+  const scheduleSlotPanel = document.getElementById("scheduleSlotPanel");
+
+  const cupons = {
+    "PRIMEIRA10": "Cupom aplicado: 10% de desconto na primeira reserva.",
+    "POS20": "Cupom aplicado: melhor condição para horário pós-comercial.",
+    "PLUS15": "Cupom aplicado: benefício de agenda Plus.",
+    "TESTE5": "Cupom aplicado: desconto de teste do protótipo."
+  };
+
+  function resetarPainel() {
+    document.querySelectorAll(".schedule-day").forEach((item) => {
+      item.classList.remove("active");
+    });
+
+    if (scheduleSlotPanel) {
+      scheduleSlotPanel.innerHTML = `
+        <strong>Selecione um dia disponível</strong>
+        <p>Os horários liberados aparecerão aqui.</p>
+      `;
+    }
+
+    scheduleSuccess?.classList.add("is-hidden");
+  }
+
+  function abrirModal() {
+    scheduleModal?.classList.remove("is-hidden");
+    scheduleSuccess?.classList.add("is-hidden");
+  }
+
+  function fecharModal() {
+    scheduleModal?.classList.add("is-hidden");
+  }
+
+  function montarHorarios(button) {
+    const jaSelecionado = button.classList.contains("active");
+
+    if (jaSelecionado) {
+      resetarPainel();
+      return;
+    }
+
+    const day = button.dataset.day;
+    const weekday = button.dataset.weekday;
+    const slots = (button.dataset.slots || "").split(",").filter(Boolean);
+
+    document.querySelectorAll(".schedule-day").forEach((item) => {
+      item.classList.remove("active");
+    });
+
+    button.classList.add("active");
+    scheduleSuccess?.classList.add("is-hidden");
+
+    if (!scheduleSlotPanel) return;
+
+    scheduleSlotPanel.classList.add("is-changing");
+
+    setTimeout(() => {
+      const slotButtons = slots.map((slot, index) => {
+        const reservado = (Number(day) + index) % 4 === 0;
+        const status = reservado ? "Reservado" : "Livre";
+        const classe = reservado ? "reserved" : "free";
+        const disabled = reservado ? "disabled" : "";
+
+        return `
+          <button type="button" class="schedule-slot ${classe}" ${disabled} data-slot="${slot}">
+            <strong>${slot}</strong>
+            <small>${status}</small>
+          </button>
+        `;
+      }).join("");
+
+      scheduleSlotPanel.innerHTML = `
+        <strong>${weekday}, dia ${day}</strong>
+        <p>Escolha um horário livre para reservar sua videochamada.</p>
+
+        <div class="schedule-slots">
+          ${slotButtons}
+        </div>
+
+        <div class="coupon-area is-hidden" id="couponArea">
+          <label for="couponInput">Cupom de desconto</label>
+          <div class="coupon-line">
+            <input id="couponInput" type="text" placeholder="Ex: PRIMEIRA10 ou POS20">
+            <button type="button" id="applyCouponButton">Aplicar</button>
+          </div>
+          <small id="couponFeedback">
+            Dica: cupons podem liberar melhores condições em horários específicos.
+          </small>
+        </div>
+      `;
+
+      scheduleSlotPanel.classList.remove("is-changing");
+
+      scheduleSlotPanel.querySelectorAll(".schedule-slot.free").forEach((slotButton) => {
+        slotButton.addEventListener("click", () => {
+          scheduleSlotPanel.querySelectorAll(".schedule-slot").forEach((item) => {
+            item.classList.remove("active");
+          });
+
+          slotButton.classList.add("active");
+
+          const couponArea = document.getElementById("couponArea");
+          couponArea?.classList.remove("is-hidden");
+
+          scheduleSuccess?.classList.remove("is-hidden");
+          scheduleSuccess.textContent = `Horário ${slotButton.dataset.slot} reservado no protótipo. Você ainda pode aplicar um cupom antes de confirmar.`;
+        });
+      });
+
+      const applyCouponButton = document.getElementById("applyCouponButton");
+      const couponInput = document.getElementById("couponInput");
+      const couponFeedback = document.getElementById("couponFeedback");
+
+      applyCouponButton?.addEventListener("click", () => {
+        const codigo = String(couponInput?.value || "").trim().toUpperCase();
+
+        if (!codigo) {
+          couponFeedback.textContent = "Digite um cupom para validar.";
+          couponFeedback.className = "coupon-feedback warning";
+          return;
+        }
+
+        if (cupons[codigo]) {
+          couponFeedback.textContent = cupons[codigo];
+          couponFeedback.className = "coupon-feedback success";
+          return;
+        }
+
+        couponFeedback.textContent = "Cupom não encontrado para este horário.";
+        couponFeedback.className = "coupon-feedback error";
+      });
+    }, 180);
+  }
+
+  openScheduleModal?.addEventListener("click", abrirModal);
+  closeScheduleModal?.addEventListener("click", fecharModal);
+
+  document.querySelectorAll(".schedule-day:not(.locked)").forEach((button) => {
+    button.addEventListener("click", () => montarHorarios(button));
+  });
+})();

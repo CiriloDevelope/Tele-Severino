@@ -9,6 +9,15 @@
       {{ avatar(specialist, "xl") }}
       <h1>{{ specialist.name }}</h1>
       <p>{{ specialist.role }}</p>
+
+      <div class="profile-meta-row">
+        <span class="status-pill {% if specialist.is_online %}online{% else %}offline{% endif %}">
+          {{ specialist.status_label }}
+        </span>
+        <span class="plan-pill">
+          Plano {{ specialist.plano_label }}
+        </span>
+      </div>
       {% if specialist.reviews and specialist.reviews > 0 %}
         <div class="rating center-rating">
           <strong>{{ specialist.rating }}</strong>
@@ -46,14 +55,22 @@
         {% endif %}
       </div>
 
-      {% if specialist.reviews and specialist.reviews > 0 %}
-        <article class="review-item">
-          <div class="review-avatar">A</div>
-          <div>
-            <strong>Cliente</strong>
-            <p>Avaliação registrada após atendimento.</p>
-          </div>
-        </article>
+      {% if specialist.reviews_list %}
+        {% for review in specialist.reviews_list %}
+          <article class="review-item">
+            <div class="review-avatar">{{ review.cliente[:1] }}</div>
+            <div>
+              <strong>{{ review.cliente }}</strong>
+              <div class="stars">{{ review.estrelas }}</div>
+              {% if review.comentario %}
+                <p>{{ review.comentario }}</p>
+              {% else %}
+                <p>Cliente avaliou o atendimento sem comentário.</p>
+              {% endif %}
+            </div>
+            <span>{{ review.data }}</span>
+          </article>
+        {% endfor %}
       {% else %}
         <div class="empty-state-card">
           <strong>Sem avaliações ainda</strong>
@@ -63,8 +80,56 @@
     </section>
 
     <div class="bottom-action split-action">
-      <a class="primary-button" href="{{ url_for('call.chamada', specialist_id=specialist.id) }}">▣ Iniciar chamada</a>
-      <button class="chat-button">⌕</button>
+      <a class="primary-button" href="{{ url_for('call.chamada', specialist_id=specialist.id) }}">
+        Iniciar videochamada
+      </a>
+      <button class="chat-button" type="button" id="openScheduleModal">
+        Horários
+      </button>
+    </div>
+
+    <div class="payment-modal-backdrop is-hidden" id="scheduleModal">
+      <div class="payment-modal schedule-modal">
+        <h2>Disponibilidade</h2>
+
+        <p>
+          Plano {{ agenda.plano_label }}:
+          {{ agenda.regras }}
+        </p>
+
+        <div class="schedule-month-title">
+          {{ agenda.mes_label }}
+        </div>
+
+        <div class="schedule-calendar">
+          {% for dia in agenda.dias %}
+            <button
+              type="button"
+              class="schedule-day {% if dia.is_today %}today{% endif %} {% if not dia.is_available %}locked{% endif %}"
+              data-day="{{ dia.dia }}"
+              data-weekday="{{ dia.semana }}"
+              data-slots="{{ dia.slots_text }}"
+              {% if not dia.is_available %}disabled{% endif %}
+            >
+              <small>{{ dia.semana }}</small>
+              <strong>{{ dia.dia }}</strong>
+            </button>
+          {% endfor %}
+        </div>
+
+        <div class="schedule-slot-panel" id="scheduleSlotPanel">
+          <strong>Selecione um dia disponível</strong>
+          <p>Os horários liberados aparecerão aqui.</p>
+        </div>
+
+        <div class="payment-message payment-message-success is-hidden" id="scheduleSuccess">
+          Horário reservado no protótipo. O especialista será notificado na simulação.
+        </div>
+
+        <button type="button" class="secondary-button" id="closeScheduleModal">
+          Fechar
+        </button>
+      </div>
     </div>
   </main>
 {% endblock %}

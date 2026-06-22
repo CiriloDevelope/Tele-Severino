@@ -1,24 +1,85 @@
 {% extends "base.html" %}
 {% from "components.html" import avatar, header %}
 {% block title %}Especialistas - Tele Severino{% endblock %}
+
 {% block content %}
-  <main class="phone-page">
+  <main class="phone-page client-specialists-page">
     {{ header(title, subtitle) }}
 
-    <section class="list-section">
-      {% for specialist in specialists %}
-        <article class="specialist-card">
-          {{ avatar(specialist) }}
-          <div class="specialist-info">
-            <h2>{{ specialist.name }}</h2>
-            <p>{{ specialist.role }}</p>
-            <div class="rating">★ <strong>{{ specialist.rating }}</strong> <span>({{ specialist.reviews }} avaliações)</span></div>
-            <strong class="orange-price">R$ {{ specialist.price }}</strong>
-            <small>por minuto</small>
-          </div>
-          <a class="small-button" href="{{ url_for('specialist.especialista', specialist_id=specialist.id) }}">Ver perfil</a>
-        </article>
-      {% endfor %}
+    {% if categories %}
+      <section class="client-category-filter">
+        <a
+          href="{{ url_for('specialist.especialistas') }}"
+          class="client-filter-chip {% if not categoria_selecionada %}active{% endif %}"
+        >
+          Todos
+        </a>
+
+        {% for category in categories %}
+          <a
+            href="{{ url_for('specialist.especialistas') }}?categoria={{ category.slug }}"
+            class="client-filter-chip {% if categoria_selecionada == category.slug %}active{% endif %}"
+          >
+            {{ category.name }}
+          </a>
+        {% endfor %}
+      </section>
+    {% endif %}
+
+    <section class="client-specialists-list">
+      {% if specialists %}
+        {% for specialist in specialists %}
+          <article class="client-specialist-card {% if not specialist.is_online %}offline{% endif %}">
+            <div class="client-specialist-avatar">
+              {{ avatar(specialist) }}
+            </div>
+
+            <div class="client-specialist-content">
+              <div>
+                <h2>{{ specialist.name }}</h2>
+                <p>{{ specialist.role }}</p>
+              </div>
+
+              <div class="client-status-row">
+                <span class="status-pill {% if specialist.is_online %}online{% else %}offline{% endif %}">
+                  {{ specialist.status_label }}
+                </span>
+                <span class="plan-pill">
+                  Plano {{ specialist.plano_label }}
+                </span>
+              </div>
+
+              {% if specialist.reviews and specialist.reviews > 0 %}
+                <span class="client-rating">{{ specialist.rating }} | {{ specialist.reviews }} avaliações</span>
+              {% else %}
+                <span class="client-rating muted">Sem avaliações ainda</span>
+              {% endif %}
+
+              {% if specialist.tags %}
+                <div class="client-tag-row">
+                  {% for tag in specialist.tags[:3] %}
+                    <span>{{ tag }}</span>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </div>
+
+            <div class="client-specialist-side">
+              <strong>R$ {{ specialist.price }}</strong>
+              <small>por minuto</small>
+              <a class="small-button" href="{{ url_for('specialist.especialista', specialist_id=specialist.id) }}">
+                Ver perfil
+              </a>
+            </div>
+          </article>
+        {% endfor %}
+      {% else %}
+        <div class="empty-state-card">
+          <strong>Nenhum especialista encontrado</strong>
+          <p>Ainda não há especialistas cadastrados para esta categoria.</p>
+          <a class="small-button" href="{{ url_for('specialist.especialistas') }}">Ver todos</a>
+        </div>
+      {% endif %}
     </section>
   </main>
 {% endblock %}

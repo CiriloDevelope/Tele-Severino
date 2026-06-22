@@ -4,11 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{% block title %}Tele Severino{% endblock %}</title>
-  <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}?v=css-limpo-1">
+  <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}?v=schedule-stable-1">
   <link rel="icon" href="{{ url_for('static', path='/favicon.svg') }}" type="image/svg+xml">
 </head>
 <body class="{% block body_class %}{% endblock %}">
   {% block content %}{% endblock %}
-  <script src="{{ url_for('static', path='/script.js') }}?v=css-limpo-1"></script>
+  <script src="{{ url_for('static', path='/script.js') }}?v=schedule-stable-1"></script>
 </body>
 </html>
