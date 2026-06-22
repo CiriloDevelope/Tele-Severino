@@ -926,3 +926,31 @@ document.querySelectorAll(".schedule-grid button").forEach((button) => {
     button.addEventListener("click", () => montarHorarios(button));
   });
 })();
+
+
+
+// Solicitação fake do Tele-Severino após seleção de horário.
+const confirmScheduleButton = document.getElementById("confirmScheduleButton");
+
+document.addEventListener("click", (event) => {
+  const freeSlot = event.target.closest(".schedule-slot.free");
+
+  if (freeSlot && confirmScheduleButton) {
+    confirmScheduleButton.disabled = false;
+    confirmScheduleButton.classList.add("is-ready");
+  }
+});
+
+confirmScheduleButton?.addEventListener("click", () => {
+  if (confirmScheduleButton.disabled) return;
+
+  const scheduleSuccess = document.getElementById("scheduleSuccess");
+
+  if (scheduleSuccess) {
+    scheduleSuccess.classList.remove("is-hidden");
+    scheduleSuccess.textContent = "Solicitação Tele-Severino enviada no protótipo. O especialista receberá o pedido de agendamento.";
+  }
+
+  confirmScheduleButton.textContent = "Solicitado";
+  confirmScheduleButton.disabled = true;
+});

@@ -14,9 +14,6 @@
         <span class="status-pill {% if specialist.is_online %}online{% else %}offline{% endif %}">
           {{ specialist.status_label }}
         </span>
-        <span class="plan-pill">
-          Plano {{ specialist.plano_label }}
-        </span>
       </div>
       {% if specialist.reviews and specialist.reviews > 0 %}
         <div class="rating center-rating">
@@ -126,9 +123,15 @@
           Horário reservado no protótipo. O especialista será notificado na simulação.
         </div>
 
-        <button type="button" class="secondary-button" id="closeScheduleModal">
-          Fechar
-        </button>
+        <div class="schedule-modal-actions">
+          <button type="button" class="secondary-button" id="closeScheduleModal">
+            Fechar
+          </button>
+
+          <button type="button" class="primary-button schedule-request-button" id="confirmScheduleButton" disabled>
+            Solicitar Tele-Severino
+          </button>
+        </div>
       </div>
     </div>
   </main>

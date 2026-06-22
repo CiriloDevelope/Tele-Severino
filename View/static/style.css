@@ -6536,3 +6536,45 @@ body {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   }
 }
+
+
+/* SCHEDULE MODAL ACTION BUTTONS */
+.schedule-modal-actions {
+  display: grid;
+  grid-template-columns: 1fr 1.45fr;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.schedule-modal-actions .secondary-button,
+.schedule-modal-actions .primary-button {
+  width: 100%;
+  min-height: 48px;
+  border-radius: 17px;
+  font-weight: 900;
+}
+
+.schedule-request-button {
+  background: #ff6b00;
+  color: #ffffff;
+  border: 0;
+  box-shadow: 0 12px 24px rgba(255, 107, 0, 0.22);
+}
+
+.schedule-request-button:disabled {
+  background: #d1d5db;
+  color: #ffffff;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.schedule-request-button.is-ready:not(:disabled) {
+  background: #ff6b00;
+  cursor: pointer;
+}
+
+@media (max-width: 520px) {
+  .schedule-modal-actions {
+    grid-template-columns: 1fr;
+  }
+}
