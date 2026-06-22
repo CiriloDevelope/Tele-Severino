@@ -21,16 +21,17 @@ if (splash) {
 
 // Cronômetro da tela de chamada.
 // Em produção, isso deve ser sincronizado com o backend para evitar fraude.
-// Exemplo futuro:
-// - Backend salva horário de início.
-// - Front consulta o status da chamada.
-// - Backend calcula o valor final pelo tempo real.
+// No protótipo, o tempo é enviado para a tela de pagamento via query string.
 const timer = document.getElementById("callTimer");
 const value = document.getElementById("callValue");
+const callScreen = document.querySelector(".call-screen");
+const endCallLink = document.getElementById("endCallLink");
 
 if (timer && value) {
   let seconds = 0;
-  const pricePerMinute = 5.00;
+  const rawPrice = callScreen?.dataset.pricePerMinute || "0";
+  const pricePerMinute = Number(String(rawPrice).replace(",", ".")) || 0;
+  const paymentUrl = callScreen?.dataset.paymentUrl || endCallLink?.getAttribute("href")?.split("?")[0] || "";
 
   setInterval(() => {
     seconds += 1;
@@ -42,9 +43,29 @@ if (timer && value) {
     timer.textContent = `${h}:${m}:${s}`;
 
     const total = (seconds / 60) * pricePerMinute;
-    value.textContent = `R$ ${total.toFixed(2)}`;
+    value.textContent = total.toLocaleString("pt-BR", {
+      style: "currency",
+      currency: "BRL"
+    });
+
+    if (endCallLink && paymentUrl) {
+      endCallLink.href = `${paymentUrl}?tempo=${Math.max(seconds, 1)}`;
+    }
   }, 1000);
 }
+
+
+// Seleção visual da forma de pagamento.
+document.querySelectorAll('.payment-option input[name="payment_method"]').forEach((input) => {
+  input.addEventListener("change", () => {
+    document.querySelectorAll(".payment-option").forEach((option) => {
+      option.classList.remove("active");
+    });
+
+    input.closest(".payment-option")?.classList.add("active");
+  });
+});
+
 
 
 // Cadastro: mostra campos de especialista somente quando "Sou especialista" estiver selecionado.
@@ -544,5 +565,129 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     img.src = URL.createObjectURL(selectedFile);
+  });
+});
+
+
+
+// Fluxo fake de pagamento.
+// Simula retorno de operadora para cartão e confirmação de PIX.
+const fakePaymentForm = document.getElementById("fakePaymentForm");
+const gatewayStatus = document.getElementById("gatewayStatus");
+const cardPaymentModal = document.getElementById("cardPaymentModal");
+const cardPaymentStatus = document.getElementById("cardPaymentStatus");
+const pixPaymentModal = document.getElementById("pixPaymentModal");
+const approvePixPayment = document.getElementById("approvePixPayment");
+const cancelPixPayment = document.getElementById("cancelPixPayment");
+const pixCountdown = document.getElementById("pixCountdown");
+const pixPreview = document.getElementById("pixPreview");
+
+function getSelectedPaymentMethod() {
+  return document.querySelector('input[name="payment_method"]:checked')?.value || "cartao";
+}
+
+function submitApprovedPayment() {
+  if (!fakePaymentForm || !gatewayStatus) return;
+
+  gatewayStatus.value = "approved";
+  fakePaymentForm.dataset.confirmed = "true";
+  fakePaymentForm.submit();
+}
+
+function openPaymentModal(modal) {
+  modal?.classList.remove("is-hidden");
+}
+
+function closePaymentModal(modal) {
+  modal?.classList.add("is-hidden");
+}
+
+function startPixCountdown() {
+  if (!pixCountdown) return;
+
+  let seconds = 300;
+
+  const interval = setInterval(() => {
+    seconds -= 1;
+
+    if (!pixPaymentModal || pixPaymentModal.classList.contains("is-hidden")) {
+      clearInterval(interval);
+      return;
+    }
+
+    const minutes = String(Math.floor(seconds / 60)).padStart(2, "0");
+    const secs = String(seconds % 60).padStart(2, "0");
+
+    pixCountdown.textContent = `${minutes}:${secs}`;
+
+    if (seconds <= 0) {
+      clearInterval(interval);
+      pixCountdown.textContent = "Expirado";
+    }
+  }, 1000);
+}
+
+if (fakePaymentForm) {
+  fakePaymentForm.addEventListener("submit", (event) => {
+    if (fakePaymentForm.dataset.confirmed === "true") return;
+
+    event.preventDefault();
+
+    const method = getSelectedPaymentMethod();
+
+    if (method === "cartao") {
+      openPaymentModal(cardPaymentModal);
+
+      let seconds = 30;
+
+      if (cardPaymentStatus) {
+        cardPaymentStatus.textContent = `Autorizando com a operadora fake... aprovação em ${seconds}s`;
+      }
+
+      const interval = setInterval(() => {
+        seconds -= 1;
+
+        if (cardPaymentStatus) {
+          cardPaymentStatus.textContent = `Autorizando com a operadora fake... aprovação em ${seconds}s`;
+        }
+
+        if (seconds <= 0) {
+          clearInterval(interval);
+
+          if (cardPaymentStatus) {
+            cardPaymentStatus.textContent = "Pagamento aprovado pela operadora fake.";
+          }
+
+          setTimeout(() => {
+            submitApprovedPayment();
+          }, 900);
+        }
+      }, 1000);
+
+      return;
+    }
+
+    if (method === "pix") {
+      openPaymentModal(pixPaymentModal);
+      startPixCountdown();
+    }
+  });
+}
+
+approvePixPayment?.addEventListener("click", () => {
+  submitApprovedPayment();
+});
+
+cancelPixPayment?.addEventListener("click", () => {
+  closePaymentModal(pixPaymentModal);
+});
+
+document.querySelectorAll('input[name="payment_method"]').forEach((input) => {
+  input.addEventListener("change", () => {
+    const method = getSelectedPaymentMethod();
+
+    if (pixPreview) {
+      pixPreview.classList.toggle("is-visible", method === "pix");
+    }
   });
 });

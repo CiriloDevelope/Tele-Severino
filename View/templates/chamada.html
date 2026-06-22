@@ -3,13 +3,17 @@
 {% block title %}Chamada - {{ specialist.name }}{% endblock %}
 {% block body_class %}call-body{% endblock %}
 {% block content %}
-  <main class="call-screen">
+  <main
+    class="call-screen"
+    data-price-per-minute="{{ specialist.price_value or 0 }}"
+    data-payment-url="{{ url_for('payment.pagamento', specialist_id=specialist.id) }}"
+  >
     <section class="call-phone">
       <div class="call-status-card">
         <h1>{{ specialist.name }}</h1>
         <p><span></span> Em atendimento</p>
         <strong id="callTimer">00:00:00</strong>
-        <small id="callValue">R$ 0.00</small>
+        <small id="callValue">R$ 0,00</small>
       </div>
 
       <div class="call-avatar-wrap">
@@ -18,10 +22,17 @@
     </section>
 
     <section class="call-controls">
-      <button>♬</button>
-      <a class="end-call" href="{{ url_for('payment.pagamento', specialist_id=specialist.id) }}">☎</a>
-      <button>▣</button>
+      <button type="button">Audio</button>
+      <a
+        class="end-call"
+        id="endCallLink"
+        href="{{ url_for('payment.pagamento', specialist_id=specialist.id) }}?tempo=15"
+        aria-label="Encerrar chamada"
+      >
+        Encerrar
+      </a>
+      <button type="button">Video</button>
     </section>
-    <p class="call-help">Toque no telefone vermelho para encerrar</p>
+    <p class="call-help">Toque em encerrar para finalizar a chamada e seguir para o pagamento.</p>
   </main>
 {% endblock %}

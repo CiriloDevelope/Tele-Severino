@@ -204,6 +204,81 @@ def obter_nome_categoria(slug):
     return nomes.get(slug, "Especialistas")
 
 
+
+
+def payment_cookie_name(usuario_id, specialist_id):
+    return f"pagamento_aprovado_{usuario_id}_{specialist_id}"
+
+
+def get_fake_payment_profile(usuario):
+    cadastro = consultar_cadastro_complementar(int(usuario["id"]))
+
+    return {
+        "has_saved_card": True,
+        "card_brand": "Visa",
+        "card_last4": "4532",
+        "card_holder": "Cliente Tele Severino",
+        "pix_key": "pagamento@teleseverino.local",
+        "pix_code": f"00020126580014br.gov.bcb.pix0136tele-severino-{usuario['id']}5204000053039865802BR5925TELE SEVERINO PROTOTIPO6009SAO PAULO62070503***6304FAKE"
+    }
+
+
+def format_duration(seconds):
+    try:
+        seconds = int(seconds)
+    except Exception:
+        seconds = 15
+
+    seconds = max(1, min(seconds, 14400))
+
+    horas = seconds // 3600
+    minutos = (seconds % 3600) // 60
+    segundos = seconds % 60
+
+    return f"{horas:02d}:{minutos:02d}:{segundos:02d}"
+
+
+def get_price_value(specialist):
+    valor = specialist.get("price_value")
+
+    if valor is not None:
+        try:
+            return float(valor)
+        except Exception:
+            pass
+
+    texto = str(specialist.get("price", "0")).replace("R$", "").strip()
+    texto = texto.replace(",", ".")
+
+    try:
+        return float(texto)
+    except Exception:
+        return 0.0
+
+
+def montar_resumo_pagamento(specialist, tempo):
+    try:
+        segundos = int(tempo)
+    except Exception:
+        segundos = 15
+
+    segundos = max(1, min(segundos, 14400))
+
+    valor_minuto = get_price_value(specialist)
+    total = (segundos / 60) * valor_minuto
+
+    if total <= 0:
+        total = 0.01
+
+    return {
+        "duration_seconds": segundos,
+        "duration": format_duration(segundos),
+        "price_per_minute": format_price(valor_minuto),
+        "total": format_price(total),
+        "total_value": round(total, 2)
+    }
+
+
 def get_db_specialists():
     conexao = None
     try:
@@ -247,6 +322,7 @@ def get_db_specialists():
                 "initials": initials,
                 "role": row["especialidade"],
                 "price": format_price(row["valor_minuto"]),
+                "price_value": float(row["valor_minuto"] or 0),
                 "rating": "0.0",
                 "reviews": 0,
                 "avatar_class": "avatar-orange",
@@ -849,19 +925,103 @@ def chamada(request: Request, specialist_id: int):
 
 
 @app.get("/pagamento/{specialist_id}", name="payment.pagamento")
-def pagamento(request: Request, specialist_id: int):
+def pagamento(request: Request, specialist_id: int, tempo: int = 15):
     usuario = exigir_cliente(request)
 
     if isinstance(usuario, RedirectResponse):
         return usuario
 
+    specialist = get_specialist(specialist_id)
+    payment_summary = montar_resumo_pagamento(specialist, tempo)
+    payment_profile = get_fake_payment_profile(usuario)
+
     return templates.TemplateResponse(
         "pagamento.html",
         {
             "request": request,
-            "specialist": get_specialist(specialist_id)
+            "specialist": specialist,
+            "payment_summary": payment_summary,
+            "payment_profile": payment_profile,
+            "erro": None
         }
     )
+
+
+@app.post("/pagamento/{specialist_id}", name="payment.confirmar")
+def confirmar_pagamento(
+    request: Request,
+    specialist_id: int,
+    payment_method: str = Form(...),
+    gateway_status: str = Form(""),
+    duration_seconds: int = Form(15)
+):
+    usuario = exigir_cliente(request)
+
+    if isinstance(usuario, RedirectResponse):
+        return usuario
+
+    specialist = get_specialist(specialist_id)
+    payment_summary = montar_resumo_pagamento(specialist, duration_seconds)
+    payment_profile = get_fake_payment_profile(usuario)
+
+    metodos_validos = {
+        "cartao": "Cartão de crédito",
+        "pix": "PIX"
+    }
+
+    if payment_method not in metodos_validos:
+        return templates.TemplateResponse(
+            "pagamento.html",
+            {
+                "request": request,
+                "specialist": specialist,
+                "payment_summary": payment_summary,
+                "payment_profile": payment_profile,
+                "erro": "Selecione uma forma de pagamento válida."
+            },
+            status_code=400
+        )
+
+    if payment_method == "cartao" and not payment_profile["has_saved_card"]:
+        return templates.TemplateResponse(
+            "pagamento.html",
+            {
+                "request": request,
+                "specialist": specialist,
+                "payment_summary": payment_summary,
+                "payment_profile": payment_profile,
+                "erro": "Nenhum cartão salvo foi encontrado para este usuário."
+            },
+            status_code=400
+        )
+
+    if gateway_status != "approved":
+        return templates.TemplateResponse(
+            "pagamento.html",
+            {
+                "request": request,
+                "specialist": specialist,
+                "payment_summary": payment_summary,
+                "payment_profile": payment_profile,
+                "erro": "Aguardando confirmação fake da operadora de pagamento."
+            },
+            status_code=400
+        )
+
+    transaction_id = f"fake-{usuario['id']}-{specialist_id}-{payment_method}"
+
+    response = RedirectResponse(
+        f"/avaliacao/{specialist_id}?pagamento=aprovado&metodo={payment_method}&transacao={transaction_id}",
+        status_code=303
+    )
+    response.set_cookie(
+        payment_cookie_name(usuario["id"], specialist_id),
+        transaction_id,
+        max_age=1800,
+        httponly=True
+    )
+
+    return response
 
 
 @app.get("/avaliacao/{specialist_id}", name="review.avaliacao")
@@ -870,6 +1030,11 @@ def avaliacao(request: Request, specialist_id: int):
 
     if isinstance(usuario, RedirectResponse):
         return usuario
+
+    pagamento_cookie = request.cookies.get(payment_cookie_name(usuario["id"], specialist_id))
+
+    if not pagamento_cookie:
+        return RedirectResponse(f"/pagamento/{specialist_id}", status_code=303)
 
     return templates.TemplateResponse(
         "avaliacao.html",
@@ -887,7 +1052,14 @@ def enviar_avaliacao(request: Request, specialist_id: int):
     if isinstance(usuario, RedirectResponse):
         return usuario
 
-    return RedirectResponse("/home", status_code=303)
+    pagamento_cookie = request.cookies.get(payment_cookie_name(usuario["id"], specialist_id))
+
+    if not pagamento_cookie:
+        return RedirectResponse(f"/pagamento/{specialist_id}", status_code=303)
+
+    response = RedirectResponse("/home", status_code=303)
+    response.delete_cookie(payment_cookie_name(usuario["id"], specialist_id))
+    return response
 
 
 @app.get("/personalizacao", name="brand.personalizacao")

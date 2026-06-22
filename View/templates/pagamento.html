@@ -7,11 +7,17 @@
       <p>Revise os detalhes da sua consulta</p>
     </header>
 
+    {% if erro %}
+      <div class="payment-message payment-message-error">
+        {{ erro }}
+      </div>
+    {% endif %}
+
     <section class="white-card payment-card">
       <h2>Resumo da consulta</h2>
 
       <div class="summary-row">
-        <span class="summary-icon">♙</span>
+        <span class="summary-icon">E</span>
         <div>
           <p>Especialista</p>
           <strong>{{ specialist.name }}</strong>
@@ -19,10 +25,10 @@
       </div>
 
       <div class="summary-row">
-        <span class="summary-icon">◷</span>
+        <span class="summary-icon">T</span>
         <div>
           <p>Tempo total</p>
-          <strong>00:00:15</strong>
+          <strong>{{ payment_summary.duration }}</strong>
         </div>
       </div>
 
@@ -30,40 +36,111 @@
         <span class="summary-icon">$</span>
         <div>
           <p>Valor por minuto</p>
-          <strong>R$ {{ specialist.price }}</strong>
+          <strong>R$ {{ payment_summary.price_per_minute }}</strong>
         </div>
       </div>
 
       <div class="total-row">
         <strong>Total</strong>
-        <strong>R$ 1.25</strong>
+        <strong>R$ {{ payment_summary.total }}</strong>
       </div>
     </section>
 
-    <section class="white-card">
-      <h2>Forma de pagamento</h2>
+    <form
+      id="fakePaymentForm"
+      method="POST"
+      action="{{ url_for('payment.pagamento', specialist_id=specialist.id) }}"
+      data-enhanced-payment="true"
+    >
+      <input type="hidden" name="duration_seconds" value="{{ payment_summary.duration_seconds }}">
+      <input type="hidden" id="gatewayStatus" name="gateway_status" value="">
 
-      <label class="payment-option active">
-        <span class="summary-icon">▭</span>
-        <div>
-          <strong>Cartão crédito</strong>
-          <p>•••• 4532</p>
+      <section class="white-card">
+        <h2>Forma de pagamento</h2>
+
+        <label class="payment-option active" data-payment-option="cartao">
+          <span class="summary-icon">C</span>
+          <div>
+            <strong>Cartão de crédito</strong>
+            {% if payment_profile.has_saved_card %}
+              <p>{{ payment_profile.card_brand }} final {{ payment_profile.card_last4 }}</p>
+            {% else %}
+              <p>Nenhum cartão salvo</p>
+            {% endif %}
+          </div>
+          <input type="radio" name="payment_method" value="cartao" checked>
+        </label>
+
+        <label class="payment-option" data-payment-option="pix">
+          <span class="summary-icon gray-icon">P</span>
+          <div>
+            <strong>PIX</strong>
+            <p>QR Code e copia e cola fake</p>
+          </div>
+          <input type="radio" name="payment_method" value="pix">
+        </label>
+
+        <div class="pix-preview" id="pixPreview">
+          <div class="fake-qr-code">
+            <span></span><span></span><span></span>
+            <span></span><span></span><span></span>
+            <span></span><span></span><span></span>
+          </div>
+
+          <div>
+            <strong>PIX copia e cola</strong>
+            <p>{{ payment_profile.pix_code }}</p>
+          </div>
         </div>
-        <input type="radio" checked>
-      </label>
+      </section>
 
-      <label class="payment-option">
-        <span class="summary-icon gray-icon">$</span>
-        <div>
-          <strong>PIX</strong>
-          <p>Pagamento instantâneo</p>
+      <div class="bottom-action">
+        <button type="submit" class="primary-button">Confirmar pagamento</button>
+      </div>
+    </form>
+
+    <div class="payment-modal-backdrop is-hidden" id="cardPaymentModal">
+      <div class="payment-modal">
+        <h2>Autorizando pagamento</h2>
+        <p id="cardPaymentStatus">Enviando transação fake para a operadora...</p>
+
+        <div class="payment-loader"></div>
+
+        <small>
+          Este é um retorno simulado da operadora do cartão para apresentação do protótipo.
+        </small>
+      </div>
+    </div>
+
+    <div class="payment-modal-backdrop is-hidden" id="pixPaymentModal">
+      <div class="payment-modal">
+        <h2>Pagamento via PIX</h2>
+        <p>Escaneie o QR Code fake ou use o código copia e cola.</p>
+
+        <div class="fake-qr-code fake-qr-code-large">
+          <span></span><span></span><span></span>
+          <span></span><span></span><span></span>
+          <span></span><span></span><span></span>
         </div>
-        <input type="radio">
-      </label>
-    </section>
 
-    <div class="bottom-action">
-      <a class="primary-button" href="{{ url_for('review.avaliacao', specialist_id=specialist.id) }}">Confirmar pagamento</a>
+        <div class="pix-code-box">
+          {{ payment_profile.pix_code }}
+        </div>
+
+        <strong id="pixCountdown">05:00</strong>
+
+        <button type="button" class="primary-button" id="approvePixPayment">
+          Simular pagamento aprovado
+        </button>
+
+        <button type="button" class="secondary-button" id="cancelPixPayment">
+          Cancelar
+        </button>
+
+        <small>
+          No fluxo real, a operadora confirmaria o pagamento após a leitura do QR Code.
+        </small>
+      </div>
     </div>
   </main>
 {% endblock %}
