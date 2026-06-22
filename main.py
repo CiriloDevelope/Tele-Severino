@@ -1133,7 +1133,12 @@ def home(request: Request):
 
 
 @app.get("/especialistas", name="specialist.especialistas")
-def especialistas_page(request: Request, categoria: str = ""):
+def especialistas_page(
+    request: Request,
+    categoria: str = "",
+    q: str = "",
+    ordenacao: str = ""
+):
     usuario = exigir_cliente(request)
 
     if isinstance(usuario, RedirectResponse):
@@ -1141,20 +1146,58 @@ def especialistas_page(request: Request, categoria: str = ""):
 
     todos_especialistas = get_db_specialists()
     categoria_selecionada = normalizar_texto_categoria(categoria)
+    termo_busca = str(q or "").strip()
+    termo_normalizado = normalizar_texto_categoria(termo_busca)
+
+    specialists_filtrados = todos_especialistas
 
     if categoria_selecionada:
         specialists_filtrados = [
-            specialist for specialist in todos_especialistas
+            specialist for specialist in specialists_filtrados
             if specialist.get("category_slug") == categoria_selecionada
         ]
 
+    if termo_normalizado:
+        def corresponde_busca(specialist):
+            campos = [
+                specialist.get("name", ""),
+                specialist.get("role", ""),
+                specialist.get("about", ""),
+                specialist.get("category", ""),
+                specialist.get("category_slug", ""),
+                " ".join(specialist.get("tags", []))
+            ]
+
+            texto_busca = normalizar_texto_categoria(" ".join(campos))
+            return termo_normalizado in texto_busca
+
+        specialists_filtrados = [
+            specialist for specialist in specialists_filtrados
+            if corresponde_busca(specialist)
+        ]
+
+    if ordenacao == "menor_preco":
+        specialists_filtrados = sorted(
+            specialists_filtrados,
+            key=lambda specialist: float(specialist.get("price_value") or 0)
+        )
+    elif ordenacao == "maior_preco":
+        specialists_filtrados = sorted(
+            specialists_filtrados,
+            key=lambda specialist: float(specialist.get("price_value") or 0),
+            reverse=True
+        )
+
+    if categoria_selecionada:
         nome_categoria = obter_nome_categoria(categoria_selecionada)
         title = nome_categoria
         subtitle = f"Especialistas disponíveis em {nome_categoria}"
     else:
-        specialists_filtrados = todos_especialistas
         title = "Especialistas"
         subtitle = "Escolha um profissional disponível"
+
+    if termo_busca:
+        subtitle = f'Resultados para "{termo_busca}"'
 
     return templates.TemplateResponse(
         "especialistas.html",
@@ -1164,7 +1207,9 @@ def especialistas_page(request: Request, categoria: str = ""):
             "subtitle": subtitle,
             "specialists": specialists_filtrados,
             "categories": categories,
-            "categoria_selecionada": categoria_selecionada
+            "categoria_selecionada": categoria_selecionada,
+            "q": termo_busca,
+            "ordenacao": ordenacao
         }
     )
 

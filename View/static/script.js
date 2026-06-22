@@ -954,3 +954,106 @@ confirmScheduleButton?.addEventListener("click", () => {
   confirmScheduleButton.textContent = "Solicitado";
   confirmScheduleButton.disabled = true;
 });
+
+
+
+// LIVE_SPECIALIST_SEARCH_FILTER
+(() => {
+  const searchInput = document.getElementById("specialistLiveSearch");
+  const clearButton = document.getElementById("clearSpecialistSearch");
+  const filterTabs = document.getElementById("priceFilterTabs");
+  const counter = document.getElementById("specialistResultCounter");
+  const list = document.querySelector(".client-specialists-list");
+
+  if (!searchInput || !list) return;
+
+  const cards = Array.from(document.querySelectorAll(".client-specialist-card"));
+
+  function normalizeText(value) {
+    return String(value || "")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .trim();
+  }
+
+  function getSelectedSort() {
+    const active = filterTabs?.querySelector("button.active");
+    return active?.dataset.sort || "";
+  }
+
+  function updateCounter(total) {
+    if (!counter) return;
+
+    if (total === 0) {
+      counter.textContent = "Nenhum especialista encontrado";
+      return;
+    }
+
+    if (total === 1) {
+      counter.textContent = "1 especialista encontrado";
+      return;
+    }
+
+    counter.textContent = `${total} especialistas encontrados`;
+  }
+
+  function applySearchAndSort() {
+    const term = normalizeText(searchInput.value);
+    const sort = getSelectedSort();
+
+    let visibleCards = cards.filter((card) => {
+      const searchable = normalizeText(card.dataset.search);
+      return !term || searchable.includes(term);
+    });
+
+    if (sort === "menor_preco") {
+      visibleCards.sort((a, b) => {
+        return Number(a.dataset.price || 0) - Number(b.dataset.price || 0);
+      });
+    }
+
+    if (sort === "maior_preco") {
+      visibleCards.sort((a, b) => {
+        return Number(b.dataset.price || 0) - Number(a.dataset.price || 0);
+      });
+    }
+
+    cards.forEach((card) => {
+      card.classList.add("is-hidden-by-search");
+    });
+
+    visibleCards.forEach((card) => {
+      card.classList.remove("is-hidden-by-search");
+      list.appendChild(card);
+    });
+
+    updateCounter(visibleCards.length);
+  }
+
+  searchInput.addEventListener("input", applySearchAndSort);
+
+  clearButton?.addEventListener("click", () => {
+    searchInput.value = "";
+
+    filterTabs?.querySelectorAll("button").forEach((button) => {
+      button.classList.toggle("active", button.dataset.sort === "");
+    });
+
+    applySearchAndSort();
+    searchInput.focus();
+  });
+
+  filterTabs?.querySelectorAll("button").forEach((button) => {
+    button.addEventListener("click", () => {
+      filterTabs.querySelectorAll("button").forEach((item) => {
+        item.classList.remove("active");
+      });
+
+      button.classList.add("active");
+      applySearchAndSort();
+    });
+  });
+
+  applySearchAndSort();
+})();

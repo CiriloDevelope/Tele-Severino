@@ -5,6 +5,37 @@
 {% block content %}
   <main class="phone-page client-specialists-page">
     {{ header(title, subtitle) }}
+    <section class="client-search-panel">
+      <div class="client-search-input">
+        <input
+          type="text"
+          id="specialistLiveSearch"
+          value="{{ q or '' }}"
+          placeholder="Buscar especialista"
+          autocomplete="off"
+        >
+
+        <button type="button" id="clearSpecialistSearch" class="clear-search-button">
+          Limpar
+        </button>
+      </div>
+
+      <div class="apple-filter-tabs" id="priceFilterTabs">
+        <button type="button" data-sort="" class="active">
+          Relevância
+        </button>
+        <button type="button" data-sort="menor_preco">
+          Mais barato
+        </button>
+        <button type="button" data-sort="maior_preco">
+          Mais caro
+        </button>
+      </div>
+
+      <p class="search-result-counter" id="specialistResultCounter">
+        Mostrando especialistas disponíveis
+      </p>
+    </section>
 
     {% if categories %}
       <section class="client-category-filter">
@@ -29,7 +60,11 @@
     <section class="client-specialists-list">
       {% if specialists %}
         {% for specialist in specialists %}
-          <article class="client-specialist-card {% if not specialist.is_online %}offline{% endif %}">
+          <article
+            class="client-specialist-card {% if not specialist.is_online %}offline{% endif %}"
+            data-search="{{ specialist.name }} {{ specialist.role }} {{ specialist.about }} {{ specialist.category }} {{ specialist.tags|join(' ') }}"
+            data-price="{{ specialist.price_value }}"
+          >
             <div class="client-specialist-avatar">
               {{ avatar(specialist) }}
             </div>
@@ -76,7 +111,7 @@
       {% else %}
         <div class="empty-state-card">
           <strong>Nenhum especialista encontrado</strong>
-          <p>Ainda não há especialistas cadastrados para esta categoria.</p>
+          <p>Nenhum especialista foi encontrado para a busca ou categoria selecionada.</p>
           <a class="small-button" href="{{ url_for('specialist.especialistas') }}">Ver todos</a>
         </div>
       {% endif %}
