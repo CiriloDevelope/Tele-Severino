@@ -1,3 +1,4 @@
+import os
 from datetime import date
 import calendar
 import uuid
@@ -1250,7 +1251,7 @@ def especialista_dashboard(request: Request, usuario_id: int = 0):
             "request": request,
             "usuario_id": usuario["id"],
             "cadastro_complementar": consultar_cadastro_complementar(int(usuario["id"])),
-            "cliente_atual": consultar_usuario_basico(int(usuario["id"])),
+            "cliente_atual": consultar_cliente_atual_para_layout(int(usuario["id"])),
             "especialista": consultar_especialista_por_usuario(int(usuario["id"])),
             "active_page": "resumo"
         }
@@ -1414,7 +1415,7 @@ def especialistas_page(
             "categoria_selecionada": categoria_selecionada,
             "q": termo_busca,
             "ordenacao": ordenacao,
-            "cliente_atual": consultar_usuario_basico(int(usuario["id"]))
+            "cliente_atual": consultar_cliente_atual_para_layout(int(usuario["id"]))
         }
     )
 
@@ -1627,6 +1628,14 @@ def enviar_avaliacao(
 
 @app.get("/personalizacao", name="brand.personalizacao")
 def personalizacao(request: Request):
+    usuario = exigir_login(request)
+
+    if isinstance(usuario, RedirectResponse):
+        return usuario
+
+    if usuario["tipo"] == "CLIENTE":
+        return RedirectResponse("/cliente/perfil", status_code=303)
+
     return templates.TemplateResponse(
         "personalizacao.html",
         {
@@ -2007,3 +2016,197 @@ async def severino_chat(request: Request):
         "mensagem": mensagem,
         **resposta
     })
+
+
+def garantir_tabela_cliente_perfil():
+    conexao = None
+
+    try:
+        conexao = conectar_banco()
+        cursor = conexao.cursor()
+
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS cliente_perfil_config (
+                id_config INT AUTO_INCREMENT PRIMARY KEY,
+                id_usuario INT NOT NULL UNIQUE,
+                nome_exibicao VARCHAR(160) NULL,
+                objetivo TEXT NULL,
+                foto_perfil VARCHAR(255) NULL,
+                data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                data_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            )
+        """)
+
+        conexao.commit()
+
+    except Exception as erro:
+        print("Erro ao garantir tabela cliente_perfil_config:", erro)
+
+    finally:
+        if conexao:
+            conexao.close()
+
+
+def consultar_perfil_cliente_config(id_usuario: int):
+    garantir_tabela_cliente_perfil()
+
+    conexao = None
+
+    try:
+        conexao = conectar_banco()
+        cursor = conexao.cursor(dictionary=True)
+
+        cursor.execute("""
+            SELECT
+                nome_exibicao,
+                objetivo,
+                foto_perfil
+            FROM cliente_perfil_config
+            WHERE id_usuario = %s
+            LIMIT 1
+        """, (id_usuario,))
+
+        return cursor.fetchone() or {}
+
+    except Exception as erro:
+        print("Erro ao consultar perfil do cliente:", erro)
+        return {}
+
+    finally:
+        if conexao:
+            conexao.close()
+
+
+def salvar_perfil_cliente_config(id_usuario: int, nome_exibicao=None, objetivo=None, foto_perfil=None):
+    garantir_tabela_cliente_perfil()
+
+    atual = consultar_perfil_cliente_config(id_usuario)
+
+    nome_final = nome_exibicao if nome_exibicao is not None else atual.get("nome_exibicao")
+    objetivo_final = objetivo if objetivo is not None else atual.get("objetivo")
+    foto_final = foto_perfil if foto_perfil is not None else atual.get("foto_perfil")
+
+    conexao = None
+
+    try:
+        conexao = conectar_banco()
+        cursor = conexao.cursor()
+
+        cursor.execute("""
+            INSERT INTO cliente_perfil_config
+                (id_usuario, nome_exibicao, objetivo, foto_perfil)
+            VALUES
+                (%s, %s, %s, %s)
+            ON DUPLICATE KEY UPDATE
+                nome_exibicao = VALUES(nome_exibicao),
+                objetivo = VALUES(objetivo),
+                foto_perfil = VALUES(foto_perfil)
+        """, (
+            id_usuario,
+            nome_final,
+            objetivo_final,
+            foto_final
+        ))
+
+        conexao.commit()
+
+    except Exception as erro:
+        print("Erro ao salvar perfil do cliente:", erro)
+
+    finally:
+        if conexao:
+            conexao.close()
+
+
+def consultar_cliente_atual_para_layout(id_usuario: int):
+    usuario = consultar_usuario_basico(id_usuario)
+    perfil = consultar_perfil_cliente_config(id_usuario)
+
+    nome_base = usuario.get("nome") or "Cliente"
+    nome_final = perfil.get("nome_exibicao") or nome_base
+
+    partes_nome = [parte for parte in nome_final.split() if parte]
+    iniciais = "".join([parte[0] for parte in partes_nome[:2]]).upper() or "CL"
+
+    usuario["nome"] = nome_final
+    usuario["iniciais"] = iniciais
+    usuario["foto_perfil"] = perfil.get("foto_perfil") or ""
+    usuario["objetivo"] = perfil.get("objetivo") or ""
+
+    return usuario
+
+
+@app.get("/cliente/perfil")
+def cliente_perfil_page(request: Request):
+    usuario = exigir_cliente(request)
+
+    if isinstance(usuario, RedirectResponse):
+        return usuario
+
+    cliente_atual = consultar_cliente_atual_para_layout(int(usuario["id"]))
+
+    return templates.TemplateResponse(
+        "cliente_perfil.html",
+        {
+            "request": request,
+            "usuario_id": usuario["id"],
+            "cliente_atual": cliente_atual
+        }
+    )
+
+
+@app.post("/cliente/perfil/dados")
+def cliente_perfil_dados(
+    request: Request,
+    nome_exibicao: str = Form(""),
+    objetivo: str = Form("")
+):
+    usuario = exigir_cliente(request)
+
+    if isinstance(usuario, RedirectResponse):
+        return usuario
+
+    salvar_perfil_cliente_config(
+        int(usuario["id"]),
+        nome_exibicao=nome_exibicao.strip() or None,
+        objetivo=objetivo.strip() or None
+    )
+
+    return RedirectResponse("/cliente/perfil", status_code=303)
+
+
+@app.post("/cliente/perfil/foto")
+async def cliente_perfil_foto(
+    request: Request,
+    foto_perfil: UploadFile = File(...)
+):
+    usuario = exigir_cliente(request)
+
+    if isinstance(usuario, RedirectResponse):
+        return usuario
+
+    nome_original = foto_perfil.filename or ""
+    extensao = os.path.splitext(nome_original)[1].lower()
+
+    if extensao not in [".png", ".jpg", ".jpeg", ".webp", ".svg"]:
+        extensao = ".png"
+
+    pasta_upload = "View/static/uploads/clientes"
+    os.makedirs(pasta_upload, exist_ok=True)
+
+    nome_arquivo = f"cliente_{usuario['id']}_{uuid.uuid4().hex}{extensao}"
+    caminho_arquivo = os.path.join(pasta_upload, nome_arquivo)
+
+    conteudo = await foto_perfil.read()
+
+    with open(caminho_arquivo, "wb") as arquivo:
+        arquivo.write(conteudo)
+
+    caminho_publico = f"/static/uploads/clientes/{nome_arquivo}"
+
+    salvar_perfil_cliente_config(
+        int(usuario["id"]),
+        foto_perfil=caminho_publico
+    )
+
+    return RedirectResponse("/cliente/perfil", status_code=303)

@@ -4,17 +4,17 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{% block title %}Tele Severino{% endblock %}</title>
-  <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}?v=profile-status-1">
+  <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}?v=cliente-perfil-link-fix-1">
   <link rel="icon" href="{{ url_for('static', path='/favicon.svg') }}" type="image/svg+xml">
 </head>
 <body class="{% block body_class %}{% endblock %}">
   {% block content %}{% endblock %}
-  <script src="{{ url_for('static', path='/script.js') }}?v=profile-status-1"></script>
+  <script src="{{ url_for('static', path='/script.js') }}?v=cliente-perfil-link-fix-1"></script>
 
 {% set current_path = request.url.path if request is defined else '' %}
 {% if current_path and current_path not in ['/', '/login'] and not current_path.startswith('/especialista') %}
   <aside class="client-instagram-rail" aria-label="Navegação do usuário">
-    <a href="{{ url_for('home') }}" class="client-rail-profile" title="{{ cliente_atual.nome if cliente_atual else 'Cliente' }}">
+    <a href="{{ url_for('cliente_perfil_page') }}" class="client-rail-profile" title="Editar perfil e foto">
       {% if cliente_atual and cliente_atual.foto_perfil %}
         <img src="{{ cliente_atual.foto_perfil }}" alt="Foto do perfil">
       {% else %}
@@ -29,39 +29,39 @@
 
     <nav class="client-rail-nav">
       <a href="{{ url_for('home') }}" class="client-rail-item {% if current_path == '/home' %}active{% endif %}">
-        <span class="client-rail-icon">⌂</span>
+        <span class="client-rail-icon icon-home" aria-hidden="true"></span>
         <span class="client-rail-label">Página inicial</span>
       </a>
 
       <a href="{{ url_for('specialist.especialistas') }}" class="client-rail-item {% if current_path.startswith('/especialistas') %}active{% endif %}">
-        <span class="client-rail-icon">⌕</span>
+        <span class="client-rail-icon icon-search" aria-hidden="true"></span>
         <span class="client-rail-label">Pesquisar</span>
       </a>
 
       <a href="{{ url_for('specialist.especialistas') }}?status=online" class="client-rail-item">
-        <span class="client-rail-icon">●</span>
+        <span class="client-rail-icon icon-online" aria-hidden="true"></span>
         <span class="client-rail-label">Online agora</span>
       </a>
 
       <button type="button" class="client-rail-item client-open-messages" id="clientOpenMessages">
-        <span class="client-rail-icon">✉</span>
+        <span class="client-rail-icon icon-message" aria-hidden="true"></span>
         <span class="client-rail-label">Mensagens</span>
       </button>
 
       <a href="{{ url_for('specialist.especialistas') }}" class="client-rail-item">
-        <span class="client-rail-icon">＋</span>
+        <span class="client-rail-icon icon-plus" aria-hidden="true"></span>
         <span class="client-rail-label">Nova consulta</span>
       </a>
     </nav>
 
     <div class="client-rail-bottom">
       <button type="button" class="client-rail-item">
-        <span class="client-rail-icon">☰</span>
+        <span class="client-rail-icon icon-menu" aria-hidden="true"></span>
         <span class="client-rail-label">Mais</span>
       </button>
 
       <a href="/logout" class="client-rail-item">
-        <span class="client-rail-icon">↪</span>
+        <span class="client-rail-icon icon-logout" aria-hidden="true"></span>
         <span class="client-rail-label">Sair</span>
       </a>
     </div>

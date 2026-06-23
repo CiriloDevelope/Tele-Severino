@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block content %}
+<main class="client-profile-page">
+  <section class="client-profile-hero">
+    <a href="{{ url_for('home') }}" class="client-profile-back">‹</a>
+    <div>
+      <h1>Personalização do Perfil</h1>
+      <p>Edite como você aparece no Tele-Severino.</p>
+    </div>
+  </section>
+
+  <section class="client-profile-preview">
+    <div class="client-profile-photo-preview">
+      {% if cliente_atual.foto_perfil %}
+        <img src="{{ cliente_atual.foto_perfil }}" alt="Foto do perfil">
+      {% else %}
+        <span>{{ cliente_atual.iniciais }}</span>
+      {% endif %}
+    </div>
+
+    <div>
+      <h2>{{ cliente_atual.nome }}</h2>
+      <p>{{ cliente_atual.objetivo or "Buscando especialistas sob demanda" }}</p>
+    </div>
+  </section>
+
+  <section class="client-profile-card">
+    <h3>Foto do perfil</h3>
+
+    <form action="/cliente/perfil/foto" method="POST" enctype="multipart/form-data" class="client-photo-form">
+      <label class="client-photo-upload">
+        <input type="file" name="foto_perfil" accept="image/png,image/jpeg,image/jpg,image/webp,image/svg+xml" onchange="this.form.submit()">
+        <span>+</span>
+        <strong>Clique para adicionar ou trocar sua foto</strong>
+        <small>PNG, JPG, WEBP ou SVG</small>
+      </label>
+    </form>
+  </section>
+
+  <section class="client-profile-card">
+    <h3>Dados do perfil</h3>
+
+    <form action="/cliente/perfil/dados" method="POST" class="client-profile-form">
+      <label>
+        Nome exibido
+        <input type="text" name="nome_exibicao" value="{{ cliente_atual.nome }}" placeholder="Seu nome">
+      </label>
+
+      <label>
+        O que você procura no Tele-Severino?
+        <textarea name="objetivo" placeholder="Ex: ajuda com reparos, tecnologia, estudos ou culinária">{{ cliente_atual.objetivo }}</textarea>
+      </label>
+
+      <button type="submit">Salvar perfil</button>
+    </form>
+  </section>
+</main>
+{% endblock %}
