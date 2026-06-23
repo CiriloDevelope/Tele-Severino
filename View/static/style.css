@@ -8151,3 +8151,414 @@ body:has(.client-instagram-rail) .header .logout {
 .icon-settings {
   --rail-icon: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='black' d='M19.4 13.5c.1-.5.1-1 .1-1.5s0-1-.1-1.5l2-1.5-2-3.5-2.4 1a7.8 7.8 0 0 0-2.6-1.5L14 2h-4l-.4 2.5A7.8 7.8 0 0 0 7 6l-2.4-1-2 3.5 2 1.5c-.1.5-.1 1-.1 1.5s0 1 .1 1.5l-2 1.5 2 3.5 2.4-1a7.8 7.8 0 0 0 2.6 1.5L10 22h4l.4-2.5A7.8 7.8 0 0 0 17 18l2.4 1 2-3.5-2-1.5ZM12 15.5A3.5 3.5 0 1 1 12 8a3.5 3.5 0 0 1 0 7.5Z'/%3E%3C/svg%3E");
 }
+
+
+/* CLIENT RAIL ALIGN CLEAN FINAL */
+.client-instagram-rail {
+  width: 56px !important;
+  padding: 10px 7px !important;
+  align-items: center !important;
+  gap: 0 !important;
+}
+
+.client-instagram-rail:hover {
+  width: 218px !important;
+  align-items: stretch !important;
+}
+
+.client-rail-profile {
+  width: 42px !important;
+  height: 48px !important;
+  min-height: 48px !important;
+  margin: 0 auto 16px !important;
+  padding: 5px 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 18px !important;
+  box-sizing: border-box !important;
+}
+
+.client-instagram-rail:hover .client-rail-profile {
+  width: 100% !important;
+  justify-content: flex-start !important;
+  padding: 5px 8px !important;
+  margin-bottom: 16px !important;
+}
+
+.client-rail-profile img,
+.client-rail-profile > span {
+  width: 36px !important;
+  height: 36px !important;
+  min-width: 36px !important;
+  border-radius: 14px !important;
+}
+
+.client-rail-nav,
+.client-rail-bottom {
+  width: 100% !important;
+  align-items: center !important;
+}
+
+.client-instagram-rail:hover .client-rail-nav,
+.client-instagram-rail:hover .client-rail-bottom {
+  align-items: stretch !important;
+}
+
+.client-rail-item {
+  width: 42px !important;
+  height: 44px !important;
+  min-height: 44px !important;
+  margin: 0 auto 4px !important;
+  padding: 0 !important;
+  border-radius: 17px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0 !important;
+  background: transparent !important;
+  box-sizing: border-box !important;
+}
+
+.client-instagram-rail:hover .client-rail-item {
+  width: 100% !important;
+  justify-content: flex-start !important;
+  gap: 12px !important;
+  padding: 0 11px !important;
+  margin-bottom: 5px !important;
+}
+
+.client-rail-icon {
+  width: 28px !important;
+  min-width: 28px !important;
+  height: 28px !important;
+  border-radius: 12px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #1d1d1f !important;
+  background: transparent !important;
+}
+
+.client-rail-icon::before {
+  width: 18px !important;
+  height: 18px !important;
+}
+
+/* Remove o laranja transparente quando o menu está recolhido */
+.client-instagram-rail:not(:hover) .client-rail-item.active,
+.client-instagram-rail:not(:hover) .client-rail-item:hover {
+  background: transparent !important;
+  color: #1d1d1f !important;
+}
+
+/* No menu recolhido, só o ícone ativo fica laranja, sem fundo */
+.client-instagram-rail:not(:hover) .client-rail-item.active .client-rail-icon {
+  color: #ff6a00 !important;
+  background: transparent !important;
+}
+
+/* No menu aberto, mantém o destaque bonito no item ativo */
+.client-instagram-rail:hover .client-rail-item.active,
+.client-instagram-rail:hover .client-rail-item:hover {
+  background: rgba(255, 122, 26, 0.10) !important;
+  color: #ff6a00 !important;
+}
+
+.client-instagram-rail:hover .client-rail-item.active .client-rail-icon,
+.client-instagram-rail:hover .client-rail-item:hover .client-rail-icon {
+  background: rgba(255, 122, 26, 0.14) !important;
+  color: #ff6a00 !important;
+}
+
+.client-rail-label {
+  font-size: 13px !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+}
+
+.client-instagram-rail:not(:hover) .client-rail-label,
+.client-instagram-rail:not(:hover) .client-rail-profile-info {
+  display: none !important;
+}
+
+.client-instagram-rail:hover .client-rail-label,
+.client-instagram-rail:hover .client-rail-profile-info {
+  display: block !important;
+}
+
+.client-rail-bottom {
+  margin-top: auto !important;
+}
+
+
+/* CLIENT RAIL ACTIVE PAGE FINAL */
+.client-instagram-rail:not(:hover) .client-rail-item.active {
+  background: transparent !important;
+}
+
+.client-instagram-rail:not(:hover) .client-rail-item.active .client-rail-icon {
+  color: #ff6a00 !important;
+  background: rgba(255, 122, 26, 0.13) !important;
+}
+
+.client-instagram-rail:not(:hover) .client-rail-item.active::after {
+  content: "";
+  position: absolute;
+  right: 4px;
+  width: 5px;
+  height: 18px;
+  border-radius: 999px;
+  background: #ff6a00;
+  box-shadow: 0 8px 18px rgba(255, 106, 0, 0.28);
+}
+
+.client-rail-item {
+  position: relative !important;
+}
+
+.client-instagram-rail:hover .client-rail-item.active {
+  background: rgba(255, 122, 26, 0.12) !important;
+  color: #ff6a00 !important;
+}
+
+.client-instagram-rail:hover .client-rail-item.active .client-rail-icon {
+  color: #ff6a00 !important;
+  background: rgba(255, 122, 26, 0.16) !important;
+}
+
+
+/* CLIENT RAIL ACTIVE CLEAN SIMPLE */
+
+/* Remove a barrinha lateral laranja */
+.client-rail-item.active::after,
+.client-instagram-rail:not(:hover) .client-rail-item.active::after {
+  display: none !important;
+  content: none !important;
+}
+
+/* Estado normal: tudo neutro */
+.client-rail-item {
+  background: transparent !important;
+  color: #1d1d1f !important;
+}
+
+/* Hover simples, sem laranja forte */
+.client-rail-item:hover {
+  background: #f5f5f7 !important;
+  color: #1d1d1f !important;
+}
+
+.client-rail-item:hover .client-rail-icon {
+  background: transparent !important;
+  color: #1d1d1f !important;
+}
+
+/* Página realmente selecionada: laranja */
+.client-instagram-rail .client-rail-item.active {
+  background: rgba(255, 122, 26, 0.11) !important;
+  color: #ff6a00 !important;
+}
+
+.client-instagram-rail .client-rail-item.active .client-rail-icon {
+  background: rgba(255, 122, 26, 0.15) !important;
+  color: #ff6a00 !important;
+}
+
+/* Menu recolhido: só mostra o ícone ativo em laranja, sem faixa */
+.client-instagram-rail:not(:hover) .client-rail-item.active {
+  background: transparent !important;
+}
+
+.client-instagram-rail:not(:hover) .client-rail-item.active .client-rail-icon {
+  background: rgba(255, 122, 26, 0.14) !important;
+  color: #ff6a00 !important;
+}
+
+/* Mensagens é painel, não página. Não deixa fixo laranja */
+.client-open-messages.active,
+.client-instagram-rail .client-open-messages.active {
+  background: transparent !important;
+  color: #1d1d1f !important;
+}
+
+.client-open-messages.active .client-rail-icon,
+.client-instagram-rail .client-open-messages.active .client-rail-icon {
+  background: transparent !important;
+  color: #1d1d1f !important;
+}
+
+.client-open-messages:hover {
+  background: #f5f5f7 !important;
+  color: #1d1d1f !important;
+}
+
+
+/* CLIENT MESSAGES MENU PAGE UI */
+.client-online-dot {
+  position: absolute;
+  left: 34px;
+  top: 34px;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: #34c759;
+  border: 2px solid #ffffff;
+  box-shadow: 0 6px 14px rgba(52, 199, 89, 0.38);
+  z-index: 3;
+}
+
+.client-instagram-rail:hover .client-online-dot {
+  left: 38px;
+  top: 36px;
+}
+
+.client-messages-page {
+  width: min(390px, calc(100vw - 28px));
+  margin: 0 auto;
+  padding: 18px 0 110px;
+}
+
+.client-messages-hero {
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 28px;
+  padding: 18px;
+  display: grid;
+  grid-template-columns: 42px 1fr;
+  gap: 12px;
+  align-items: center;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.08);
+  margin-bottom: 16px;
+}
+
+.client-messages-hero h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 950;
+  color: #1d1d1f;
+}
+
+.client-messages-hero p {
+  margin: 6px 0 0;
+  color: #6e6e73;
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.client-messages-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.client-message-history-row {
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(0, 0, 0, 0.07);
+  border-radius: 24px;
+  padding: 14px;
+  display: grid;
+  grid-template-columns: 54px 1fr;
+  gap: 12px;
+  align-items: center;
+  text-decoration: none;
+  color: #1d1d1f;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.06);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.client-message-history-row:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.09);
+}
+
+.client-message-history-avatar {
+  position: relative;
+  width: 54px;
+  height: 54px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #ff7a1a, #ff5f00);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 950;
+  overflow: hidden;
+}
+
+.client-message-history-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.client-message-history-avatar::after {
+  content: "";
+  position: absolute;
+  right: 2px;
+  bottom: 2px;
+  width: 11px;
+  height: 11px;
+  border-radius: 999px;
+  border: 2px solid #ffffff;
+  background: #b8b8bd;
+}
+
+.client-message-history-avatar.online::after {
+  background: #34c759;
+}
+
+.client-message-history-content {
+  min-width: 0;
+}
+
+.client-message-history-content > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.client-message-history-content strong {
+  font-size: 14px;
+  font-weight: 950;
+  color: #1d1d1f;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.client-message-history-content small {
+  font-size: 11px;
+  font-weight: 900;
+  border-radius: 999px;
+  padding: 4px 8px;
+  white-space: nowrap;
+}
+
+.client-message-history-content small.online {
+  color: #0b7a2a;
+  background: rgba(52, 199, 89, 0.16);
+}
+
+.client-message-history-content small.offline {
+  color: #6e6e73;
+  background: #f5f5f7;
+}
+
+.client-message-history-content p {
+  margin: 4px 0 3px;
+  color: #6e6e73;
+  font-size: 13px;
+  font-weight: 750;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.client-message-history-content span {
+  display: block;
+  color: #6e6e73;
+  font-size: 12px;
+  line-height: 1.3;
+}

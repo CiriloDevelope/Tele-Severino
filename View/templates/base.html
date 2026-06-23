@@ -12,7 +12,18 @@
   <script src="{{ url_for('static', path='/script.js') }}?v=cliente-perfil-link-fix-1"></script>
 
 {% set current_path = request.url.path if request is defined else '' %}
-{% if current_path and current_path not in ['/', '/login'] and not current_path.startswith('/especialista') %}
+{% set is_client_flow = current_path.startswith('/perfil') or current_path.startswith('/chamada') or current_path.startswith('/pagamento') or current_path.startswith('/avaliacao') %}
+{% set show_client_shell =
+  current_path.startswith('/home')
+  or current_path.startswith('/especialistas')
+  or current_path.startswith('/perfil')
+  or current_path.startswith('/chamada')
+  or current_path.startswith('/pagamento')
+  or current_path.startswith('/avaliacao')
+  or current_path.startswith('/cliente/perfil')
+  or current_path.startswith('/cliente/mensagens')
+%}
+{% if show_client_shell %}
   <aside class="client-instagram-rail" aria-label="Navegação do usuário">
     <a href="{{ url_for('cliente_perfil_page') }}" class="client-rail-profile" title="Editar perfil e foto">
       {% if cliente_atual and cliente_atual.foto_perfil %}
@@ -21,6 +32,8 @@
         <span>{{ cliente_atual.iniciais if cliente_atual else 'CL' }}</span>
       {% endif %}
 
+      <em class="client-online-dot" title="Cliente online"></em>
+
       <div class="client-rail-profile-info">
         <strong>{{ cliente_atual.nome if cliente_atual else 'Cliente' }}</strong>
         <small>{{ cliente_atual.email if cliente_atual else 'Usuário comum' }}</small>
@@ -28,29 +41,24 @@
     </a>
 
     <nav class="client-rail-nav">
-      <a href="{{ url_for('home') }}" class="client-rail-item {% if current_path == '/home' %}active{% endif %}">
+      <a href="{{ url_for('home') }}" class="client-rail-item {% if current_path.startswith('/home') %}active{% endif %}">
         <span class="client-rail-icon icon-home" aria-hidden="true"></span>
         <span class="client-rail-label">Página inicial</span>
       </a>
 
-      <a href="{{ url_for('specialist.especialistas') }}" class="client-rail-item {% if current_path.startswith('/especialistas') %}active{% endif %}">
+      <a href="{{ url_for('specialist.especialistas') }}" class="client-rail-item {% if is_client_flow or (current_path.startswith('/especialistas') and request.query_params.get('status') != 'online') %}active{% endif %}">
         <span class="client-rail-icon icon-search" aria-hidden="true"></span>
         <span class="client-rail-label">Pesquisar</span>
       </a>
 
-      <a href="{{ url_for('specialist.especialistas') }}?status=online" class="client-rail-item">
+      <a href="{{ url_for('specialist.especialistas') }}?status=online" class="client-rail-item {% if current_path.startswith('/especialistas') and request.query_params.get('status') == 'online' %}active{% endif %}">
         <span class="client-rail-icon icon-online" aria-hidden="true"></span>
         <span class="client-rail-label">Online agora</span>
       </a>
 
-      <button type="button" class="client-rail-item client-open-messages" id="clientOpenMessages">
+      <a href="{{ url_for('cliente_mensagens_page') }}" class="client-rail-item {% if current_path.startswith('/cliente/mensagens') %}active{% endif %}">
         <span class="client-rail-icon icon-message" aria-hidden="true"></span>
         <span class="client-rail-label">Mensagens</span>
-      </button>
-
-      <a href="{{ url_for('specialist.especialistas') }}" class="client-rail-item">
-        <span class="client-rail-icon icon-plus" aria-hidden="true"></span>
-        <span class="client-rail-label">Nova consulta</span>
       </a>
     </nav>
 

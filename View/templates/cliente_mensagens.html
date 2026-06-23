@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<main class="client-messages-page">
+  <section class="client-messages-hero">
+    <a href="{{ url_for('home') }}" class="client-profile-back">‹</a>
+    <div>
+      <h1>Mensagens</h1>
+      <p>Histórico de conversas e atendimentos do cliente.</p>
+    </div>
+  </section>
+
+  <section class="client-messages-card">
+    {% for conversa in conversas %}
+      <a href="{{ conversa.url }}" class="client-message-history-row">
+        <div class="client-message-history-avatar {{ conversa.status }}">
+          {% if conversa.foto %}
+            <img src="{{ conversa.foto }}" alt="{{ conversa.nome }}">
+          {% else %}
+            <span>{{ conversa.iniciais }}</span>
+          {% endif %}
+        </div>
+
+        <div class="client-message-history-content">
+          <div>
+            <strong>{{ conversa.nome }}</strong>
+            <small class="{{ conversa.status }}">
+              {% if conversa.status == "online" %}Online agora{% else %}Offline{% endif %}
+            </small>
+          </div>
+
+          <p>{{ conversa.subtitulo }}</p>
+          <span>{{ conversa.mensagem }}</span>
+        </div>
+      </a>
+    {% endfor %}
+  </section>
+</main>
+{% endblock %}

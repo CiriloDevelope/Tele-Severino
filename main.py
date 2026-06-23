@@ -2210,3 +2210,49 @@ async def cliente_perfil_foto(
     )
 
     return RedirectResponse("/cliente/perfil", status_code=303)
+
+
+@app.get("/cliente/mensagens")
+def cliente_mensagens_page(request: Request):
+    usuario = exigir_cliente(request)
+
+    if isinstance(usuario, RedirectResponse):
+        return usuario
+
+    cliente_atual = consultar_cliente_atual_para_layout(int(usuario["id"]))
+
+    especialistas = get_db_specialists()
+
+    conversas = [
+        {
+            "tipo": "severino",
+            "nome": "Severino",
+            "subtitulo": "Assistente Tele-Severino",
+            "mensagem": "Me conte o que você precisa resolver hoje.",
+            "iniciais": "S",
+            "status": "online",
+            "url": "/home"
+        }
+    ]
+
+    for especialista in especialistas[:8]:
+        conversas.append({
+            "tipo": "especialista",
+            "nome": especialista.get("name"),
+            "subtitulo": especialista.get("role"),
+            "mensagem": "Histórico de atendimento e solicitações do cliente.",
+            "iniciais": especialista.get("initials"),
+            "foto": especialista.get("foto_perfil"),
+            "status": "online" if especialista.get("is_online") else "offline",
+            "url": f"/perfil/{especialista.get('id')}"
+        })
+
+    return templates.TemplateResponse(
+        "cliente_mensagens.html",
+        {
+            "request": request,
+            "usuario_id": usuario["id"],
+            "cliente_atual": cliente_atual,
+            "conversas": conversas
+        }
+    )
