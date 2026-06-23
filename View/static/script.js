@@ -1188,3 +1188,228 @@ document.addEventListener("DOMContentLoaded", () => {
 
   applyAllSpecialistFilters();
 });
+
+
+// SEVERINO CHAT JS
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("severinoChatForm");
+  const input = document.getElementById("severinoChatInput");
+  const chatBox = document.getElementById("severinoChatBox");
+
+  if (!form || !input || !chatBox) {
+    return;
+  }
+
+  let severinoUserName = "";
+  let severinoStep = "apresentacao";
+
+  const cleanName = (value) => {
+    return String(value || "")
+      .replace(/[^A-Za-zÀ-ÿ\s]/g, "")
+      .trim()
+      .split(" ")[0];
+  };
+
+  const addMessage = ({ author, text, type, actionLabel, actionUrl }) => {
+    chatBox.classList.remove("empty");
+
+    const message = document.createElement("div");
+    message.className = `severino-message ${type}`;
+
+    const strong = document.createElement("strong");
+    strong.textContent = author;
+
+    const span = document.createElement("span");
+    span.textContent = text;
+
+    message.appendChild(strong);
+    message.appendChild(span);
+
+    if (actionLabel && actionUrl) {
+      const link = document.createElement("a");
+      link.className = "severino-action-link";
+      link.href = actionUrl;
+      link.textContent = actionLabel;
+      message.appendChild(link);
+    }
+
+    chatBox.appendChild(message);
+    chatBox.scrollTop = chatBox.scrollHeight;
+  };
+
+  const askSeverino = async (mensagem) => {
+    const response = await fetch("/api/severino/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ mensagem })
+    });
+
+    return await response.json();
+  };
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const mensagem = input.value.trim();
+
+    if (!mensagem) {
+      return;
+    }
+
+    const button = form.querySelector("button");
+    button.disabled = true;
+
+    addMessage({
+      author: "Você",
+      text: mensagem,
+      type: "severino-user"
+    });
+
+    input.value = "";
+
+    if (severinoStep === "apresentacao") {
+      severinoStep = "nome";
+
+      addMessage({
+        author: "Severino",
+        text: "Olá! Eu sou o Severino, mascote do Tele-Severino. Estou bem feliz em te atender por aqui. Como você está hoje? Antes de continuar, me fala seu primeiro nome?",
+        type: "severino-bot"
+      });
+
+      button.disabled = false;
+      input.focus();
+      return;
+    }
+
+    if (severinoStep === "nome") {
+      const nome = cleanName(mensagem);
+
+      if (!nome || nome.length < 2) {
+        addMessage({
+          author: "Severino",
+          text: "Opa, não consegui pegar seu nome direitinho. Pode me falar só seu primeiro nome?",
+          type: "severino-bot"
+        });
+
+        button.disabled = false;
+        input.focus();
+        return;
+      }
+
+      severinoUserName = nome;
+      severinoStep = "duvida";
+
+      addMessage({
+        author: "Severino",
+        text: `Prazer, ${nome}! Agora me conta: qual problema você precisa resolver hoje? Pode ser algo como chuveiro, computador, receita, estudos ou atendimento online.`,
+        type: "severino-bot"
+      });
+
+      button.disabled = false;
+      input.focus();
+      return;
+    }
+
+    addMessage({
+      author: "Severino",
+      text: `${severinoUserName ? severinoUserName + ", " : ""}só um instante, estou procurando a melhor orientação para você...`,
+      type: "severino-bot"
+    });
+
+    const loadingMessage = chatBox.lastElementChild;
+
+    try {
+      const data = await askSeverino(mensagem);
+
+      if (loadingMessage) {
+        loadingMessage.remove();
+      }
+
+      const respostaFinal = severinoUserName
+        ? `${severinoUserName}, ${data.resposta || "não consegui entender, mas posso te mostrar os especialistas disponíveis."}`
+        : data.resposta || "Não consegui entender, mas posso te mostrar os especialistas disponíveis.";
+
+      addMessage({
+        author: "Severino",
+        text: respostaFinal,
+        type: "severino-bot",
+        actionLabel: data.acao_label || "Ver especialistas",
+        actionUrl: data.acao_url || "/especialistas"
+      });
+
+    } catch (error) {
+      if (loadingMessage) {
+        loadingMessage.remove();
+      }
+
+      addMessage({
+        author: "Severino",
+        text: "Tive um problema para responder agora, mas você pode ver todos os especialistas disponíveis.",
+        type: "severino-bot",
+        actionLabel: "Ver especialistas",
+        actionUrl: "/especialistas"
+      });
+
+    } finally {
+      button.disabled = false;
+      input.focus();
+    }
+  });
+});
+
+
+// CLIENT MESSAGE DOCK JS
+document.addEventListener("DOMContentLoaded", () => {
+  const dock = document.getElementById("clientMessageDock");
+  const pill = document.getElementById("clientMessagePill");
+  const openFromRail = document.getElementById("clientOpenMessages");
+  const closeButton = document.getElementById("clientCloseMessages");
+  const focusSeverinoButtons = document.querySelectorAll(".client-focus-severino");
+
+  if (!dock || !pill) {
+    return;
+  }
+
+  const openDock = () => {
+    dock.classList.add("open");
+  };
+
+  const closeDock = () => {
+    dock.classList.remove("open");
+  };
+
+  pill.addEventListener("click", () => {
+    dock.classList.toggle("open");
+  });
+
+  openFromRail?.addEventListener("click", openDock);
+  closeButton?.addEventListener("click", closeDock);
+
+  focusSeverinoButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const severinoCard = document.querySelector(".severino-chat-card");
+      const severinoInput = document.getElementById("severinoChatInput");
+
+      if (severinoCard) {
+        closeDock();
+        severinoCard.scrollIntoView({ behavior: "smooth", block: "center" });
+
+        setTimeout(() => {
+          severinoInput?.focus();
+        }, 450);
+
+        return;
+      }
+
+      window.location.href = "/home";
+    });
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      closeDock();
+    }
+  });
+});

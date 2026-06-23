@@ -4,7 +4,7 @@ import uuid
 from pathlib import Path
 
 from fastapi import FastAPI, Request, Form, UploadFile, File
-from fastapi.responses import RedirectResponse
+from fastapi.responses import JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
@@ -547,6 +547,119 @@ def montar_resumo_pagamento(specialist, tempo):
     }
 
 
+
+SEVERINO_RESPOSTAS_PADRAO = [
+    {
+        "intencao": "casa_reparos",
+        "gatilhos": "chuveiro, tomada, eletrica, elétrica, disjuntor, lampada, lâmpada, encanamento, torneira, vazamento, parede, porta, reparo",
+        "resposta": "Entendi! Isso parece ser algo de Casa e Reparos. Posso te mostrar especialistas disponíveis para te ajudar agora.",
+        "categoria_slug": "casa",
+        "acao_label": "Ver Casa e Reparos",
+        "acao_url": "/especialistas?categoria=casa"
+    },
+    {
+        "intencao": "tecnologia",
+        "gatilhos": "computador, notebook, celular, internet, wifi, wi-fi, aplicativo, app, sistema, tela, erro, impressora",
+        "resposta": "Beleza! Isso parece ser um assunto de Tecnologia. Vou te indicar especialistas que podem ajudar com suporte técnico.",
+        "categoria_slug": "tecnologia",
+        "acao_label": "Ver Tecnologia",
+        "acao_url": "/especialistas?categoria=tecnologia"
+    },
+    {
+        "intencao": "culinaria",
+        "gatilhos": "cozinha, receita, comida, bolo, churrasco, tempero, carne, almoço, jantar, culinaria, culinária",
+        "resposta": "Legal! Isso combina com Culinária. Posso te mostrar especialistas para te orientar com receitas e preparo.",
+        "categoria_slug": "culinaria",
+        "acao_label": "Ver Culinária",
+        "acao_url": "/especialistas?categoria=culinaria"
+    },
+    {
+        "intencao": "estudos",
+        "gatilhos": "faculdade, prova, trabalho, estudo, estudar, matematica, matemática, programação, aula, escola, tarefa",
+        "resposta": "Entendi! Isso parece ser uma dúvida de Estudos. Posso te mostrar especialistas para te ajudar com esse assunto.",
+        "categoria_slug": "estudos",
+        "acao_label": "Ver Estudos",
+        "acao_url": "/especialistas?categoria=estudos"
+    },
+    {
+        "intencao": "preco",
+        "gatilhos": "preço, preco, valor, custa, cobrar, barato, caro, minuto, pagamento",
+        "resposta": "No Tele-Severino, cada especialista possui um valor por minuto. Você pode comparar os profissionais usando os filtros de mais barato e mais caro.",
+        "categoria_slug": "",
+        "acao_label": "Ver especialistas",
+        "acao_url": "/especialistas"
+    },
+    {
+        "intencao": "online",
+        "gatilhos": "online, agora, disponivel, disponível, atender, atendimento, urgente",
+        "resposta": "Posso te mostrar os especialistas disponíveis agora. Use o filtro Online para encontrar quem pode atender mais rápido.",
+        "categoria_slug": "",
+        "acao_label": "Ver especialistas online",
+        "acao_url": "/especialistas"
+    },
+    {
+        "intencao": "fallback",
+        "gatilhos": "",
+        "resposta": "Sou o Severino, seu ajudante aqui no Tele-Severino. Me conte em poucas palavras o que você precisa, por exemplo: arrumar chuveiro, ajuda com computador, receita ou estudo.",
+        "categoria_slug": "",
+        "acao_label": "Ver todos especialistas",
+        "acao_url": "/especialistas"
+    }
+]
+
+
+def garantir_respostas_severino():
+    conexao = None
+
+    try:
+        conexao = conectar_banco()
+        cursor = conexao.cursor()
+
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS severino_respostas (
+                id_resposta INT AUTO_INCREMENT PRIMARY KEY,
+                intencao VARCHAR(80) NOT NULL UNIQUE,
+                gatilhos TEXT NULL,
+                resposta TEXT NOT NULL,
+                categoria_slug VARCHAR(80) NULL,
+                acao_label VARCHAR(120) NULL,
+                acao_url VARCHAR(255) NULL,
+                ativo TINYINT(1) NOT NULL DEFAULT 1,
+                data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+
+        for item in SEVERINO_RESPOSTAS_PADRAO:
+            cursor.execute("""
+                INSERT INTO severino_respostas
+                (intencao, gatilhos, resposta, categoria_slug, acao_label, acao_url, ativo)
+                VALUES (%s, %s, %s, %s, %s, %s, 1)
+                ON DUPLICATE KEY UPDATE
+                    gatilhos = VALUES(gatilhos),
+                    resposta = VALUES(resposta),
+                    categoria_slug = VALUES(categoria_slug),
+                    acao_label = VALUES(acao_label),
+                    acao_url = VALUES(acao_url),
+                    ativo = 1
+            """, (
+                item["intencao"],
+                item["gatilhos"],
+                item["resposta"],
+                item["categoria_slug"],
+                item["acao_label"],
+                item["acao_url"]
+            ))
+
+        conexao.commit()
+
+    except Exception as erro:
+        print("Erro ao preparar respostas do Severino:", erro)
+
+    finally:
+        if conexao:
+            conexao.close()
+
+
 def get_db_specialists():
     conexao = None
     try:
@@ -739,6 +852,67 @@ def exigir_login(request: Request):
         return RedirectResponse("/login", status_code=303)
 
     return usuario
+
+
+
+def consultar_usuario_basico(id_usuario: int):
+    conexao = None
+
+    try:
+        conexao = conectar_banco()
+        cursor = conexao.cursor(dictionary=True)
+
+        cursor.execute("""
+            SELECT
+                id_usuario,
+                nome,
+                email,
+                tipo
+            FROM usuarios
+            WHERE id_usuario = %s
+            LIMIT 1
+        """, (id_usuario,))
+
+        usuario = cursor.fetchone()
+
+        if not usuario:
+            return {
+                "id": id_usuario,
+                "nome": "Cliente",
+                "email": "",
+                "tipo": "CLIENTE",
+                "iniciais": "CL",
+                "foto_perfil": ""
+            }
+
+        nome = usuario.get("nome") or "Cliente"
+        partes_nome = [parte for parte in nome.split() if parte]
+        iniciais = "".join([parte[0] for parte in partes_nome[:2]]).upper() or "CL"
+
+        return {
+            "id": usuario.get("id_usuario"),
+            "nome": nome,
+            "email": usuario.get("email") or "",
+            "tipo": usuario.get("tipo") or "CLIENTE",
+            "iniciais": iniciais,
+            "foto_perfil": ""
+        }
+
+    except Exception as erro:
+        print("Erro ao consultar usuário básico:", erro)
+
+        return {
+            "id": id_usuario,
+            "nome": "Cliente",
+            "email": "",
+            "tipo": "CLIENTE",
+            "iniciais": "CL",
+            "foto_perfil": ""
+        }
+
+    finally:
+        if conexao:
+            conexao.close()
 
 
 def consultar_cadastro_complementar(id_usuario: int):
@@ -1076,6 +1250,7 @@ def especialista_dashboard(request: Request, usuario_id: int = 0):
             "request": request,
             "usuario_id": usuario["id"],
             "cadastro_complementar": consultar_cadastro_complementar(int(usuario["id"])),
+            "cliente_atual": consultar_usuario_basico(int(usuario["id"])),
             "especialista": consultar_especialista_por_usuario(int(usuario["id"])),
             "active_page": "resumo"
         }
@@ -1153,7 +1328,7 @@ def home(request: Request):
         "home.html",
         {
             "request": request,
-            "categories": categorias_dinamicas,
+            "categories": montar_categorias_dinamicas(get_db_specialists()),
             "specialists": get_db_specialists(),
             "cadastro_complementar": consultar_cadastro_complementar(int(usuario["id"]))
         }
@@ -1238,7 +1413,8 @@ def especialistas_page(
             "categories": categories,
             "categoria_selecionada": categoria_selecionada,
             "q": termo_busca,
-            "ordenacao": ordenacao
+            "ordenacao": ordenacao,
+            "cliente_atual": consultar_usuario_basico(int(usuario["id"]))
         }
     )
 
@@ -1720,3 +1896,114 @@ def especialista_operacao(request: Request):
 def favicon_ico():
     return RedirectResponse(url="/static/favicon.svg")
 
+
+
+def consultar_resposta_severino(mensagem):
+    garantir_respostas_severino()
+
+    mensagem_normalizada = normalizar_texto_categoria(mensagem)
+
+    conexao = None
+
+    try:
+        conexao = conectar_banco()
+        cursor = conexao.cursor(dictionary=True)
+
+        cursor.execute("""
+            SELECT
+                intencao,
+                gatilhos,
+                resposta,
+                categoria_slug,
+                acao_label,
+                acao_url
+            FROM severino_respostas
+            WHERE ativo = 1
+            ORDER BY
+                CASE WHEN intencao = 'fallback' THEN 2 ELSE 1 END,
+                id_resposta ASC
+        """)
+
+        respostas = cursor.fetchall()
+
+        fallback = None
+        melhor_resposta = None
+        melhor_pontuacao = 0
+
+        for item in respostas:
+            if item.get("intencao") == "fallback":
+                fallback = item
+                continue
+
+            gatilhos = item.get("gatilhos") or ""
+            pontuacao = 0
+
+            for gatilho in gatilhos.split(","):
+                gatilho_normalizado = normalizar_texto_categoria(gatilho)
+
+                if gatilho_normalizado and gatilho_normalizado in mensagem_normalizada:
+                    pontuacao += 1
+
+            if pontuacao > melhor_pontuacao:
+                melhor_pontuacao = pontuacao
+                melhor_resposta = item
+
+        resposta_final = melhor_resposta or fallback
+
+        if not resposta_final:
+            return {
+                "intencao": "fallback",
+                "resposta": "Sou o Severino, seu ajudante aqui no Tele-Severino. Me conte em poucas palavras o que você precisa.",
+                "categoria_slug": "",
+                "acao_label": "Ver especialistas",
+                "acao_url": "/especialistas"
+            }
+
+        return {
+            "intencao": resposta_final.get("intencao") or "fallback",
+            "resposta": resposta_final.get("resposta") or "",
+            "categoria_slug": resposta_final.get("categoria_slug") or "",
+            "acao_label": resposta_final.get("acao_label") or "Ver especialistas",
+            "acao_url": resposta_final.get("acao_url") or "/especialistas"
+        }
+
+    except Exception as erro:
+        print("Erro ao consultar Severino:", erro)
+
+        return {
+            "intencao": "fallback",
+            "resposta": "Sou o Severino, seu ajudante aqui no Tele-Severino. No momento não consegui entender tudo, mas posso te mostrar os especialistas disponíveis.",
+            "categoria_slug": "",
+            "acao_label": "Ver especialistas",
+            "acao_url": "/especialistas"
+        }
+
+    finally:
+        if conexao:
+            conexao.close()
+
+
+@app.post("/api/severino/chat")
+async def severino_chat(request: Request):
+    try:
+        dados = await request.json()
+    except Exception:
+        dados = {}
+
+    mensagem = (dados.get("mensagem") or "").strip()
+
+    if not mensagem:
+        return JSONResponse({
+            "ok": False,
+            "resposta": "Me conte em poucas palavras o que você precisa. Por exemplo: arrumar chuveiro, ajuda com computador, receita ou estudos.",
+            "acao_label": "Ver especialistas",
+            "acao_url": "/especialistas"
+        })
+
+    resposta = consultar_resposta_severino(mensagem)
+
+    return JSONResponse({
+        "ok": True,
+        "mensagem": mensagem,
+        **resposta
+    })

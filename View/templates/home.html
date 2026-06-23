@@ -14,18 +14,29 @@
 
       <div class="topbar-actions">
         <a href="{{ url_for('brand.personalizacao') }}" class="topbar-icon-btn" title="Personalização">⚙</a>
-        <a href="{{ url_for('auth.logout') }}" class="topbar-logout-btn" title="Sair">Sair</a>
       </div>
     </div>
 
     <section class="hero-card">
       <h1>Olá, como podemos ajudar?</h1>
-      <p>Encontre especialistas disponíveis agora</p>
+      
 
-      <div class="search-box">
-        <span class="search-icon">⌕</span>
-        <input type="text" placeholder="Digite sua dúvida" />
-      </div>
+      
+<section class="severino-chat-card">
+
+  <div class="severino-chat-box empty" id="severinoChatBox"></div>
+
+  <form class="severino-chat-form" id="severinoChatForm">
+    <input
+      type="text"
+      id="severinoChatInput"
+      placeholder="Envie uma mensagem"
+      autocomplete="off"
+    >
+    <button type="submit">Enviar</button>
+  </form>
+</section>
+
     </section>
 
     <section class="home-section">

@@ -10,5 +10,108 @@
 <body class="{% block body_class %}{% endblock %}">
   {% block content %}{% endblock %}
   <script src="{{ url_for('static', path='/script.js') }}?v=profile-status-1"></script>
+
+{% set current_path = request.url.path if request is defined else '' %}
+{% if current_path and current_path not in ['/', '/login'] and not current_path.startswith('/especialista') %}
+  <aside class="client-instagram-rail" aria-label="Navegação do usuário">
+    <a href="{{ url_for('home') }}" class="client-rail-profile" title="{{ cliente_atual.nome if cliente_atual else 'Cliente' }}">
+      {% if cliente_atual and cliente_atual.foto_perfil %}
+        <img src="{{ cliente_atual.foto_perfil }}" alt="Foto do perfil">
+      {% else %}
+        <span>{{ cliente_atual.iniciais if cliente_atual else 'CL' }}</span>
+      {% endif %}
+
+      <div class="client-rail-profile-info">
+        <strong>{{ cliente_atual.nome if cliente_atual else 'Cliente' }}</strong>
+        <small>{{ cliente_atual.email if cliente_atual else 'Usuário comum' }}</small>
+      </div>
+    </a>
+
+    <nav class="client-rail-nav">
+      <a href="{{ url_for('home') }}" class="client-rail-item {% if current_path == '/home' %}active{% endif %}">
+        <span class="client-rail-icon">⌂</span>
+        <span class="client-rail-label">Página inicial</span>
+      </a>
+
+      <a href="{{ url_for('specialist.especialistas') }}" class="client-rail-item {% if current_path.startswith('/especialistas') %}active{% endif %}">
+        <span class="client-rail-icon">⌕</span>
+        <span class="client-rail-label">Pesquisar</span>
+      </a>
+
+      <a href="{{ url_for('specialist.especialistas') }}?status=online" class="client-rail-item">
+        <span class="client-rail-icon">●</span>
+        <span class="client-rail-label">Online agora</span>
+      </a>
+
+      <button type="button" class="client-rail-item client-open-messages" id="clientOpenMessages">
+        <span class="client-rail-icon">✉</span>
+        <span class="client-rail-label">Mensagens</span>
+      </button>
+
+      <a href="{{ url_for('specialist.especialistas') }}" class="client-rail-item">
+        <span class="client-rail-icon">＋</span>
+        <span class="client-rail-label">Nova consulta</span>
+      </a>
+    </nav>
+
+    <div class="client-rail-bottom">
+      <button type="button" class="client-rail-item">
+        <span class="client-rail-icon">☰</span>
+        <span class="client-rail-label">Mais</span>
+      </button>
+
+      <a href="/logout" class="client-rail-item">
+        <span class="client-rail-icon">↪</span>
+        <span class="client-rail-label">Sair</span>
+      </a>
+    </div>
+  </aside>
+
+  <section class="client-message-dock" id="clientMessageDock" aria-label="Mensagens">
+    <button type="button" class="client-message-pill" id="clientMessagePill">
+      <span>✉</span>
+      <strong>Mensagens</strong>
+      <small>Severino</small>
+    </button>
+
+    <div class="client-message-panel" id="clientMessagePanel">
+      <div class="client-message-panel-header">
+        <div>
+          <strong>Mensagens</strong>
+          <span>Atendimento Tele-Severino</span>
+        </div>
+
+        <button type="button" id="clientCloseMessages">×</button>
+      </div>
+
+      <div class="client-message-list">
+        <button type="button" class="client-message-row client-focus-severino">
+          <span class="client-message-avatar">S</span>
+          <span>
+            <strong>Severino</strong>
+            <small>Me conte o que você precisa resolver hoje.</small>
+          </span>
+        </button>
+
+        <a href="{{ url_for('specialist.especialistas') }}?status=online" class="client-message-row">
+          <span class="client-message-avatar online">ON</span>
+          <span>
+            <strong>Especialistas online</strong>
+            <small>Veja quem pode atender agora.</small>
+          </span>
+        </a>
+
+        <a href="{{ url_for('specialist.especialistas') }}" class="client-message-row">
+          <span class="client-message-avatar">+</span>
+          <span>
+            <strong>Nova solicitação</strong>
+            <small>Buscar especialista por categoria.</small>
+          </span>
+        </a>
+      </div>
+    </div>
+  </section>
+{% endif %}
+
 </body>
 </html>
