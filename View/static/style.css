@@ -8562,3 +8562,425 @@ body:has(.client-instagram-rail) .header .logout {
   font-size: 12px;
   line-height: 1.3;
 }
+
+
+/* ADMIN LINKEDIN SETTINGS UI */
+.admin-settings-page {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 260px minmax(0, 620px);
+  gap: 28px;
+  justify-content: center;
+  padding: 26px 24px 90px;
+  box-sizing: border-box;
+}
+
+.admin-settings-sidebar {
+  position: sticky;
+  top: 24px;
+  height: calc(100vh - 48px);
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 28px;
+  padding: 18px;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.08);
+  box-sizing: border-box;
+}
+
+.admin-settings-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: #1d1d1f;
+  margin-bottom: 20px;
+}
+
+.admin-settings-logo span,
+.admin-profile-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 15px;
+  background: linear-gradient(135deg, #ff7a1a, #ff5f00);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 950;
+  box-shadow: 0 12px 26px rgba(255, 122, 26, 0.24);
+}
+
+.admin-settings-logo strong {
+  font-size: 15px;
+  font-weight: 950;
+}
+
+.admin-profile-mini {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: 10px;
+  align-items: center;
+  padding: 12px;
+  border-radius: 20px;
+  background: #f5f5f7;
+  margin-bottom: 18px;
+}
+
+.admin-profile-mini strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 950;
+  color: #1d1d1f;
+}
+
+.admin-profile-mini small {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  color: #6e6e73;
+  line-height: 1.25;
+}
+
+.admin-settings-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.admin-settings-nav a {
+  min-height: 44px;
+  border-radius: 16px;
+  text-decoration: none;
+  color: #1d1d1f;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 12px;
+  font-size: 14px;
+  font-weight: 850;
+}
+
+.admin-settings-nav a span {
+  width: 24px;
+  text-align: center;
+}
+
+.admin-settings-nav a:hover,
+.admin-settings-nav a.active {
+  background: rgba(255, 122, 26, 0.11);
+  color: #ff6a00;
+}
+
+.admin-settings-content {
+  min-width: 0;
+}
+
+.admin-settings-header {
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 28px;
+  padding: 22px;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.admin-settings-header p {
+  margin: 0 0 4px;
+  color: #ff6a00;
+  font-size: 12px;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.admin-settings-header h1 {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 950;
+  color: #1d1d1f;
+}
+
+.admin-settings-header span {
+  display: block;
+  margin-top: 6px;
+  color: #6e6e73;
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.admin-header-action {
+  height: 42px;
+  padding: 0 16px;
+  border-radius: 999px;
+  background: #f5f5f7;
+  color: #1d1d1f;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 13px;
+}
+
+.admin-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.admin-summary-grid article {
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.07);
+  border-radius: 22px;
+  padding: 14px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05);
+}
+
+.admin-summary-grid span {
+  display: block;
+  font-size: 12px;
+  color: #6e6e73;
+  font-weight: 850;
+}
+
+.admin-summary-grid strong {
+  display: block;
+  margin-top: 5px;
+  font-size: 15px;
+  color: #0a66c2;
+  font-weight: 950;
+}
+
+.admin-summary-grid small {
+  display: block;
+  margin-top: 5px;
+  font-size: 11px;
+  color: #6e6e73;
+  line-height: 1.25;
+}
+
+.admin-settings-card {
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.06);
+  margin-bottom: 14px;
+}
+
+.admin-settings-card h2 {
+  margin: 0;
+  padding: 18px 20px 8px;
+  font-size: 18px;
+  font-weight: 950;
+  color: #1d1d1f;
+}
+
+.admin-settings-row {
+  min-height: 66px;
+  padding: 14px 18px 14px 20px;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  display: grid;
+  grid-template-columns: 1fr 26px;
+  gap: 12px;
+  align-items: center;
+  text-decoration: none;
+  color: #1d1d1f;
+  transition: background 0.16s ease;
+}
+
+.admin-settings-row:hover {
+  background: #f5f5f7;
+}
+
+.admin-settings-row strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 950;
+  color: #1d1d1f;
+}
+
+.admin-settings-row span {
+  display: block;
+  margin-top: 4px;
+  font-size: 13px;
+  color: #6e6e73;
+  line-height: 1.32;
+}
+
+.admin-settings-row em {
+  font-style: normal;
+  font-size: 28px;
+  color: #0a66c2;
+  text-align: right;
+}
+
+@media (max-width: 920px) {
+  .admin-settings-page {
+    grid-template-columns: 1fr;
+    width: min(430px, calc(100vw - 28px));
+    margin: 0 auto;
+    padding: 18px 0 100px;
+  }
+
+  .admin-settings-sidebar {
+    position: relative;
+    top: 0;
+    height: auto;
+  }
+
+  .admin-summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-settings-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+
+/* ADMIN LOGIN UI */
+.admin-login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  box-sizing: border-box;
+  background:
+    radial-gradient(circle at top, rgba(255, 122, 26, 0.10), transparent 34%),
+    #f5f5f7;
+}
+
+.admin-login-card {
+  width: min(390px, 100%);
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 30px;
+  padding: 30px;
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.10);
+  box-sizing: border-box;
+}
+
+.admin-login-logo {
+  width: 62px;
+  height: 62px;
+  border-radius: 22px;
+  background: linear-gradient(135deg, #ff7a1a, #ff5f00);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 950;
+  margin: 0 auto 18px;
+  box-shadow: 0 16px 34px rgba(255, 122, 26, 0.28);
+}
+
+.admin-login-card h1 {
+  margin: 0;
+  text-align: center;
+  font-size: 28px;
+  font-weight: 950;
+  color: #1d1d1f;
+}
+
+.admin-login-card p {
+  margin: 8px 0 22px;
+  text-align: center;
+  color: #6e6e73;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.admin-login-error {
+  background: rgba(255, 59, 48, 0.10);
+  color: #b42318;
+  border: 1px solid rgba(255, 59, 48, 0.20);
+  border-radius: 16px;
+  padding: 12px;
+  font-size: 13px;
+  font-weight: 850;
+  margin-bottom: 16px;
+}
+
+.admin-login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.admin-login-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: #1d1d1f;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.admin-login-form input {
+  height: 52px;
+  border-radius: 17px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background: #ffffff;
+  padding: 0 15px;
+  font-size: 14px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.admin-login-form input:focus {
+  border-color: rgba(255, 122, 26, 0.55);
+  box-shadow: 0 0 0 4px rgba(255, 122, 26, 0.13);
+}
+
+.admin-login-form button {
+  height: 54px;
+  border: none;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #ff7a1a, #ff5f00);
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 950;
+  cursor: pointer;
+  box-shadow: 0 16px 34px rgba(255, 122, 26, 0.26);
+  margin-top: 4px;
+}
+
+.admin-login-help {
+  margin-top: 18px;
+  padding: 14px;
+  border-radius: 18px;
+  background: #f5f5f7;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.admin-login-help strong {
+  font-size: 12px;
+  color: #1d1d1f;
+  font-weight: 950;
+}
+
+.admin-login-help span {
+  font-size: 12px;
+  color: #6e6e73;
+  line-height: 1.3;
+}
+
+.admin-login-back {
+  display: block;
+  text-align: center;
+  margin-top: 18px;
+  color: #0a66c2;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 900;
+}

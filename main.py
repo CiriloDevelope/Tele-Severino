@@ -1626,8 +1626,66 @@ def enviar_avaliacao(
     return response
 
 
-@app.get("/personalizacao", name="brand.personalizacao")
-def personalizacao(request: Request):
+
+
+@app.get("/admin/login")
+def admin_login_page(request: Request):
+    return templates.TemplateResponse(
+        "admin_login.html",
+        {
+            "request": request,
+            "erro": ""
+        }
+    )
+
+
+@app.post("/admin/login-web")
+def admin_login_web(
+    request: Request,
+    email: str = Form(...),
+    password: str = Form(...)
+):
+    usuario = consultar_usuarios(email)
+
+    if usuario is None or isinstance(usuario, dict):
+        return templates.TemplateResponse(
+            "admin_login.html",
+            {
+                "request": request,
+                "erro": "E-mail ou senha inválidos."
+            }
+        )
+
+    id_usuario = usuario[0]
+    senha_banco = usuario[3]
+    tipo_usuario = usuario[4]
+
+    if senha_hash(password) != senha_banco:
+        return templates.TemplateResponse(
+            "admin_login.html",
+            {
+                "request": request,
+                "erro": "E-mail ou senha inválidos."
+            }
+        )
+
+    if tipo_usuario not in ["ADMIN", "SUPER_ADMIN"]:
+        return templates.TemplateResponse(
+            "admin_login.html",
+            {
+                "request": request,
+                "erro": "Este acesso é exclusivo para administradores."
+            }
+        )
+
+    response = RedirectResponse("/personalizacao", status_code=303)
+    response.set_cookie("usuario_id", str(id_usuario))
+    response.set_cookie("usuario_tipo", tipo_usuario)
+
+    return response
+
+
+def exigir_admin(request: Request):
     usuario = exigir_login(request)
 
     if isinstance(usuario, RedirectResponse):
@@ -1636,10 +1694,31 @@ def personalizacao(request: Request):
     if usuario["tipo"] == "CLIENTE":
         return RedirectResponse("/cliente/perfil", status_code=303)
 
+    if usuario["tipo"] == "ESPECIALISTA":
+        return RedirectResponse(
+            f"/especialista/dashboard?usuario_id={usuario['id']}",
+            status_code=303
+        )
+
+    if usuario["tipo"] not in ["ADMIN", "SUPER_ADMIN"]:
+        return RedirectResponse("/login", status_code=303)
+
+    return usuario
+
+
+@app.get("/personalizacao", name="brand.personalizacao")
+def personalizacao(request: Request):
+    usuario = exigir_admin(request)
+
+    if isinstance(usuario, RedirectResponse):
+        return usuario
+
     return templates.TemplateResponse(
         "personalizacao.html",
         {
-            "request": request
+            "request": request,
+            "usuario_admin": usuario,
+            "is_super_admin": usuario["tipo"] == "SUPER_ADMIN"
         }
     )
 

@@ -1,49 +1,255 @@
 {% extends "base.html" %}
-{% from "components.html" import logo_box, header %}
-{% block title %}Personalização - Tele Severino{% endblock %}
+
 {% block content %}
-  <main class="phone-page">
-    {{ header("Personalização da Marca", "Customize a identidade visual da sua plataforma") }}
+<main class="admin-settings-page">
+  <aside class="admin-settings-sidebar">
+    <a href="{{ url_for('home') }}" class="admin-settings-logo">
+      <span>TS</span>
+      <strong>Tele Severino</strong>
+    </a>
 
-    <section class="section-block">
-      <h2>Pré-visualização</h2>
-      <div class="preview-card">
-        {{ logo_box() }}
-        <h3>Tele Severino</h3>
-        <p>Conhecimento sob demanda</p>
+    <div class="admin-profile-mini">
+      <div class="admin-profile-avatar">AD</div>
+      <div>
+        <strong>Administração</strong>
+        <small>Configurações da plataforma</small>
       </div>
-    </section>
-
-    <section class="form-section">
-      <h2>Nome da plataforma</h2>
-      <input value="Tele Severino">
-    </section>
-
-    <section class="form-section">
-      <h2>Logo da plataforma</h2>
-      <div class="upload-box">
-        <span>⇧</span>
-        <strong>Clique para fazer upload</strong>
-        <p>PNG, JPG ou SVG (máx. 2MB)</p>
-      </div>
-    </section>
-
-    <section class="form-section color-section">
-      <h2>Cor principal</h2>
-      <label>Selecione a cor</label>
-      <div class="color-row">
-        <div class="selected-color"></div>
-        <input value="#F97316">
-        <span class="color-dot orange-dot"></span>
-        <span class="color-dot blue-dot"></span>
-        <span class="color-dot green-dot"></span>
-        <span class="color-dot purple-dot"></span>
-        <span class="color-dot red-dot"></span>
-      </div>
-    </section>
-
-    <div class="bottom-action">
-      <button class="primary-button">Salvar personalização</button>
     </div>
-  </main>
+
+    <nav class="admin-settings-nav">
+      <a href="#plataforma" class="active">
+        <span>⚙</span>
+        Plataforma
+      </a>
+      <a href="#usuarios">
+        <span>👤</span>
+        Usuários
+      </a>
+      <a href="#especialistas">
+        <span>🧰</span>
+        Especialistas
+      </a>
+      <a href="#financeiro">
+        <span>💳</span>
+        Pagamentos
+      </a>
+      <a href="#mensagens">
+        <span>✉</span>
+        Mensagens
+      </a>
+      <a href="#severino">
+        <span>🤖</span>
+        Severino IA
+      </a>
+      <a href="#seguranca">
+        <span>🔒</span>
+        Segurança
+      </a>
+    </nav>
+  </aside>
+
+  <section class="admin-settings-content">
+    <header class="admin-settings-header">
+      <div>
+        <p>Admin</p>
+        <h1>Configurações</h1>
+        <span>Gerencie a identidade, operação e regras principais do Tele-Severino.</span>
+      </div>
+
+      <a href="{{ url_for('home') }}" class="admin-header-action">Voltar</a>
+    </header>
+
+    <section class="admin-summary-grid">
+      <article>
+        <span>Clientes</span>
+        <strong>Ativo</strong>
+        <small>Cadastro e perfil do cliente comum</small>
+      </article>
+
+      <article>
+        <span>Especialistas</span>
+        <strong>Online/Offline</strong>
+        <small>Controle visual e busca por status</small>
+      </article>
+
+      <article>
+        <span>Severino</span>
+        <strong>IA controlada</strong>
+        <small>Respostas pré-cadastradas no banco</small>
+      </article>
+    </section>
+
+    <section id="plataforma" class="admin-settings-card">
+      <h2>Informações da plataforma</h2>
+
+      <a href="#" class="admin-settings-row">
+        <div>
+          <strong>Nome da plataforma</strong>
+          <span>Tele Severino</span>
+        </div>
+        <em>›</em>
+      </a>
+
+      <a href="#" class="admin-settings-row">
+        <div>
+          <strong>Identidade visual</strong>
+          <span>Logo, ícone, textos institucionais e descrição da plataforma</span>
+        </div>
+        <em>›</em>
+      </a>
+
+      <a href="#" class="admin-settings-row">
+        <div>
+          <strong>Configuração de categorias</strong>
+          <span>Casa e Reparos, Tecnologia, Culinária, Estudos e novas categorias dinâmicas</span>
+        </div>
+        <em>›</em>
+      </a>
+    </section>
+
+    <section id="usuarios" class="admin-settings-card">
+      <h2>Usuários e perfis</h2>
+
+      <a href="#" class="admin-settings-row">
+        <div>
+          <strong>Clientes cadastrados</strong>
+          <span>Visualizar perfis, objetivo do cliente, foto e histórico</span>
+        </div>
+        <em>›</em>
+      </a>
+
+      <a href="#" class="admin-settings-row">
+        <div>
+          <strong>Perfil do cliente</strong>
+          <span>Nome exibido, foto, status online e preferências</span>
+        </div>
+        <em>›</em>
+      </a>
+
+      <a href="#" class="admin-settings-row">
+        <div>
+          <strong>Permissões futuras</strong>
+          <span>Separação entre admin, cliente e especialista</span>
+        </div>
+        <em>›</em>
+      </a>
+    </section>
+
+    <section id="especialistas" class="admin-settings-card">
+      <h2>Especialistas</h2>
+
+      <a href="#" class="admin-settings-row">
+        <div>
+          <strong>Cadastro de especialistas</strong>
+          <span>Nome, especialidade, valor por minuto, foto e descrição</span>
+        </div>
+        <em>›</em>
+      </a>
+
+      <a href="#" class="admin-settings-row">
+        <div>
+          <strong>Status de atendimento</strong>
+          <span>Controle de especialistas online e offline</span>
+        </div>
+        <em>›</em>
+      </a>
+
+      <a href="#" class="admin-settings-row">
+        <div>
+          <strong>Planos dos especialistas</strong>
+          <span>Free, Plus, Profissional e regras comerciais</span>
+        </div>
+        <em>›</em>
+      </a>
+    </section>
+
+    <section id="financeiro" class="admin-settings-card">
+      <h2>Pagamentos e monetização</h2>
+
+      <a href="#" class="admin-settings-row">
+        <div>
+          <strong>Cobrança por minuto</strong>
+          <span>Cálculo do tempo de chamada multiplicado pelo valor do especialista</span>
+        </div>
+        <em>›</em>
+      </a>
+
+      <a href="#" class="admin-settings-row">
+        <div>
+          <strong>Pagamentos fake</strong>
+          <span>Simulação por cartão e Pix para apresentação acadêmica</span>
+        </div>
+        <em>›</em>
+      </a>
+
+      <a href="#" class="admin-settings-row">
+        <div>
+          <strong>Regras futuras</strong>
+          <span>Comissão, saque rápido, assinatura premium e relatórios</span>
+        </div>
+        <em>›</em>
+      </a>
+    </section>
+
+    <section id="mensagens" class="admin-settings-card">
+      <h2>Mensagens e histórico</h2>
+
+      <a href="#" class="admin-settings-row">
+        <div>
+          <strong>Histórico do cliente</strong>
+          <span>Tela inicial de mensagens e atendimentos simulados</span>
+        </div>
+        <em>›</em>
+      </a>
+
+      <a href="#" class="admin-settings-row">
+        <div>
+          <strong>Conversas com especialistas</strong>
+          <span>Funcionalidade futura para salvar mensagens reais</span>
+        </div>
+        <em>›</em>
+      </a>
+    </section>
+
+    <section id="severino" class="admin-settings-card">
+      <h2>Assistente Severino</h2>
+
+      <a href="#" class="admin-settings-row">
+        <div>
+          <strong>Respostas pré-cadastradas</strong>
+          <span>Intenções, gatilhos e respostas controladas no banco</span>
+        </div>
+        <em>›</em>
+      </a>
+
+      <a href="#" class="admin-settings-row">
+        <div>
+          <strong>Fluxo de atendimento</strong>
+          <span>Apresentação, nome do cliente, problema e sugestão de categoria</span>
+        </div>
+        <em>›</em>
+      </a>
+    </section>
+
+    <section id="seguranca" class="admin-settings-card">
+      <h2>Segurança e dados</h2>
+
+      <a href="#" class="admin-settings-row">
+        <div>
+          <strong>Controle de acesso</strong>
+          <span>Separação entre cliente comum e especialista</span>
+        </div>
+        <em>›</em>
+      </a>
+
+      <a href="#" class="admin-settings-row">
+        <div>
+          <strong>LGPD e dados pessoais</strong>
+          <span>Ponto futuro para privacidade, documentos e exclusão de dados</span>
+        </div>
+        <em>›</em>
+      </a>
+    </section>
+  </section>
+</main>
 {% endblock %}

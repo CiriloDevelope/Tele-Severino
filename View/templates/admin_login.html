@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<main class="admin-login-page">
+  <section class="admin-login-card">
+    <div class="admin-login-logo">TS</div>
+
+    <h1>Acesso Administrativo</h1>
+    <p>Entre como Admin ou Super Admin para gerenciar o Tele-Severino.</p>
+
+    {% if erro %}
+      <div class="admin-login-error">
+        {{ erro }}
+      </div>
+    {% endif %}
+
+    <form action="/admin/login-web" method="POST" class="admin-login-form">
+      <label>
+        E-mail administrativo
+        <input type="email" name="email" placeholder="admin.tele@teste.com" required>
+      </label>
+
+      <label>
+        Senha
+        <input type="password" name="password" placeholder="••••••••" required>
+      </label>
+
+      <button type="submit">Entrar no Admin</button>
+    </form>
+
+    <div class="admin-login-help">
+      <strong>Contas de teste</strong>
+      <span>ADMIN: admin.tele@teste.com / 123456</span>
+      <span>SUPER_ADMIN: super.admin@teste.com / 123456</span>
+    </div>
+
+    <a href="{{ url_for('auth.login_page') if false else '/login' }}" class="admin-login-back">
+      Voltar para login comum
+    </a>
+  </section>
+</main>
+{% endblock %}
