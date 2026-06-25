@@ -4,262 +4,455 @@
 
 O **Tele Severino** é uma plataforma digital criada para conectar, de forma rápida e acessível, pessoas que possuem dúvidas técnicas ou práticas a profissionais experientes de diversas áreas, por meio de atendimento remoto via vídeo ou áudio, com cobrança por minuto de uso.
 
-Este projeto foi desenvolvido como parte da **primeira entrega oficial do Projeto Integrador**, correspondente ao **Bloco 1 – Concepção (Semanas 1 a 5)**.
+O projeto foi desenvolvido como parte do **Projeto Integrador**, inicialmente na entrega oficial do **Bloco 1 – Concepção (Semanas 1 a 5)**, e evoluiu para um protótipo funcional com login, busca de especialistas, assistente virtual controlado, videochamada simulada, pagamento fake, avaliação, perfil do cliente e área do especialista.
 
----
+**Data de realização inicial:** 25/03/2026
+**Grupo:** 13
 
 ## Integrantes do Grupo 13
 
-**Data de realização:** 25/03/2026
-
-- **Luciano Souza da Silva Junior** — RA: **926114218** — lucianososiljunior@uni9.edu.br
-- **Israel de Albuquerque** — RA: **926116180** — israelalbuquerque@uni9.edu.br
-- **Edvanio Maximo da Silva** — RA: **926114228** — silva.edvanio@uni9.edu.br
-- **Roger Sousa Funaki** — RA: **926115899** — roger.funaki@uni9.edu.br
-- **Cicero Silva de Almeida Junior** — RA: **1726104302** — cj.almeida@uni9.edu.br
-
----
+| Integrante                     |         RA | E-mail                                                                  |
+| ------------------------------ | ---------: | ----------------------------------------------------------------------- |
+| Luciano Souza da Silva Junior  |  926114218 | [lucianososiljunior@uni9.edu.br](mailto:lucianososiljunior@uni9.edu.br) |
+| Israel de Albuquerque          |  926116180 | [israelalbuquerque@uni9.edu.br](mailto:israelalbuquerque@uni9.edu.br)   |
+| Edvanio Maximo da Silva        |  926114228 | [silva.edvanio@uni9.edu.br](mailto:silva.edvanio@uni9.edu.br)           |
+| Roger Sousa Funaki             |  926115899 | [roger.funaki@uni9.edu.br](mailto:roger.funaki@uni9.edu.br)             |
+| Cicero Silva de Almeida Junior | 1726104302 | [cj.almeida@uni9.edu.br](mailto:cj.almeida@uni9.edu.br)                 |
 
 ## Descrição do Projeto
 
-O **Tele Severino** surge para resolver um problema comum no dia a dia: a dificuldade de obter ajuda técnica rápida, confiável e com custo acessível para resolver dúvidas pontuais.
+O Tele Severino surge para resolver um problema comum no dia a dia: a dificuldade de obter ajuda técnica rápida, confiável e com custo acessível para resolver dúvidas pontuais.
 
-Muitas vezes, as pessoas precisam de uma orientação imediata para:
-- pequenos reparos domésticos;
-- dúvidas de informática;
-- apoio em projetos;
-- orientação culinária;
-- mentorias rápidas em áreas específicas.
+Muitas vezes, as pessoas precisam de uma orientação imediata para pequenos reparos domésticos, dúvidas de informática, apoio em projetos, orientação culinária ou mentorias rápidas em áreas específicas. Atualmente, encontrar profissionais disponíveis para esse tipo de suporte imediato pode ser difícil, caro e inseguro.
 
-Atualmente, encontrar profissionais disponíveis para esse tipo de suporte imediato é difícil, caro e, muitas vezes, inseguro. O Tele Severino propõe uma solução simples: conectar usuários e especialistas em tempo real, com pagamento proporcional ao tempo utilizado.
-
----
+A proposta do Tele Severino é conectar usuários e especialistas em tempo real, com pagamento proporcional ao tempo utilizado.
 
 ## Problema que o Projeto Resolve
 
 O projeto busca solucionar as seguintes dificuldades:
 
-- **Dificuldade de acesso:** encontrar profissionais qualificados para dúvidas rápidas nem sempre é fácil.
-- **Custo elevado:** consultorias tradicionais costumam cobrar valores altos, mesmo para problemas simples.
-- **Falta de confiança:** tutoriais genéricos na internet nem sempre resolvem o problema corretamente.
-- **Desperdício de tempo:** usuários gastam muito tempo pesquisando respostas que poderiam ser resolvidas em poucos minutos com um especialista.
-
----
+* **Dificuldade de acesso:** encontrar profissionais qualificados para dúvidas rápidas nem sempre é fácil.
+* **Custo elevado:** consultorias tradicionais costumam cobrar valores altos, mesmo para problemas simples.
+* **Falta de confiança:** tutoriais genéricos na internet nem sempre resolvem corretamente.
+* **Desperdício de tempo:** usuários gastam muito tempo pesquisando respostas que poderiam ser resolvidas em poucos minutos com um especialista.
 
 ## Público-Alvo
 
 O Tele Severino é voltado para:
 
-- **Estudantes e autônomos**, que precisam de ajuda técnica pontual;
-- **Pessoas que realizam pequenos reparos domésticos**, como elétrica, hidráulica e construção;
-- **Profissionais em transição de carreira**, que necessitam de mentorias rápidas;
-- **Usuários em geral**, com acesso à internet e necessidade de orientação especializada.
-
----
+* Estudantes e autônomos que precisam de ajuda técnica pontual.
+* Pessoas que realizam pequenos reparos domésticos, como elétrica, hidráulica e construção.
+* Profissionais em transição de carreira que necessitam de mentorias rápidas.
+* Usuários em geral com acesso à internet e necessidade de orientação especializada.
 
 ## Contexto Social e Comunitário
 
-O projeto possui forte relação com a **extensão universitária**, pois pode servir como meio para que estudantes de cursos técnicos e superiores apliquem seus conhecimentos na prática, adquiram experiência e também gerem renda.
+O projeto possui relação com a extensão universitária, pois pode servir como meio para que estudantes de cursos técnicos e superiores apliquem seus conhecimentos na prática, adquiram experiência e também gerem renda.
 
-Além disso, a proposta contribui para:
-- ampliar o acesso ao conhecimento especializado;
-- aproximar universidade e sociedade;
-- promover aprendizado prático;
-- incentivar a economia local e digital.
+A proposta contribui para:
 
----
+* Ampliar o acesso ao conhecimento especializado.
+* Aproximar universidade e sociedade.
+* Promover aprendizado prático.
+* Incentivar a economia local e digital.
 
 ## Modelo de Negócio SaaS
 
-O Tele Severino segue o modelo **SaaS (Software as a Service)**, funcionando como uma **plataforma multilateral**, semelhante a um marketplace de conhecimento sob demanda.
+O Tele Severino segue o modelo **SaaS (Software as a Service)**, funcionando como uma plataforma multilateral, semelhante a um marketplace de conhecimento sob demanda.
 
 ### Proposta de Valor
+
 Conectar instantaneamente quem tem uma dúvida técnica a quem pode resolvê-la, oferecendo atendimento remoto rápido, confiável e com pagamento por minuto.
 
 ### Segmentos de Clientes
-- Pessoas físicas em busca de soluções rápidas;
-- Microempreendedores e autônomos;
-- Profissionais especialistas que desejam monetizar conhecimento;
-- Estudantes e aprendizes em busca de orientação.
+
+* Pessoas físicas em busca de soluções rápidas.
+* Microempreendedores e autônomos.
+* Profissionais especialistas que desejam monetizar conhecimento.
+* Estudantes e aprendizes em busca de orientação.
 
 ### Canais
-- Aplicativo mobile (iOS e Android);
-- Divulgação em redes sociais;
-- Parcerias com instituições de ensino;
-- Parcerias com conselhos profissionais e comunidades.
+
+* Plataforma web.
+* Futuro aplicativo mobile.
+* Divulgação em redes sociais.
+* Parcerias com instituições de ensino.
+* Parcerias com conselhos profissionais e comunidades.
 
 ### Fontes de Receita
-- Comissão sobre cada atendimento realizado;
-- Taxa de saque rápido para profissionais;
-- Possibilidade futura de assinatura premium para usuários frequentes.
+
+* Comissão sobre cada atendimento realizado.
+* Taxa de saque rápido para profissionais.
+* Possibilidade futura de assinatura premium para usuários frequentes.
 
 ### Estrutura de Custos
-- Desenvolvimento e manutenção da plataforma;
-- Hospedagem e servidores;
-- Marketing e aquisição de usuários;
-- Suporte ao cliente;
-- Moderação e garantia de qualidade;
-- Processamento de pagamentos.
 
----
+* Desenvolvimento e manutenção da plataforma.
+* Hospedagem e servidores.
+* Marketing e aquisição de usuários.
+* Suporte ao cliente.
+* Moderação e garantia de qualidade.
+* Processamento de pagamentos.
 
 ## Business Model Canvas
 
-### Proposta de Valor
-- Atendimento técnico rápido e especializado;
-- Pagamento justo por minuto utilizado;
-- Facilidade de acesso ao conhecimento;
-- Plataforma segura para contratação e prestação de suporte.
-
-### Segmentos de Clientes
-- Usuários com dúvidas técnicas e práticas;
-- Prestadores de serviço e especialistas;
-- Estudantes e profissionais em formação;
-- Pequenos empreendedores.
-
-### Canais
-- Aplicativo mobile;
-- Redes sociais;
-- Universidades e instituições parceiras;
-- Divulgação digital.
-
-### Relacionamento com Clientes
-- Atendimento digital;
-- Notificações automatizadas;
-- Avaliação dos serviços;
-- Histórico de atendimentos e pagamentos.
-
-### Fontes de Receita
-- Comissão por transação;
-- Taxa por saque rápido;
-- Assinaturas premium futuras;
-- Serviços adicionais na plataforma.
-
-### Recursos Principais
-- Plataforma web/mobile;
-- Sistema de pagamento;
-- Base de especialistas cadastrados;
-- Infraestrutura em nuvem;
-- Sistema de autenticação e segurança.
-
-### Atividades Principais
-- Manutenção da plataforma;
-- Gestão dos atendimentos;
-- Validação de cadastros;
-- Moderação da qualidade;
-- Processamento dos pagamentos.
-
-### Parcerias Principais
-- Instituições de ensino;
-- Gateways de pagamento;
-- Provedores de nuvem;
-- Comunidades técnicas e profissionais.
-
-### Estrutura de Custos
-- Desenvolvimento;
-- Infraestrutura;
-- Marketing;
-- Suporte;
-- Segurança da informação;
-- Operação financeira.
-
----
+| Bloco                       | Descrição                                                                                                      |
+| --------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| Proposta de Valor           | Atendimento técnico rápido e especializado, pagamento justo por minuto e facilidade de acesso ao conhecimento. |
+| Segmentos de Clientes       | Usuários com dúvidas técnicas, especialistas, estudantes, profissionais em formação e pequenos empreendedores. |
+| Canais                      | Plataforma web, aplicativo mobile futuro, redes sociais, universidades e divulgação digital.                   |
+| Relacionamento com Clientes | Atendimento digital, notificações, avaliação dos serviços e histórico de atendimentos.                         |
+| Fontes de Receita           | Comissão por transação, taxa por saque rápido, assinaturas futuras e serviços adicionais.                      |
+| Recursos Principais         | Plataforma web/mobile, sistema de pagamento, base de especialistas, autenticação e infraestrutura em nuvem.    |
+| Atividades Principais       | Manutenção da plataforma, gestão dos atendimentos, validação de cadastros, moderação e pagamentos.             |
+| Parcerias Principais        | Instituições de ensino, gateways de pagamento, provedores de nuvem e comunidades técnicas.                     |
+| Estrutura de Custos         | Desenvolvimento, infraestrutura, marketing, suporte, segurança e operação financeira.                          |
 
 ## Requisitos Funcionais
 
-### RF01 – Cadastro de Usuários
-O sistema deve permitir que usuários se cadastrem informando nome, CPF/CNPJ, documento com foto, e-mail e senha, com validação dos dados preenchidos.
-
-### RF02 – Login e Autenticação
-O sistema deve permitir autenticação por e-mail e senha, gerando um token seguro para manter a sessão do usuário ativa.
-
-### RF03 – Histórico de Atividades
-O usuário deve poder consultar suas solicitações anteriores e seu histórico de pagamentos dentro da plataforma.
-
-### RF04 – Sistema de Avaliação
-Após a conclusão do atendimento, o sistema deve permitir que usuário e profissional avaliem a experiência com nota e comentário.
-
-### RF05 – Edição de Perfil
-O sistema deve permitir que o usuário altere seus dados cadastrais, como nome, telefone, endereço e e-mail.
-
-### RF06 – Notificações
-O sistema deve enviar notificações por push, e-mail, WhatsApp ou SMS para avisar sobre mensagens, atualizações de solicitações e novos atendimentos.
-
-### RF07 – Busca com Filtros
-O sistema deve permitir a filtragem de serviços por categoria, tipo e outros critérios, facilitando a busca do usuário.
-
-### RF08 – Processamento de Pagamentos
-O sistema deve integrar-se a provedores de pagamento para processar transações por cartão, boleto e Pix, além de atualizar automaticamente o status do pagamento.
-
-### RF09 – Registro de Atendimento
-O sistema deve gerar um protocolo único para cada solicitação, registrando data, hora, usuário e categoria do problema.
-
-### RF10 – Integração com Mapas
-O sistema deve exibir no mapa a disponibilidade de ajuda ou profissionais em regiões específicas.
-
-### RF11 – Recuperação de Senha
-O sistema deve permitir que o usuário redefina sua senha por meio de um link enviado por e-mail.
-
----
+| Código | Requisito                                                         |
+| ------ | ----------------------------------------------------------------- |
+| RF01   | Cadastro de usuários com dados pessoais, e-mail e senha.          |
+| RF02   | Login e autenticação por e-mail e senha.                          |
+| RF03   | Histórico de atividades e pagamentos.                             |
+| RF04   | Sistema de avaliação com nota e comentário.                       |
+| RF05   | Edição de perfil do usuário.                                      |
+| RF06   | Notificações por push, e-mail, WhatsApp ou SMS.                   |
+| RF07   | Busca com filtros por categoria, tipo, preço e status.            |
+| RF08   | Processamento de pagamentos por cartão, boleto e Pix.             |
+| RF09   | Registro de atendimento com protocolo, data, usuário e categoria. |
+| RF10   | Integração futura com mapas.                                      |
+| RF11   | Recuperação de senha.                                             |
 
 ## Requisitos Não Funcionais
 
-### RNF01 – Escalabilidade
-A arquitetura do sistema deve suportar pelo menos 1.000 acessos simultâneos, garantindo estabilidade durante picos de uso.
-
-### RNF02 – Usabilidade
-A interface deve ser responsiva e de fácil utilização em smartphone, tablet e navegador web.
-
-### RNF03 – Disponibilidade
-O sistema deve permanecer disponível pelo menos 95% do tempo.
-
-### RNF04 – Desempenho
-O carregamento do mapa e das listagens não deve ultrapassar 3 segundos em condições normais de uso.
-
-### RNF05 – Segurança e LGPD
-O sistema deve criptografar dados sensíveis e proteger documentos, dados pessoais e endereços dos usuários.
-
----
+| Código | Requisito                                                     |
+| ------ | ------------------------------------------------------------- |
+| RNF01  | Escalabilidade para suportar alto volume de acessos.          |
+| RNF02  | Interface responsiva para smartphone, tablet e navegador web. |
+| RNF03  | Disponibilidade mínima esperada de 95%.                       |
+| RNF04  | Bom desempenho no carregamento de listagens e informações.    |
+| RNF05  | Segurança, proteção de dados sensíveis e adequação à LGPD.    |
 
 ## User Stories
 
-- Como Carlos, 35 anos, prestador de serviços autônomo, quero me cadastrar informando meus dados pessoais e documentos para acessar a plataforma com segurança.
-- Como Mariana, 28 anos, cliente que busca serviços domésticos, quero fazer login com e-mail e senha para acessar minha conta com segurança.
-- Como João, 40 anos, usuário frequente da plataforma, quero visualizar meu histórico de solicitações e pagamentos para acompanhar minhas atividades na plataforma.
-- Como Fernanda, 31 anos, contratante de serviços, quero avaliar serviços com nota e comentário para contribuir com a reputação dos prestadores.
-- Como Lucas, 22 anos, prestador iniciante, quero editar meus dados cadastrais para manter minhas informações atualizadas.
-- Como Aline, 29 anos, usuária ativa, quero receber notificações sobre mensagens e novos serviços para não perder oportunidades.
-- Como Rafael, 28 anos, cliente com necessidade urgente, quero filtrar serviços por categoria para encontrar rapidamente o que preciso.
-- Como Beatriz, 37 anos, cliente da plataforma, quero realizar pagamentos via cartão, boleto ou Pix para contratar serviços de forma prática.
-- Como Diego, 45 anos, usuário que já solicitou vários serviços, quero acompanhar minhas solicitações por meio de um protocolo para verificar o status do atendimento.
-- Como Juliana, 24 anos, usuária que busca serviços próximos, quero visualizar serviços disponíveis em um mapa para identificar ajuda próxima à minha localização.
+* Como cliente, quero me cadastrar e acessar a plataforma com segurança.
+* Como cliente, quero buscar especialistas por categoria para encontrar ajuda rapidamente.
+* Como cliente, quero visualizar o perfil do especialista antes de iniciar o atendimento.
+* Como cliente, quero iniciar uma chamada simulada com o especialista para receber orientação.
+* Como cliente, quero pagar pelo atendimento de forma prática.
+* Como cliente, quero avaliar o especialista após o atendimento.
+* Como especialista, quero editar meu perfil para apresentar meus serviços.
+* Como especialista, quero visualizar dados financeiros e operacionais.
+* Como usuário, quero receber orientação inicial do Severino para encontrar a categoria correta.
 
----
+## Fluxo Principal do Sistema
+
+```text
+Login/Cadastro
+→ Home do cliente
+→ Assistente Severino
+→ Busca de especialistas
+→ Perfil do especialista
+→ Chamada simulada
+→ Pagamento fake
+→ Avaliação
+→ Histórico/Mensagens
+```
+
+## Tecnologias Utilizadas
+
+* Python
+* FastAPI
+* Jinja2 Templates
+* MySQL
+* HTML
+* CSS
+* JavaScript
+* Uvicorn
+
+## Estrutura do Projeto
+
+```text
+Tele-Severino/
+├── Controller/
+├── Model/
+├── View/
+│   ├── static/
+│   │   ├── style.css
+│   │   ├── script.js
+│   │   └── uploads/
+│   └── templates/
+│       ├── base.html
+│       ├── home.html
+│       ├── especialistas.html
+│       ├── perfil.html
+│       ├── chamada.html
+│       ├── pagamento.html
+│       ├── avaliacao.html
+│       ├── cliente_perfil.html
+│       ├── cliente_mensagens.html
+│       └── personalizacao.html
+├── main.py
+└── README.md
+```
+
+## Como Rodar Localmente
+
+### 1. Clonar o repositório
+
+```bash
+git clone git@github.com:CiriloDevelope/Tele-Severino.git
+cd Tele-Severino
+```
+
+### 2. Ativar o ambiente virtual
+
+```bash
+source .venv/bin/activate
+```
+
+### 3. Configurar variável local da IA
+
+```bash
+export GROQ_API_KEY="fake-key-local"
+```
+
+### 4. Subir o servidor
+
+```bash
+uvicorn main:app --reload
+```
+
+### 5. Acessar no navegador
+
+```text
+http://127.0.0.1:8000/login
+```
+
+## Banco de Dados
+
+Banco utilizado:
+
+```text
+tele_severino
+```
+
+O projeto utiliza MySQL e possui rotinas automáticas para criar ou ajustar tabelas de apoio, como:
+
+* `avaliacoes`
+* `severino_respostas`
+* `cliente_perfil_config`
+
+## Login de Teste
+
+Cliente comum:
+
+```text
+E-mail: cliente.navegador@teste.com
+Senha: 123456
+```
+
+## Funcionalidades Implementadas
+
+### Cliente
+
+* Home com layout mobile-first.
+* Menu lateral recolhível inspirado no Instagram.
+* Perfil do cliente com nome, foto e objetivo.
+* Busca inteligente de especialistas.
+* Filtro por categoria.
+* Categorias dinâmicas vindas do banco.
+* Filtro por preço: relevância, mais barato e mais caro.
+* Filtro por status: todos, online e offline.
+* Perfil do especialista.
+* Agenda/disponibilidade simulada.
+* Chamada simulada.
+* Pagamento fake por cartão ou Pix.
+* Avaliação com nota e comentário.
+* Tela de mensagens/histórico inicial.
+
+### Especialista
+
+* Dashboard do especialista.
+* Área financeira.
+* Área operacional.
+* Perfil do especialista.
+* Upload de foto.
+* Edição de dados.
+* Controle visual de plano e status.
+
+### Assistente Severino
+
+O **Severino** é o mascote e assistente controlado do Tele-Severino. Ele simula uma IA segura, usando respostas pré-cadastradas no banco de dados.
+
+Fluxo do Severino:
+
+```text
+Cliente envia a primeira mensagem
+→ Severino se apresenta
+→ Pergunta o nome do cliente
+→ Cliente informa o nome
+→ Severino pergunta o problema
+→ Cliente descreve a necessidade
+→ Severino identifica a intenção
+→ Severino sugere categoria ou ação
+```
+
+Exemplo:
+
+```text
+Cliente: preciso arrumar meu chuveiro
+
+Severino:
+Entendi! Isso parece ser algo de Casa e Reparos.
+Posso te mostrar especialistas disponíveis para te ajudar agora.
+
+Ação:
+Ver Casa e Reparos
+```
+
+Rota utilizada:
+
+```text
+POST /api/severino/chat
+```
+
+Tabela utilizada:
+
+```text
+severino_respostas
+```
+
+Intenções iniciais:
+
+* casa_reparos
+* tecnologia
+* culinaria
+* estudos
+* preco
+* online
+* fallback
+
+## Rotas Principais
+
+### Autenticação
+
+```text
+GET  /
+GET  /login
+POST /login-web
+GET  /logout
+```
+
+### Cliente
+
+```text
+GET  /home
+GET  /especialistas
+GET  /perfil/{specialist_id}
+GET  /chamada/{specialist_id}
+GET  /pagamento/{specialist_id}
+POST /pagamento/{specialist_id}
+GET  /avaliacao/{specialist_id}
+POST /avaliacao/{specialist_id}
+GET  /cliente/perfil
+POST /cliente/perfil/dados
+POST /cliente/perfil/foto
+GET  /cliente/mensagens
+POST /api/severino/chat
+```
+
+### Especialista
+
+```text
+GET  /especialista/dashboard
+GET  /especialista/financeiro
+GET  /especialista/operacao
+GET  /especialista/perfil
+POST /especialista/perfil/foto
+POST /especialista/perfil/dados
+GET  /especialista/assinatura
+POST /especialista/assinatura/solicitar-plano
+```
+
+### Marca/Admin
+
+```text
+GET /personalizacao
+```
+
+A rota `/personalizacao` foi mantida para configuração da marca ou uso administrativo. Quando um cliente comum acessa essa rota, ele é redirecionado para `/cliente/perfil`.
 
 ## Kanban do Projeto
 
-**Link do GitHub Projects:**  
+GitHub Projects:
+
+```text
 https://github.com/users/CiriloDevelope/projects/1
+```
 
 Colunas utilizadas:
-- A Fazer
-- Em Progresso
-- Concluído
 
----
+* A Fazer
+* Em Progresso
+* Concluído
 
 ## Repositório GitHub
 
-**Link do repositório:**  
+Link do repositório:
+
+```text
 https://github.com/CiriloDevelope/Tele-Severino
+```
 
-**URL SSH:**  
-`git@github.com:CiriloDevelope/Tele-Severino.git`
+URL SSH:
 
----
+```text
+git@github.com:CiriloDevelope/Tele-Severino.git
+```
 
-## Instruções de Uso
+## Status Atual
 
-### Clonar o repositório
-```bash
-git clone git@github.com:CiriloDevelope/Tele-Severino.git
+| Área                   | Status           |
+| ---------------------- | ---------------- |
+| Fluxo do cliente       | Funcional        |
+| Busca e filtros        | Funcional        |
+| Assistente Severino    | Funcional        |
+| Perfil do cliente      | Funcional        |
+| Perfil do especialista | Funcional        |
+| Pagamento fake         | Funcional        |
+| Avaliação              | Funcional        |
+| Mensagens              | Inicial/simulado |
+| Dashboard especialista | Parcial          |
+| Admin/marca            | Parcial          |
+
+## Pendências e Melhorias Futuras
+
+* Salvar histórico real de mensagens com especialistas.
+* Criar conversa real entre cliente e especialista.
+* Melhorar tela `/cliente/mensagens`.
+* Criar área administrativa completa.
+* Separar permissões de admin, cliente e especialista.
+* Criar seed/migration oficial do banco.
+* Documentar o banco em SQL.
+* Melhorar dashboard do especialista.
+* Criar fluxo de aceite/recusa de solicitação pelo especialista.
+* Salvar agendamentos no banco.
+* Criar notificações internas.
+* Criar histórico completo do cliente.
+* Melhorar responsividade em telas muito pequenas.
+
+## Observações
+
+Este projeto é acadêmico e utiliza simulações para representar um produto real:
+
+* Pagamento fake.
+* Pix fake.
+* Aprovação de cartão fake.
+* Videochamada simulada.
+* Assistente Severino com respostas controladas.
+* Mensagens iniciais simuladas.
+* Agenda parcialmente simulada.
+
+O objetivo é demonstrar a jornada completa do usuário, a proposta de valor do produto e a evolução técnica da plataforma.
