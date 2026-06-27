@@ -36,7 +36,7 @@
 
       <div class="client-rail-profile-info">
         <strong>{{ cliente_atual.nome if cliente_atual else 'Cliente' }}</strong>
-        <small>{{ cliente_atual.email if cliente_atual else 'Usuário comum' }}</small>
+        <small>Usuário comum</small>
       </div>
     </a>
 
@@ -54,6 +54,11 @@
       <a href="{{ url_for('specialist.especialistas') }}?status=online" class="client-rail-item {% if current_path.startswith('/especialistas') and request.query_params.get('status') == 'online' %}active{% endif %}">
         <span class="client-rail-icon icon-online" aria-hidden="true"></span>
         <span class="client-rail-label">Online agora</span>
+      </a>
+
+      <a href="/cliente/solicitacoes" class="client-rail-item {% if current_path.startswith('/cliente/solicitacoes') %}active{% endif %}">
+        <span class="client-rail-icon icon-requests" aria-hidden="true"></span>
+        <span class="client-rail-label">Solicitações</span>
       </a>
 
       <a href="{{ url_for('cliente_mensagens_page') }}" class="client-rail-item {% if current_path.startswith('/cliente/mensagens') %}active{% endif %}">

@@ -10339,3 +10339,47 @@ body.modal-open {
     text-align: center;
   }
 }
+
+
+
+
+
+/* CLIENT RAIL STABLE MENU TWEAK */
+
+/* Centraliza o bloco principal usando o flex original da sidebar */
+.client-rail-nav {
+  margin-top: auto !important;
+  margin-bottom: auto !important;
+  gap: 10px !important;
+}
+
+/* Mantém Mais/Sair no rodapé sem empurrar o menu para cima demais */
+.client-rail-bottom {
+  margin-top: 0 !important;
+}
+
+/* Ajuste horizontal apenas no menu aberto */
+.client-instagram-rail:hover .client-rail-item {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 12px !important;
+  padding: 0 12px !important;
+}
+
+.client-instagram-rail:hover .client-rail-icon {
+  flex: 0 0 28px !important;
+}
+
+.client-instagram-rail:hover .client-rail-label {
+  display: inline-flex !important;
+  align-items: center !important;
+  opacity: 1 !important;
+  transform: none !important;
+  line-height: 1 !important;
+}
+
+/* Ícone Solicitações no mesmo padrão dos outros ícones do menu */
+.icon-requests {
+  --rail-icon: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 3h10a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Zm1.5 4.2a1 1 0 0 0 0 2h7a1 1 0 0 0 0-2h-7Zm0 4a1 1 0 0 0 0 2h4.5a1 1 0 0 0 0-2H8.5Zm7.8 2.1a1 1 0 0 0-1.4-1.4l-2.2 2.2-.8-.8a1 1 0 0 0-1.4 1.4l1.5 1.5a1 1 0 0 0 1.4 0l2.9-2.9Z' fill='black'/%3E%3C/svg%3E");
+}
