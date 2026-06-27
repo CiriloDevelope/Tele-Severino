@@ -1,12 +1,15 @@
 {% extends "base.html" %}
 {% from "components.html" import avatar, header %}
+
 {% block title %}Perfil - {{ specialist.name }}{% endblock %}
+
 {% block content %}
   <main class="phone-page profile-page">
     {{ header("Perfil do especialista") }}
 
     <section class="profile-hero">
       {{ avatar(specialist, "xl") }}
+
       <h1>{{ specialist.name }}</h1>
       <p>{{ specialist.role }}</p>
 
@@ -15,6 +18,7 @@
           {{ specialist.status_label }}
         </span>
       </div>
+
       {% if specialist.reviews and specialist.reviews > 0 %}
         <div class="rating center-rating">
           <strong>{{ specialist.rating }}</strong>
@@ -25,9 +29,73 @@
           <span>Sem avaliações ainda</span>
         </div>
       {% endif %}
+
       <div class="profile-price">
         <strong>R$ {{ specialist.price }}</strong>
         <span>por minuto</span>
+      </div>
+    </section>
+
+    {% if specialist.reviews_list %}
+      <section class="white-card reviews-card">
+        <div class="reviews-header">
+          <h2>Avaliações</h2>
+
+          {% if specialist.reviews and specialist.reviews > 0 %}
+            <span>{{ specialist.rating }} ({{ specialist.reviews }})</span>
+          {% else %}
+            <span>0 avaliações</span>
+          {% endif %}
+        </div>
+
+        {% for review in specialist.reviews_list %}
+          <article class="review-item">
+            <div class="review-avatar">{{ review.cliente[:1] }}</div>
+
+            <div>
+              <strong>{{ review.cliente }}</strong>
+              <div class="stars">{{ review.estrelas }}</div>
+
+              {% if review.comentario %}
+                <p>{{ review.comentario }}</p>
+              {% else %}
+                <p>Cliente avaliou o atendimento sem comentário.</p>
+              {% endif %}
+            </div>
+
+            <span>{{ review.data }}</span>
+          </article>
+        {% endfor %}
+      </section>
+    {% else %}
+      <section class="white-card first-consult-card">
+        <div class="first-consult-badge">Novo especialista</div>
+
+        <h2>Comece com uma consulta rápida</h2>
+
+        <p>
+          Este especialista ainda não recebeu avaliações, mas já está disponível para ajudar.
+          Explique seu problema, combine o melhor horário e pague somente pelo tempo utilizado.
+        </p>
+
+        <div class="first-consult-list">
+          <span>Atendimento por vídeo</span>
+          <span>Valor por minuto transparente</span>
+          <span>Ideal para dúvidas rápidas</span>
+        </div>
+      </section>
+    {% endif %}
+
+    <section class="white-card">
+      <h2>Sobre</h2>
+      <p>{{ specialist.about }}</p>
+
+      <h2>Especialidades</h2>
+
+      <div class="tag-list">
+        {% for tag in specialist.tags %}
+          <span>☑ {{ tag }}</span>
+        {% endfor %}
       </div>
     </section>
 
@@ -37,6 +105,7 @@
           <span>Calculadora</span>
           <h2>Previsão de gasto</h2>
         </div>
+
         <strong>R$ {{ specialist.price }}/min</strong>
       </div>
 
@@ -62,63 +131,6 @@
       </small>
     </section>
 
-    <section class="white-card">
-      <h2>Sobre</h2>
-      <p>{{ specialist.about }}</p>
-
-      <h2>Especialidades</h2>
-      <div class="tag-list">
-        {% for tag in specialist.tags %}
-          <span>☑ {{ tag }}</span>
-        {% endfor %}
-      </div>
-    </section>
-    {% if specialist.reviews_list %}
-      <section class="white-card reviews-card">
-        <div class="reviews-header">
-          <h2>Avaliações</h2>
-          {% if specialist.reviews and specialist.reviews > 0 %}
-            <span>{{ specialist.rating }} ({{ specialist.reviews }})</span>
-          {% else %}
-            <span>0 avaliações</span>
-          {% endif %}
-        </div>
-
-        {% for review in specialist.reviews_list %}
-          <article class="review-item">
-            <div class="review-avatar">{{ review.cliente[:1] }}</div>
-            <div>
-              <strong>{{ review.cliente }}</strong>
-              <div class="stars">{{ review.estrelas }}</div>
-              {% if review.comentario %}
-                <p>{{ review.comentario }}</p>
-              {% else %}
-                <p>Cliente avaliou o atendimento sem comentário.</p>
-              {% endif %}
-            </div>
-            <span>{{ review.data }}</span>
-          </article>
-        {% endfor %}
-      </section>
-    {% else %}
-      <section class="white-card first-consult-card">
-        <div class="first-consult-badge">Novo especialista</div>
-
-        <h2>Comece com uma consulta rápida</h2>
-
-        <p>
-          Este especialista ainda não recebeu avaliações, mas já está disponível para ajudar.
-          Explique seu problema, combine o melhor horário e pague somente pelo tempo utilizado.
-        </p>
-
-        <div class="first-consult-list">
-          <span>Atendimento por vídeo</span>
-          <span>Valor por minuto transparente</span>
-          <span>Ideal para dúvidas rápidas</span>
-        </div>
-      </section>
-    {% endif %}
-
     <div class="bottom-action split-action profile-bottom-action">
       {% if specialist.is_online %}
         <a class="primary-button" href="{{ url_for('call.chamada', specialist_id=specialist.id) }}">
@@ -135,6 +147,7 @@
           </div>
         </div>
       {% endif %}
+
       <button class="chat-button" type="button" id="openScheduleModal">
         Horários
       </button>

@@ -9621,3 +9621,19 @@ body:has(.profile-bottom-action) .app-content {
     flex-direction: column;
   }
 }
+
+
+/* PROFILE CARD ORDER SPACING FIX */
+.phone-page.profile-page .first-consult-card,
+.phone-page.profile-page .white-card,
+.phone-page.profile-page .cost-estimator-card {
+  margin-bottom: 16px !important;
+}
+
+.phone-page.profile-page .cost-estimator-card {
+  margin-top: 0 !important;
+}
+
+.phone-page.profile-page .profile-bottom-action {
+  margin-top: 2px !important;
+}
