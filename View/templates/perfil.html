@@ -31,6 +31,37 @@
       </div>
     </section>
 
+    <section class="white-card cost-estimator-card" data-minute-price="{{ specialist.price }}">
+      <div class="cost-estimator-header">
+        <div>
+          <span>Calculadora</span>
+          <h2>Previsão de gasto</h2>
+        </div>
+        <strong>R$ {{ specialist.price }}/min</strong>
+      </div>
+
+      <p>
+        Simule quanto você pode gastar conforme o tempo aproximado do atendimento.
+      </p>
+
+      <div class="cost-estimator-options">
+        <button type="button" data-minutes="10">10 min</button>
+        <button type="button" data-minutes="15" class="active">15 min</button>
+        <button type="button" data-minutes="30">30 min</button>
+        <button type="button" data-minutes="45">45 min</button>
+        <button type="button" data-minutes="60">60 min</button>
+      </div>
+
+      <div class="cost-estimator-result">
+        <span>Previsão para <strong id="estimateMinutes">15 min</strong></span>
+        <strong id="estimateValue">Calculando...</strong>
+      </div>
+
+      <small>
+        O valor é apenas uma estimativa. O valor final depende do tempo real de atendimento.
+      </small>
+    </section>
+
     <section class="white-card">
       <h2>Sobre</h2>
       <p>{{ specialist.about }}</p>

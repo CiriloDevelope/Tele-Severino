@@ -9506,3 +9506,118 @@ body:has(.profile-bottom-action) .app-content {
   color: #8a8a8e;
   font-size: 12px;
 }
+
+
+/* PROFILE COST ESTIMATOR CARD */
+.cost-estimator-card {
+  border: 1px solid rgba(10, 102, 194, 0.12) !important;
+  background: linear-gradient(180deg, #ffffff 0%, #f5f9ff 100%) !important;
+}
+
+.cost-estimator-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 10px;
+}
+
+.cost-estimator-header span {
+  display: block;
+  color: var(--apple-blue);
+  font-size: 12px;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.cost-estimator-header h2 {
+  margin: 3px 0 0 !important;
+}
+
+.cost-estimator-header > strong {
+  white-space: nowrap;
+  padding: 8px 11px;
+  border-radius: 999px;
+  background: rgba(10, 102, 194, 0.10);
+  color: var(--apple-blue);
+  font-size: 13px;
+  font-weight: 950;
+}
+
+.cost-estimator-card > p {
+  margin: 0 0 14px;
+  color: var(--apple-muted);
+  line-height: 1.4;
+}
+
+.cost-estimator-options {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 7px;
+  margin-bottom: 14px;
+}
+
+.cost-estimator-options button {
+  min-height: 42px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 14px;
+  background: #ffffff;
+  color: var(--apple-text);
+  font-size: 13px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.cost-estimator-options button.active {
+  border-color: rgba(255, 107, 0, 0.32);
+  background: #fff4e8;
+  color: var(--apple-orange);
+}
+
+.cost-estimator-result {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px;
+  border-radius: 18px;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.cost-estimator-result span {
+  color: var(--apple-muted);
+  font-size: 13px;
+  line-height: 1.3;
+}
+
+.cost-estimator-result span strong {
+  color: var(--apple-text);
+}
+
+.cost-estimator-result > strong {
+  color: var(--apple-orange);
+  font-size: 20px;
+  font-weight: 950;
+  white-space: nowrap;
+}
+
+.cost-estimator-card small {
+  display: block;
+  margin-top: 10px;
+  color: var(--apple-muted);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+@media (max-width: 420px) {
+  .cost-estimator-options {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .cost-estimator-result {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

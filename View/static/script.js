@@ -1462,3 +1462,56 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
+
+
+// PROFILE_COST_ESTIMATOR
+(() => {
+  const estimator = document.querySelector(".cost-estimator-card");
+
+  if (!estimator) return;
+
+  const buttons = estimator.querySelectorAll("[data-minutes]");
+  const estimateMinutes = document.getElementById("estimateMinutes");
+  const estimateValue = document.getElementById("estimateValue");
+
+  function parsePrice(value) {
+    return Number(
+      String(value || "0")
+        .replace("R$", "")
+        .replace(/\./g, "")
+        .replace(",", ".")
+        .trim()
+    ) || 0;
+  }
+
+  function formatMoney(value) {
+    return value.toLocaleString("pt-BR", {
+      style: "currency",
+      currency: "BRL"
+    });
+  }
+
+  function updateEstimate(minutes) {
+    const pricePerMinute = parsePrice(estimator.dataset.minutePrice);
+    const total = pricePerMinute * Number(minutes || 0);
+
+    if (estimateMinutes) {
+      estimateMinutes.textContent = `${minutes} min`;
+    }
+
+    if (estimateValue) {
+      estimateValue.textContent = formatMoney(total);
+    }
+  }
+
+  buttons.forEach((button) => {
+    button.addEventListener("click", () => {
+      buttons.forEach((item) => item.classList.remove("active"));
+      button.classList.add("active");
+      updateEstimate(button.dataset.minutes);
+    });
+  });
+
+  updateEstimate(15);
+})();
