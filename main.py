@@ -1248,7 +1248,7 @@ def garantir_tabela_solicitacoes_atendimento():
             id_especialista INT NOT NULL,
             dia_label VARCHAR(80) NOT NULL,
             horario VARCHAR(20) NOT NULL,
-            status ENUM('PENDENTE','ACEITA','RECUSADA','EXPIRADA') NOT NULL DEFAULT 'PENDENTE',
+            status ENUM('PENDENTE','ACEITA','RECUSADA','EXPIRADA','CANCELADA') NOT NULL DEFAULT 'PENDENTE',
             observacao VARCHAR(255) NULL,
             data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
@@ -1272,7 +1272,7 @@ def garantir_tabela_solicitacoes_atendimento():
 
     cursor.execute("""
         ALTER TABLE solicitacoes_atendimento
-        MODIFY COLUMN status ENUM('PENDENTE','ACEITA','RECUSADA','EXPIRADA') NOT NULL DEFAULT 'PENDENTE'
+        MODIFY COLUMN status ENUM('PENDENTE','ACEITA','RECUSADA','EXPIRADA','CANCELADA') NOT NULL DEFAULT 'PENDENTE'
     """)
 
     cursor.execute("SHOW COLUMNS FROM solicitacoes_atendimento LIKE 'data_expiracao'")
@@ -1385,11 +1385,57 @@ def consultar_solicitacoes_cliente(id_cliente: int, limite: int = 30):
         elif status == "EXPIRADA":
             solicitacao["status_titulo"] = "Solicitação expirada"
             solicitacao["status_descricao"] = "O especialista não respondeu dentro do prazo. Você pode solicitar novamente para este especialista ou escolher outro profissional."
+        elif status == "CANCELADA":
+            solicitacao["status_titulo"] = "Solicitação cancelada"
+            solicitacao["status_descricao"] = "Você cancelou esta solicitação. Se ainda precisar, pode solicitar novamente para este especialista."
         else:
             solicitacao["status_titulo"] = status or "Status"
             solicitacao["status_descricao"] = ""
 
     return solicitacoes
+
+
+
+def cancelar_solicitacao_cliente(id_solicitacao: int, id_cliente: int):
+    atualizar_solicitacoes_expiradas()
+
+    conexao = conectar_banco()
+    cursor = conexao.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT id_solicitacao, status
+        FROM solicitacoes_atendimento
+        WHERE id_solicitacao = %s
+          AND id_cliente = %s
+        LIMIT 1
+    """, (id_solicitacao, id_cliente))
+
+    solicitacao = cursor.fetchone()
+
+    if not solicitacao:
+        cursor.close()
+        conexao.close()
+        return False, "Solicitação não encontrada."
+
+    if solicitacao["status"] != "PENDENTE":
+        cursor.close()
+        conexao.close()
+        return False, "Somente solicitações pendentes podem ser canceladas."
+
+    cursor.execute("""
+        UPDATE solicitacoes_atendimento
+        SET status = 'CANCELADA',
+            observacao = 'Solicitação cancelada pelo cliente.'
+        WHERE id_solicitacao = %s
+          AND id_cliente = %s
+          AND status = 'PENDENTE'
+    """, (id_solicitacao, id_cliente))
+
+    conexao.commit()
+    cursor.close()
+    conexao.close()
+
+    return True, "Solicitação cancelada com sucesso."
 
 
 def cupom_primeiro_atendimento_disponivel(id_cliente: int, id_especialista: int = 0):
@@ -1569,6 +1615,21 @@ async def api_criar_solicitacao_atendimento(request: Request):
         "cupom_codigo": cupom_codigo or None,
         "cupom_desconto_percentual": cupom_desconto_percentual
     }
+
+
+@app.post("/cliente/solicitacoes/{id_solicitacao}/cancelar")
+def cliente_cancelar_solicitacao(request: Request, id_solicitacao: int):
+    usuario = exigir_login(request)
+
+    if isinstance(usuario, RedirectResponse):
+        return usuario
+
+    if usuario["tipo"] != "CLIENTE":
+        return RedirectResponse(url="/login", status_code=303)
+
+    cancelar_solicitacao_cliente(id_solicitacao, int(usuario["id"]))
+
+    return RedirectResponse(url="/cliente/solicitacoes", status_code=303)
 
 
 @app.get("/cliente/solicitacoes")

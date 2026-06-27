@@ -3,24 +3,21 @@
 {% block content %}
 <main class="client-requests-page">
   <section class="client-requests-hero">
-    <div>
-      <span>Atendimentos</span>
-      <h1>Minhas solicitações</h1>
-      <p>
-        Acompanhe os pedidos enviados aos especialistas. Solicitações pendentes expiram em até 2 horas se não houver resposta.
-      </p>
-    </div>
+    <a href="{{ url_for('home') }}" class="client-profile-back">‹</a>
 
-    <a href="/home" class="client-requests-back">Voltar para home</a>
+    <div>
+      <h1>Minhas solicitações</h1>
+      <p>Acompanhe seus pedidos de atendimento e o prazo de resposta dos especialistas.</p>
+    </div>
   </section>
 
   {% if solicitacoes %}
     <section class="client-requests-list">
       {% for item in solicitacoes %}
         <article class="client-request-card status-{{ item.status|lower }}">
-          <div class="client-request-top">
+          <div class="client-request-header">
             <div>
-              <span class="client-request-status">{{ item.status_titulo }}</span>
+              <span class="client-request-status">Solicitado em {{ item.data_criacao_formatada }}</span>
               <h2>{{ item.especialista_nome or "Especialista" }}</h2>
               <p>{{ item.dia_label }} às {{ item.horario }}</p>
             </div>
@@ -28,13 +25,11 @@
             <strong>{{ item.status }}</strong>
           </div>
 
-          <p class="client-request-description">
-            {{ item.status_descricao }}
-          </p>
+          <div class="client-request-body">
+            <p>{{ item.status_descricao }}</p>
+          </div>
 
           <div class="client-request-meta">
-            <span>Solicitado em {{ item.data_criacao_formatada }}</span>
-
             {% if item.status == "PENDENTE" and item.data_expiracao_formatada %}
               <span>Expira em {{ item.data_expiracao_formatada }}</span>
             {% endif %}
@@ -44,11 +39,15 @@
             {% endif %}
           </div>
 
-          <div class="client-request-actions">
-            {% if item.status == "EXPIRADA" or item.status == "RECUSADA" %}
+          <div class="client-request-actions {% if item.status == 'PENDENTE' %}is-pending{% else %}is-single{% endif %}">
+            {% if item.status == "EXPIRADA" or item.status == "RECUSADA" or item.status == "CANCELADA" %}
               <a href="/perfil/{{ item.id_especialista }}">Solicitar novamente</a>
             {% elif item.status == "PENDENTE" %}
               <button type="button" disabled>Aguardando especialista</button>
+
+              <form action="/cliente/solicitacoes/{{ item.id_solicitacao }}/cancelar" method="POST">
+                <button type="submit" class="client-request-cancel-button">Cancelar</button>
+              </form>
             {% elif item.status == "ACEITA" %}
               <button type="button" disabled>Aguardando sala</button>
             {% endif %}
@@ -59,9 +58,7 @@
   {% else %}
     <section class="client-requests-empty">
       <strong>Nenhuma solicitação enviada ainda</strong>
-      <p>
-        Abra o perfil de um especialista, escolha um horário disponível e envie sua primeira solicitação.
-      </p>
+      <p>Abra o perfil de um especialista, escolha um horário disponível e envie sua primeira solicitação.</p>
       <a href="/home">Encontrar especialista</a>
     </section>
   {% endif %}
