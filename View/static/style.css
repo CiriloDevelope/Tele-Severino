@@ -9637,3 +9637,61 @@ body:has(.profile-bottom-action) .app-content {
 .phone-page.profile-page .profile-bottom-action {
   margin-top: 2px !important;
 }
+
+
+/* PROFILE CALL GATE COMMON USER */
+.profile-call-gate {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.profile-call-gate .primary-button {
+  width: 100%;
+  min-height: 54px;
+  border: none;
+  border-radius: 18px;
+  background: var(--apple-orange);
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 950;
+  cursor: pointer;
+  box-shadow: 0 14px 28px rgba(255, 107, 0, 0.22);
+}
+
+.profile-call-gate-note {
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: rgba(10, 102, 194, 0.08);
+  border: 1px solid rgba(10, 102, 194, 0.14);
+  color: #0a4f9c;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+
+/* PROFILE SINGLE ACTION BUTTON FIX */
+.profile-bottom-action {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+}
+
+.offline-schedule-button {
+  width: 100%;
+  min-height: 54px;
+  border: none;
+  border-radius: 18px;
+  background: rgba(10, 102, 194, 0.08);
+  color: var(--apple-blue);
+  font-size: 15px;
+  font-weight: 950;
+  cursor: pointer;
+  border: 1px solid rgba(10, 102, 194, 0.16);
+}
+
+.offline-schedule-button:hover {
+  background: rgba(10, 102, 194, 0.12);
+}

@@ -131,11 +131,17 @@
       </small>
     </section>
 
-    <div class="bottom-action split-action profile-bottom-action">
+    <div class="bottom-action profile-bottom-action">
       {% if specialist.is_online %}
-        <a class="primary-button" href="{{ url_for('call.chamada', specialist_id=specialist.id) }}">
-          Iniciar videochamada
-        </a>
+        <div class="profile-call-gate">
+          <button class="primary-button" type="button" id="openScheduleModalPrimary">
+            Solicitar atendimento
+          </button>
+
+          <div class="profile-call-gate-note">
+            A videochamada será liberada após o especialista aceitar a solicitação e iniciar a sala no horário combinado.
+          </div>
+        </div>
       {% else %}
         <div class="offline-specialist-box">
           <button class="offline-specialist-button" type="button" disabled>
@@ -143,14 +149,14 @@
           </button>
 
           <div class="offline-specialist-alert">
-            Este especialista está offline no momento. Você pode consultar horários disponíveis ou solicitar atendimento para depois.
+            Este especialista está offline no momento. Você pode solicitar um horário para depois e aguardar o retorno do especialista.
           </div>
+
+          <button class="offline-schedule-button" type="button" id="openScheduleModalPrimary">
+            Solicitar horário
+          </button>
         </div>
       {% endif %}
-
-      <button class="chat-button" type="button" id="openScheduleModal">
-        Horários
-      </button>
     </div>
 
     <div
