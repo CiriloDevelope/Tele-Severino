@@ -1254,12 +1254,56 @@ def garantir_tabela_solicitacoes_atendimento():
         )
     """)
 
+
+    cursor.execute("SHOW COLUMNS FROM solicitacoes_atendimento LIKE 'cupom_codigo'")
+    if not cursor.fetchone():
+        cursor.execute("""
+            ALTER TABLE solicitacoes_atendimento
+            ADD COLUMN cupom_codigo VARCHAR(30) NULL AFTER status
+        """)
+
+    cursor.execute("SHOW COLUMNS FROM solicitacoes_atendimento LIKE 'cupom_desconto_percentual'")
+    if not cursor.fetchone():
+        cursor.execute("""
+            ALTER TABLE solicitacoes_atendimento
+            ADD COLUMN cupom_desconto_percentual DECIMAL(5,2) NOT NULL DEFAULT 0 AFTER cupom_codigo
+        """)
+
     conexao.commit()
     cursor.close()
     conexao.close()
 
 
-def criar_solicitacao_atendimento(id_cliente: int, id_especialista: int, dia_label: str, horario: str):
+
+def cupom_primeiro_atendimento_disponivel(id_cliente: int, id_especialista: int = 0):
+    garantir_tabela_solicitacoes_atendimento()
+
+    conexao = conectar_banco()
+    cursor = conexao.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT COUNT(*) AS total
+        FROM solicitacoes_atendimento
+        WHERE id_cliente = %s
+          AND cupom_codigo = 'PRIMEIRA5'
+    """, (id_cliente,))
+
+    resultado = cursor.fetchone() or {"total": 0}
+
+    cursor.close()
+    conexao.close()
+
+    return int(resultado["total"] or 0) == 0
+
+
+def criar_solicitacao_atendimento(
+    id_cliente: int,
+    id_especialista: int,
+    dia_label: str,
+    horario: str,
+    cupom_codigo: str = None,
+    cupom_desconto_percentual: float = 0
+):
     garantir_tabela_solicitacoes_atendimento()
 
     conexao = conectar_banco()
@@ -1267,14 +1311,25 @@ def criar_solicitacao_atendimento(id_cliente: int, id_especialista: int, dia_lab
 
     cursor.execute("""
         INSERT INTO solicitacoes_atendimento
-            (id_cliente, id_especialista, dia_label, horario, status, observacao)
+            (
+                id_cliente,
+                id_especialista,
+                dia_label,
+                horario,
+                status,
+                cupom_codigo,
+                cupom_desconto_percentual,
+                observacao
+            )
         VALUES
-            (%s, %s, %s, %s, 'PENDENTE', %s)
+            (%s, %s, %s, %s, 'PENDENTE', %s, %s, %s)
     """, (
         id_cliente,
         id_especialista,
         dia_label,
         horario,
+        cupom_codigo,
+        cupom_desconto_percentual,
         "Solicitação criada pelo cliente no perfil público do especialista."
     ))
 
@@ -1342,6 +1397,42 @@ def contar_solicitacoes_pendentes_especialista(id_especialista: int):
     return resultado["total"] or 0
 
 
+@app.get("/api/cupom-primeiro-atendimento/status")
+def api_status_cupom_primeiro_atendimento(request: Request, especialista_id: int = 0):
+    usuario = exigir_login(request)
+
+    if isinstance(usuario, RedirectResponse):
+        return JSONResponse(
+            {"ok": False, "disponivel": False, "erro": "Faça login para consultar o cupom."},
+            status_code=401
+        )
+
+    if usuario["tipo"] != "CLIENTE":
+        return JSONResponse(
+            {"ok": False, "disponivel": False, "erro": "Cupom disponível apenas para usuário comum."},
+            status_code=403
+        )
+
+    if not especialista_id:
+        return JSONResponse(
+            {"ok": False, "disponivel": False, "erro": "Especialista inválido."},
+            status_code=400
+        )
+
+    disponivel = cupom_primeiro_atendimento_disponivel(
+        int(usuario["id"]),
+        int(especialista_id)
+    )
+
+    return {
+        "ok": True,
+        "codigo": "PRIMEIRA5",
+        "desconto_percentual": 5,
+        "disponivel": disponivel,
+        "mensagem": "Cupom PRIMEIRA5 disponível para seu primeiro atendimento na plataforma." if disponivel else "Cupom PRIMEIRA5 já utilizado no seu histórico."
+    }
+
+
 @app.post("/api/solicitacoes-atendimento")
 async def api_criar_solicitacao_atendimento(request: Request):
     usuario = exigir_login(request)
@@ -1369,6 +1460,7 @@ async def api_criar_solicitacao_atendimento(request: Request):
     id_especialista = int(payload.get("id_especialista") or 0)
     dia_label = str(payload.get("dia_label") or "").strip()
     horario = str(payload.get("horario") or "").strip()
+    cupom_codigo = str(payload.get("cupom_codigo") or "").strip().upper()
 
     if not id_especialista or not dia_label or not horario:
         return JSONResponse(
@@ -1376,18 +1468,39 @@ async def api_criar_solicitacao_atendimento(request: Request):
             status_code=400
         )
 
+    cupom_desconto_percentual = 0
+
+    if cupom_codigo:
+        if cupom_codigo != "PRIMEIRA5":
+            return JSONResponse(
+                {"ok": False, "erro": "Cupom inválido. Use PRIMEIRA5 para o primeiro atendimento na plataforma."},
+                status_code=400
+            )
+
+        if not cupom_primeiro_atendimento_disponivel(int(usuario["id"]), id_especialista):
+            return JSONResponse(
+                {"ok": False, "erro": "Você já utilizou o cupom PRIMEIRA5 no seu primeiro atendimento."},
+                status_code=400
+            )
+
+        cupom_desconto_percentual = 5
+
     id_solicitacao = criar_solicitacao_atendimento(
         int(usuario["id"]),
         id_especialista,
         dia_label,
-        horario
+        horario,
+        cupom_codigo or None,
+        cupom_desconto_percentual
     )
 
     return {
         "ok": True,
         "id_solicitacao": id_solicitacao,
         "mensagem": "Solicitação enviada com sucesso. Aguarde o aceite ou recusa do especialista.",
-        "status": "PENDENTE"
+        "status": "PENDENTE",
+        "cupom_codigo": cupom_codigo or None,
+        "cupom_desconto_percentual": cupom_desconto_percentual
     }
 
 

@@ -172,11 +172,13 @@
           Plano {{ agenda.plano_label }}: {{ agenda.regras }}
         </p>
 
-        <div class="schedule-month-title">
-          {{ agenda.mes_label }}
+        <div class="schedule-month-nav">
+          <button type="button" id="prevScheduleMonth" aria-label="Mês anterior">‹</button>
+          <strong id="scheduleMonthTitle">{{ agenda.mes_label }}</strong>
+          <button type="button" id="nextScheduleMonth" aria-label="Próximo mês">›</button>
         </div>
 
-        <div class="schedule-calendar">
+        <div class="schedule-calendar" id="scheduleCalendar">
           {% for dia in agenda.dias %}
             <button
               type="button"
@@ -197,7 +199,7 @@
           <p>Os horários liberados aparecerão aqui.</p>
         </div>
 
-        <div class="payment-message payment-message-success is-hidden" id="scheduleSuccess">
+        <div class="payment-message schedule-info-message is-hidden" id="scheduleSuccess">
           Solicitação enviada. O especialista poderá confirmar o melhor horário para atendimento.
         </div>
 

@@ -755,24 +755,130 @@ confirmVideoButton?.addEventListener("click", () => {
 // CALENDARIO_MENSAL_DISPONIBILIDADE
 (() => {
   const openScheduleModal = document.getElementById("openScheduleModal");
+  const openScheduleModalPrimary = document.getElementById("openScheduleModalPrimary");
   const closeScheduleModal = document.getElementById("closeScheduleModal");
   const scheduleModal = document.getElementById("scheduleModal");
   const scheduleSuccess = document.getElementById("scheduleSuccess");
   const scheduleSlotPanel = document.getElementById("scheduleSlotPanel");
   const confirmScheduleButton = document.getElementById("confirmScheduleButton");
+  const scheduleCalendar = document.getElementById("scheduleCalendar");
+  const scheduleMonthTitle = document.getElementById("scheduleMonthTitle");
+  const prevScheduleMonth = document.getElementById("prevScheduleMonth");
+  const nextScheduleMonth = document.getElementById("nextScheduleMonth");
+
+  if (!scheduleModal || !scheduleSlotPanel || !scheduleCalendar || !scheduleMonthTitle) return;
+
   const specialistId = scheduleModal?.dataset?.specialistId || "";
 
-  if (!scheduleModal || !scheduleSlotPanel) return;
+  const weekdays = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+  const monthNames = [
+    "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+    "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+  ];
 
-  const cupons = {
-    "PRIMEIRA10": "Cupom aplicado: 10% de desconto na primeira reserva.",
-    "POS20": "Cupom aplicado: melhor condição para horário pós-comercial.",
-    "PLUS15": "Cupom aplicado: benefício de agenda Plus.",
-    "TESTE5": "Cupom aplicado: desconto de teste do protótipo."
-  };
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
 
+  const maxDate = new Date(today);
+  maxDate.setDate(maxDate.getDate() + 30);
+
+  let currentMonthDate = new Date(today.getFullYear(), today.getMonth(), 1);
   let selectedDayText = "";
   let selectedSlot = "";
+  let firstCouponAvailable = false;
+  let couponApplied = "";
+
+  function parseDayDate(date) {
+    const copy = new Date(date);
+    copy.setHours(0, 0, 0, 0);
+    return copy;
+  }
+
+  function isDateAvailable(date) {
+    const parsed = parseDayDate(date);
+    return parsed >= today && parsed <= maxDate;
+  }
+
+  function buildSlots(date) {
+    const day = date.getDate();
+    const baseSlots = ["09:00", "11:00", "15:00", "18:30", "20:00"];
+
+    return baseSlots.map((slot, index) => {
+      const reserved = (day + index) % 4 === 0;
+      return {
+        hour: slot,
+        reserved
+      };
+    });
+  }
+
+  async function carregarStatusCupom() {
+    firstCouponAvailable = false;
+    couponApplied = "";
+
+    if (!specialistId) return;
+
+    try {
+      const response = await fetch(`/api/cupom-primeiro-atendimento/status?especialista_id=${encodeURIComponent(specialistId)}`);
+      const data = await response.json();
+
+      firstCouponAvailable = Boolean(response.ok && data.ok && data.disponivel);
+    } catch {
+      firstCouponAvailable = false;
+    }
+  }
+
+  function updateMonthButtons() {
+    const previousMonth = new Date(currentMonthDate.getFullYear(), currentMonthDate.getMonth() - 1, 1);
+    const nextMonth = new Date(currentMonthDate.getFullYear(), currentMonthDate.getMonth() + 1, 1);
+
+    const minMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    const maxMonth = new Date(maxDate.getFullYear(), maxDate.getMonth(), 1);
+
+    if (prevScheduleMonth) {
+      prevScheduleMonth.disabled = previousMonth < minMonth;
+    }
+
+    if (nextScheduleMonth) {
+      nextScheduleMonth.disabled = nextMonth > maxMonth;
+    }
+  }
+
+  function renderCalendar() {
+    const year = currentMonthDate.getFullYear();
+    const month = currentMonthDate.getMonth();
+    const totalDays = new Date(year, month + 1, 0).getDate();
+
+    scheduleMonthTitle.textContent = `${monthNames[month]} ${year}`;
+    scheduleCalendar.innerHTML = "";
+
+    for (let day = 1; day <= totalDays; day++) {
+      const date = new Date(year, month, day);
+      const available = isDateAvailable(date);
+      const isToday = parseDayDate(date).getTime() === today.getTime();
+
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = `schedule-day ${isToday ? "today" : ""} ${available ? "" : "locked"}`;
+      button.dataset.day = String(day);
+      button.dataset.weekday = weekdays[date.getDay()];
+      button.dataset.fullDate = date.toISOString();
+
+      if (!available) {
+        button.disabled = true;
+      }
+
+      button.innerHTML = `
+        <small>${weekdays[date.getDay()]}</small>
+        <strong>${day}</strong>
+      `;
+
+      button.addEventListener("click", () => montarHorarios(button, date));
+      scheduleCalendar.appendChild(button);
+    }
+
+    updateMonthButtons();
+  }
 
   function resetarBotaoConfirmacao() {
     if (!confirmScheduleButton) return;
@@ -785,21 +891,28 @@ confirmVideoButton?.addEventListener("click", () => {
   function resetarPainel() {
     selectedDayText = "";
     selectedSlot = "";
+    couponApplied = "";
 
     document.querySelectorAll(".schedule-day").forEach((item) => {
       item.classList.remove("active");
     });
 
     scheduleSlotPanel.innerHTML = `
-      <strong>Selecione um dia disponível</strong>
-      <p>Os horários liberados aparecerão aqui.</p>
+      <div class="schedule-empty-line">
+        <strong>Selecione um dia disponível:</strong>
+        <span>os horários liberados aparecerão aqui.</span>
+      </div>
     `;
 
     scheduleSuccess?.classList.add("is-hidden");
     resetarBotaoConfirmacao();
   }
 
-  function abrirModal() {
+  async function abrirModal() {
+    await carregarStatusCupom();
+
+    currentMonthDate = new Date(today.getFullYear(), today.getMonth(), 1);
+    renderCalendar();
     resetarPainel();
     scheduleModal.classList.remove("is-hidden");
   }
@@ -808,7 +921,36 @@ confirmVideoButton?.addEventListener("click", () => {
     scheduleModal.classList.add("is-hidden");
   }
 
-  function montarHorarios(button) {
+  function renderCouponArea() {
+    if (firstCouponAvailable) {
+      return `
+        <div class="coupon-area is-hidden" id="couponArea">
+          <label for="couponInput">Cupom de primeiro atendimento</label>
+          <div class="coupon-line">
+            <input id="couponInput" type="text" value="PRIMEIRA5" placeholder="PRIMEIRA5">
+            <button type="button" id="applyCouponButton">Aplicar</button>
+          </div>
+          <small id="couponFeedback">
+            Use PRIMEIRA5 para 5% de desconto na primeiro atendimento no Tele-Severino. Depois de usar, o cupom fica indisponível.
+          </small>
+          <div class="specialist-coupon-hint">
+            Cupons do especialista poderão aparecer aqui quando o profissional liberar campanhas no plano dele.
+          </div>
+        </div>
+      `;
+    }
+
+    return `
+      <div class="coupon-area coupon-area-used is-hidden" id="couponArea">
+        <strong>Cupom de primeiro atendimento já utilizado</strong>
+        <small>
+          O cupom PRIMEIRA5 só pode ser usado uma vez no seu histórico.
+        </small>
+      </div>
+    `;
+  }
+
+  function montarHorarios(button, date) {
     const jaSelecionado = button.classList.contains("active");
 
     if (jaSelecionado) {
@@ -818,10 +960,11 @@ confirmVideoButton?.addEventListener("click", () => {
 
     const day = button.dataset.day;
     const weekday = button.dataset.weekday;
-    const slots = (button.dataset.slots || "").split(",").filter(Boolean);
+    const slots = buildSlots(date);
 
     selectedDayText = `${weekday}, dia ${day}`;
     selectedSlot = "";
+    couponApplied = "";
 
     document.querySelectorAll(".schedule-day").forEach((item) => {
       item.classList.remove("active");
@@ -834,15 +977,14 @@ confirmVideoButton?.addEventListener("click", () => {
     scheduleSlotPanel.classList.add("is-changing");
 
     setTimeout(() => {
-      const slotButtons = slots.map((slot, index) => {
-        const reservado = (Number(day) + index) % 4 === 0;
-        const status = reservado ? "Reservado" : "Livre";
-        const classe = reservado ? "reserved" : "free";
-        const disabled = reservado ? "disabled" : "";
+      const slotButtons = slots.map((slot) => {
+        const status = slot.reserved ? "Reservado" : "Livre";
+        const classe = slot.reserved ? "reserved" : "free";
+        const disabled = slot.reserved ? "disabled" : "";
 
         return `
-          <button type="button" class="schedule-slot ${classe}" ${disabled} data-slot="${slot}">
-            <strong>${slot}</strong>
+          <button type="button" class="schedule-slot ${classe}" ${disabled} data-slot="${slot.hour}">
+            <strong>${slot.hour}</strong>
             <small>${status}</small>
           </button>
         `;
@@ -856,16 +998,7 @@ confirmVideoButton?.addEventListener("click", () => {
           ${slotButtons}
         </div>
 
-        <div class="coupon-area is-hidden" id="couponArea">
-          <label for="couponInput">Cupom de desconto</label>
-          <div class="coupon-line">
-            <input id="couponInput" type="text" placeholder="Ex: PRIMEIRA10 ou POS20">
-            <button type="button" id="applyCouponButton">Aplicar</button>
-          </div>
-          <small id="couponFeedback">
-            Dica: cupons podem liberar melhores condições em horários específicos.
-          </small>
-        </div>
+        ${renderCouponArea()}
       `;
 
       scheduleSlotPanel.classList.remove("is-changing");
@@ -900,29 +1033,32 @@ confirmVideoButton?.addEventListener("click", () => {
         const codigo = String(couponInput?.value || "").trim().toUpperCase();
 
         if (!codigo) {
-          couponFeedback.textContent = "Digite um cupom para validar.";
+          couponApplied = "";
+          couponFeedback.textContent = "Digite PRIMEIRA5 para aplicar o cupom de primeiro atendimento.";
           couponFeedback.className = "coupon-feedback warning";
           return;
         }
 
-        if (cupons[codigo]) {
-          couponFeedback.textContent = cupons[codigo];
-          couponFeedback.className = "coupon-feedback success";
+        if (codigo !== "PRIMEIRA5") {
+          couponApplied = "";
+          couponFeedback.textContent = "Cupom inválido. Para este protótipo, use PRIMEIRA5.";
+          couponFeedback.className = "coupon-feedback error";
           return;
         }
 
-        couponFeedback.textContent = "Cupom não encontrado para este horário.";
-        couponFeedback.className = "coupon-feedback error";
+        if (!firstCouponAvailable) {
+          couponApplied = "";
+          couponFeedback.textContent = "Você já utilizou o cupom PRIMEIRA5 no seu primeiro atendimento.";
+          couponFeedback.className = "coupon-feedback error";
+          return;
+        }
+
+        couponApplied = "PRIMEIRA5";
+        couponFeedback.textContent = "Cupom PRIMEIRA5 aplicado: 5% de desconto no primeiro atendimento no Tele-Severino.";
+        couponFeedback.className = "coupon-feedback success";
       });
     }, 180);
   }
-
-  openScheduleModal?.addEventListener("click", abrirModal);
-  closeScheduleModal?.addEventListener("click", fecharModal);
-
-  document.querySelectorAll(".schedule-day:not(.locked)").forEach((button) => {
-    button.addEventListener("click", () => montarHorarios(button));
-  });
 
   function mostrarPopupSolicitacao() {
     const popup = document.createElement("div");
@@ -949,6 +1085,22 @@ confirmVideoButton?.addEventListener("click", () => {
     }, 50);
   }
 
+  openScheduleModal?.addEventListener("click", abrirModal);
+  openScheduleModalPrimary?.addEventListener("click", abrirModal);
+  closeScheduleModal?.addEventListener("click", fecharModal);
+
+  prevScheduleMonth?.addEventListener("click", () => {
+    currentMonthDate = new Date(currentMonthDate.getFullYear(), currentMonthDate.getMonth() - 1, 1);
+    renderCalendar();
+    resetarPainel();
+  });
+
+  nextScheduleMonth?.addEventListener("click", () => {
+    currentMonthDate = new Date(currentMonthDate.getFullYear(), currentMonthDate.getMonth() + 1, 1);
+    renderCalendar();
+    resetarPainel();
+  });
+
   confirmScheduleButton?.addEventListener("click", async () => {
     if (confirmScheduleButton.disabled || !selectedSlot) return;
 
@@ -964,7 +1116,8 @@ confirmVideoButton?.addEventListener("click", () => {
         body: JSON.stringify({
           id_especialista: specialistId,
           dia_label: selectedDayText,
-          horario: selectedSlot
+          horario: selectedSlot,
+          cupom_codigo: couponApplied
         })
       });
 
@@ -974,12 +1127,18 @@ confirmVideoButton?.addEventListener("click", () => {
         throw new Error(data.erro || "Não foi possível enviar a solicitação.");
       }
 
+      if (data.cupom_codigo === "PRIMEIRA5") {
+        firstCouponAvailable = false;
+        couponApplied = "";
+      }
+
       if (scheduleSuccess) {
         scheduleSuccess.classList.remove("is-hidden");
         scheduleSuccess.innerHTML = `
           <strong>Solicitação enviada</strong>
           <span>
             Pedido registrado para ${selectedDayText}, às ${selectedSlot}.
+            ${data.cupom_codigo === "PRIMEIRA5" ? "Cupom PRIMEIRA5 aplicado nesta solicitação. " : ""}
             Aguarde o aceite ou recusa do especialista.
           </span>
         `;

@@ -9695,3 +9695,437 @@ body:has(.profile-bottom-action) .app-content {
 .offline-schedule-button:hover {
   background: rgba(10, 102, 194, 0.12);
 }
+
+
+/* SCHEDULE MODAL CALENDAR RANGE FIX */
+.schedule-month-nav {
+  display: grid;
+  grid-template-columns: 42px 1fr 42px;
+  align-items: center;
+  gap: 10px;
+  margin: 14px 0 12px;
+}
+
+.schedule-month-nav strong {
+  text-align: center;
+  color: #1d1d1f;
+  font-size: 18px;
+  font-weight: 950;
+}
+
+.schedule-month-nav button {
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: #ffffff;
+  color: #1d1d1f;
+  font-size: 24px;
+  font-weight: 950;
+  cursor: pointer;
+}
+
+.schedule-month-nav button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.schedule-empty-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  text-align: center;
+}
+
+.schedule-empty-line strong {
+  color: #1d1d1f;
+  font-size: 14px;
+  font-weight: 950;
+}
+
+.schedule-empty-line span {
+  color: #6e6e73;
+  font-size: 13px;
+  font-weight: 750;
+}
+
+#scheduleSuccess.is-hidden {
+  display: none !important;
+}
+
+.schedule-info-message {
+  border-radius: 18px !important;
+  border: 1px solid rgba(10, 102, 194, 0.18) !important;
+  background: rgba(10, 102, 194, 0.08) !important;
+  color: #0a4f9c !important;
+}
+
+.schedule-info-message strong,
+.schedule-info-message span {
+  color: #0a4f9c !important;
+}
+
+.coupon-feedback.success {
+  color: #0a66c2 !important;
+}
+
+.coupon-feedback.warning {
+  color: #8a4b00 !important;
+}
+
+.coupon-feedback.error {
+  color: #b42318 !important;
+}
+
+
+/* FIRST ATTENDANCE SINGLE COUPON */
+.coupon-area-used {
+  padding: 13px 14px;
+  border-radius: 16px;
+  background: rgba(10, 102, 194, 0.08);
+  border: 1px solid rgba(10, 102, 194, 0.14);
+}
+
+.coupon-area-used strong {
+  display: block;
+  color: #0a4f9c;
+  font-size: 13px;
+  font-weight: 950;
+}
+
+.coupon-area-used small {
+  display: block;
+  margin-top: 4px;
+  color: #0a4f9c;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.coupon-feedback.success {
+  color: #0a66c2 !important;
+  font-weight: 850;
+}
+
+.coupon-feedback.warning {
+  color: #8a4b00 !important;
+  font-weight: 850;
+}
+
+.coupon-feedback.error {
+  color: #b42318 !important;
+  font-weight: 850;
+}
+
+
+/* SPECIALIST COUPON FUTURE HINT */
+.specialist-coupon-hint {
+  margin-top: 8px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: rgba(10, 102, 194, 0.07);
+  border: 1px solid rgba(10, 102, 194, 0.12);
+  color: #0a4f9c;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+
+/* SCHEDULE MODAL REFINEMENTS */
+.payment-modal-content,
+.schedule-modal {
+  max-height: 88vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 30px !important;
+}
+
+.payment-modal-content h2,
+.schedule-modal h2 {
+  margin-bottom: 10px !important;
+}
+
+.payment-modal-content > p,
+.schedule-modal > p {
+  margin: 0 0 22px !important;
+  line-height: 1.45 !important;
+  text-align: center;
+  color: #6e6e73;
+}
+
+.schedule-month-nav {
+  margin: 18px 0 16px !important;
+}
+
+.schedule-calendar {
+  margin-bottom: 22px !important;
+  padding: 12px !important;
+  border-radius: 24px !important;
+  background: #fcfcfd !important;
+}
+
+.schedule-slot-panel {
+  margin-top: 8px !important;
+  margin-bottom: 20px !important;
+  padding: 20px !important;
+  border-radius: 24px !important;
+  background: #fcfcfd !important;
+}
+
+.schedule-slot-panel > strong {
+  display: block;
+  margin-bottom: 6px !important;
+  font-size: 16px !important;
+}
+
+.schedule-slot-panel > p {
+  margin: 0 0 18px !important;
+  line-height: 1.45 !important;
+  color: #6e6e73;
+}
+
+.schedule-empty-line {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  flex-wrap: wrap !important;
+  text-align: center;
+  padding: 4px 0;
+}
+
+.schedule-empty-line strong {
+  margin: 0 !important;
+  font-size: 14px !important;
+  font-weight: 950 !important;
+  color: #1d1d1f !important;
+}
+
+.schedule-empty-line span,
+.schedule-empty-line p {
+  margin: 0 !important;
+  font-size: 13px !important;
+  font-weight: 750 !important;
+  color: #6e6e73 !important;
+}
+
+.schedule-slots {
+  gap: 14px !important;
+  margin-bottom: 20px !important;
+}
+
+.schedule-slot {
+  min-height: 72px !important;
+  padding: 13px 14px !important;
+  border-radius: 18px !important;
+}
+
+.coupon-area {
+  margin-top: 12px !important;
+  padding: 18px !important;
+  border-radius: 22px !important;
+}
+
+.coupon-area label {
+  margin-bottom: 12px !important;
+  font-size: 15px !important;
+}
+
+.coupon-line {
+  gap: 12px !important;
+}
+
+.coupon-line input {
+  height: 52px !important;
+  padding: 0 16px !important;
+  border-radius: 16px !important;
+}
+
+.coupon-line button {
+  min-width: 112px !important;
+  height: 52px !important;
+  border-radius: 16px !important;
+}
+
+#couponFeedback,
+.coupon-feedback {
+  display: block;
+  margin-top: 14px !important;
+  line-height: 1.4 !important;
+}
+
+.specialist-coupon-hint {
+  margin-top: 14px !important;
+  padding: 13px 14px !important;
+  border-radius: 16px !important;
+  line-height: 1.4 !important;
+}
+
+.schedule-info-message {
+  margin: 0 0 20px !important;
+  padding: 15px 16px !important;
+  border-radius: 18px !important;
+  line-height: 1.45 !important;
+}
+
+.payment-modal-actions,
+.schedule-modal-actions {
+  display: grid !important;
+  grid-template-columns: 1fr 1.2fr !important;
+  gap: 16px !important;
+  margin-top: 14px !important;
+}
+
+.payment-modal-actions button,
+.schedule-modal-actions button,
+.payment-modal-actions .primary-button,
+.payment-modal-actions .secondary-button {
+  min-height: 58px !important;
+  border-radius: 18px !important;
+}
+
+/* Scrollbar no padrão Tele-Severino */
+.payment-modal-content::-webkit-scrollbar,
+.schedule-modal::-webkit-scrollbar,
+.schedule-calendar::-webkit-scrollbar,
+.schedule-slot-panel::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.payment-modal-content::-webkit-scrollbar-track,
+.schedule-modal::-webkit-scrollbar-track,
+.schedule-calendar::-webkit-scrollbar-track,
+.schedule-slot-panel::-webkit-scrollbar-track {
+  background: #f2f2f7;
+  border-radius: 999px;
+}
+
+.payment-modal-content::-webkit-scrollbar-thumb,
+.schedule-modal::-webkit-scrollbar-thumb,
+.schedule-calendar::-webkit-scrollbar-thumb,
+.schedule-slot-panel::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #ff8a2a 0%, #ff6b00 100%);
+  border-radius: 999px;
+  border: 2px solid #f2f2f7;
+}
+
+.payment-modal-content,
+.schedule-modal,
+.schedule-calendar,
+.schedule-slot-panel {
+  scrollbar-width: thin;
+  scrollbar-color: #ff6b00 #f2f2f7;
+}
+
+@media (max-width: 640px) {
+  .payment-modal-content,
+  .schedule-modal {
+    max-height: 90vh;
+    padding: 22px 18px !important;
+  }
+
+  .schedule-slots {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .coupon-line {
+    grid-template-columns: 1fr !important;
+  }
+
+  .coupon-line button {
+    width: 100% !important;
+  }
+
+  .payment-modal-actions,
+  .schedule-modal-actions {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+
+/* GLOBAL SCROLLBAR TELE-SEVERINO */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #ff6b00 #f2f2f7;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+*::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track,
+*::-webkit-scrollbar-track {
+  background: #f2f2f7;
+  border-radius: 999px;
+}
+
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb,
+*::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #ff8a2a 0%, #ff6b00 100%);
+  border-radius: 999px;
+  border: 2px solid #f2f2f7;
+}
+
+html::-webkit-scrollbar-thumb:hover,
+body::-webkit-scrollbar-thumb:hover,
+*::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #ff9a47 0%, #ff6b00 100%);
+}
+
+/* MODAL SCROLL INSIDE CARD */
+body.modal-open {
+  overflow: hidden !important;
+}
+
+.payment-modal-backdrop:not(.is-hidden) {
+  overflow: hidden !important;
+}
+
+.payment-modal-content,
+.schedule-modal {
+  position: relative;
+  max-height: 88vh !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  border-radius: 34px !important;
+  clip-path: inset(0 round 34px);
+  scrollbar-gutter: stable;
+}
+
+/* Deixa o scroll do modal mais interno e menos grudado na borda */
+.payment-modal-content {
+  padding-right: 34px !important;
+}
+
+.payment-modal-content::-webkit-scrollbar,
+.schedule-modal::-webkit-scrollbar {
+  width: 8px;
+}
+
+.payment-modal-content::-webkit-scrollbar-track,
+.schedule-modal::-webkit-scrollbar-track {
+  margin: 24px 0;
+  background: transparent;
+}
+
+.payment-modal-content::-webkit-scrollbar-thumb,
+.schedule-modal::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #ff8a2a 0%, #ff6b00 100%);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+.payment-modal-content::-webkit-scrollbar-thumb:hover,
+.schedule-modal::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #ff9a47 0%, #ff6b00 100%);
+  background-clip: content-box;
+}
