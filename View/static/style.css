@@ -8984,3 +8984,234 @@ body:has(.client-instagram-rail) .header .logout {
   font-size: 13px;
   font-weight: 900;
 }
+
+
+/* OFFLINE SPECIALIST BUTTON FIX */
+.disabled-button,
+.primary-button.disabled-button {
+  opacity: 0.55 !important;
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+  background: #b8b8bd !important;
+  color: #ffffff !important;
+  box-shadow: none !important;
+}
+
+.offline-specialist-alert {
+  margin-top: 10px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: rgba(255, 149, 0, 0.10);
+  border: 1px solid rgba(255, 149, 0, 0.20);
+  color: #8a4b00;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+
+/* OFFLINE SPECIALIST LAYOUT FIX */
+.offline-specialist-box {
+  grid-column: 1 / -1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.offline-specialist-button {
+  width: 100%;
+  min-height: 54px;
+  border: none;
+  border-radius: 18px;
+  background: #f2f2f7;
+  color: #6e6e73;
+  font-size: 15px;
+  font-weight: 950;
+  cursor: not-allowed;
+  box-sizing: border-box;
+}
+
+.offline-specialist-alert {
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 0;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: rgba(255, 149, 0, 0.10);
+  border: 1px solid rgba(255, 149, 0, 0.20);
+  color: #8a4b00;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+
+/* PROFILE OFFLINE ACTION FINAL FIX */
+.profile-bottom-action {
+  position: static !important;
+  left: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  transform: none !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 18px 0 28px !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+  z-index: 1 !important;
+}
+
+.profile-bottom-action .primary-button,
+.profile-bottom-action .chat-button,
+.profile-bottom-action .offline-specialist-box {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+.profile-bottom-action .chat-button {
+  min-height: 54px !important;
+  border-radius: 18px !important;
+  border: 1px solid rgba(10, 102, 194, 0.16) !important;
+  background: rgba(10, 102, 194, 0.08) !important;
+  color: #0a66c2 !important;
+  font-size: 15px !important;
+  font-weight: 950 !important;
+  box-shadow: none !important;
+}
+
+.profile-bottom-action .chat-button:hover {
+  background: rgba(10, 102, 194, 0.12) !important;
+}
+
+.profile-bottom-action .offline-specialist-box {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+}
+
+.profile-bottom-action .offline-specialist-button {
+  width: 100% !important;
+  min-height: 54px !important;
+  border: none !important;
+  border-radius: 18px !important;
+  background: #f2f2f7 !important;
+  color: #6e6e73 !important;
+  font-size: 15px !important;
+  font-weight: 950 !important;
+  cursor: not-allowed !important;
+}
+
+.profile-bottom-action .offline-specialist-alert {
+  width: 100% !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+  padding: 12px 14px !important;
+  border-radius: 16px !important;
+  background: rgba(255, 149, 0, 0.10) !important;
+  border: 1px solid rgba(255, 149, 0, 0.22) !important;
+  color: #8a4b00 !important;
+  font-size: 13px !important;
+  font-weight: 850 !important;
+  line-height: 1.35 !important;
+}
+
+.profile-bottom-action + .payment-modal-backdrop {
+  position: fixed !important;
+}
+
+
+/* PROFILE BOTTOM SPACE FIX */
+.profile-bottom-action {
+  margin-bottom: 8px !important;
+}
+
+.profile-bottom-action + .payment-modal-backdrop {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+body:has(.profile-bottom-action) {
+  padding-bottom: 0 !important;
+}
+
+body:has(.profile-bottom-action) .client-shell-content,
+body:has(.profile-bottom-action) .client-page,
+body:has(.profile-bottom-action) .app-content {
+  padding-bottom: 24px !important;
+}
+
+
+/* PROFILE PAGE OLD FIXED FOOTER SPACE REMOVE */
+.phone-page.profile-page {
+  padding-bottom: 18px !important;
+  min-height: auto !important;
+}
+
+.phone-page.profile-page .profile-bottom-action {
+  margin-bottom: 0 !important;
+}
+
+.phone-page.profile-page .payment-modal-backdrop.is-hidden {
+  display: none !important;
+}
+
+.phone-page.profile-page .reviews-card {
+  margin-bottom: 16px !important;
+}
+
+
+/* FIRST CONSULT CARD EMPTY REVIEWS */
+.first-consult-card {
+  border: 1px solid rgba(255, 107, 0, 0.14) !important;
+  background: linear-gradient(180deg, #ffffff 0%, #fff8f2 100%) !important;
+}
+
+.first-consult-badge {
+  width: fit-content;
+  margin-bottom: 12px;
+  padding: 7px 11px;
+  border-radius: 999px;
+  background: rgba(255, 107, 0, 0.10);
+  color: var(--apple-orange);
+  font-size: 12px;
+  font-weight: 950;
+}
+
+.first-consult-card h2 {
+  margin-bottom: 8px !important;
+}
+
+.first-consult-card p {
+  color: var(--apple-muted);
+  line-height: 1.45;
+}
+
+.first-consult-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.first-consult-list span {
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  color: var(--apple-text);
+  font-size: 13px;
+  font-weight: 850;
+}
+
+.first-consult-list span::before {
+  content: "✓";
+  color: var(--apple-orange);
+  font-weight: 950;
+  margin-right: 7px;
+}

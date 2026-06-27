@@ -42,17 +42,17 @@
         {% endfor %}
       </div>
     </section>
-    <section class="white-card reviews-card">
-      <div class="reviews-header">
-        <h2>Avaliações</h2>
-        {% if specialist.reviews and specialist.reviews > 0 %}
-          <span>{{ specialist.rating }} ({{ specialist.reviews }})</span>
-        {% else %}
-          <span>0 avaliações</span>
-        {% endif %}
-      </div>
+    {% if specialist.reviews_list %}
+      <section class="white-card reviews-card">
+        <div class="reviews-header">
+          <h2>Avaliações</h2>
+          {% if specialist.reviews and specialist.reviews > 0 %}
+            <span>{{ specialist.rating }} ({{ specialist.reviews }})</span>
+          {% else %}
+            <span>0 avaliações</span>
+          {% endif %}
+        </div>
 
-      {% if specialist.reviews_list %}
         {% for review in specialist.reviews_list %}
           <article class="review-item">
             <div class="review-avatar">{{ review.cliente[:1] }}</div>
@@ -68,18 +68,42 @@
             <span>{{ review.data }}</span>
           </article>
         {% endfor %}
+      </section>
+    {% else %}
+      <section class="white-card first-consult-card">
+        <div class="first-consult-badge">Novo especialista</div>
+
+        <h2>Comece com uma consulta rápida</h2>
+
+        <p>
+          Este especialista ainda não recebeu avaliações, mas já está disponível para ajudar.
+          Explique seu problema, combine o melhor horário e pague somente pelo tempo utilizado.
+        </p>
+
+        <div class="first-consult-list">
+          <span>Atendimento por vídeo</span>
+          <span>Valor por minuto transparente</span>
+          <span>Ideal para dúvidas rápidas</span>
+        </div>
+      </section>
+    {% endif %}
+
+    <div class="bottom-action split-action profile-bottom-action">
+      {% if specialist.is_online %}
+        <a class="primary-button" href="{{ url_for('call.chamada', specialist_id=specialist.id) }}">
+          Iniciar videochamada
+        </a>
       {% else %}
-        <div class="empty-state-card">
-          <strong>Sem avaliações ainda</strong>
-          <p>As avaliações aparecerão aqui após os atendimentos finalizados.</p>
+        <div class="offline-specialist-box">
+          <button class="offline-specialist-button" type="button" disabled>
+            Especialista offline
+          </button>
+
+          <div class="offline-specialist-alert">
+            Este especialista está offline no momento. Você pode consultar horários disponíveis ou solicitar atendimento para depois.
+          </div>
         </div>
       {% endif %}
-    </section>
-
-    <div class="bottom-action split-action">
-      <a class="primary-button" href="{{ url_for('call.chamada', specialist_id=specialist.id) }}">
-        Iniciar videochamada
-      </a>
       <button class="chat-button" type="button" id="openScheduleModal">
         Horários
       </button>
