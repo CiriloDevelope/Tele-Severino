@@ -9215,3 +9215,294 @@ body:has(.profile-bottom-action) .app-content {
   font-weight: 950;
   margin-right: 7px;
 }
+
+
+/* SCHEDULE REQUEST UX IMPROVEMENT */
+.schedule-request-button:disabled {
+  opacity: 0.52 !important;
+  cursor: not-allowed !important;
+  box-shadow: none !important;
+}
+
+.schedule-request-button.is-ready {
+  opacity: 1 !important;
+  cursor: pointer !important;
+  box-shadow: 0 14px 28px rgba(255, 107, 0, 0.22) !important;
+}
+
+#scheduleSuccess {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  line-height: 1.35;
+}
+
+#scheduleSuccess strong {
+  color: #166534;
+  font-size: 14px;
+  font-weight: 950;
+}
+
+#scheduleSuccess span {
+  color: #166534;
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.schedule-slot.free.active {
+  border-color: rgba(255, 107, 0, 0.42) !important;
+  background: #fff4e8 !important;
+  color: var(--apple-orange) !important;
+}
+
+
+/* ATTENDANCE REQUEST NOTIFICATION FLOW */
+.schedule-success-popup {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.28);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s ease;
+}
+
+.schedule-success-popup.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.schedule-success-popup > div {
+  width: min(360px, 100%);
+  border-radius: 28px;
+  background: #ffffff;
+  padding: 24px;
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.22);
+  text-align: center;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.schedule-success-popup strong {
+  display: block;
+  font-size: 20px;
+  color: #1d1d1f;
+  font-weight: 950;
+}
+
+.schedule-success-popup p {
+  margin: 10px 0 18px;
+  color: #6e6e73;
+  line-height: 1.42;
+  font-size: 14px;
+}
+
+.schedule-success-popup button {
+  width: 100%;
+  min-height: 48px;
+  border: none;
+  border-radius: 16px;
+  background: var(--apple-orange);
+  color: #ffffff;
+  font-weight: 950;
+  cursor: pointer;
+}
+
+.notification-counter {
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(255, 107, 0, 0.10);
+  color: var(--apple-orange);
+  font-size: 12px;
+  font-weight: 950;
+}
+
+.specialist-request-list {
+  display: grid;
+  gap: 12px;
+}
+
+.specialist-request-card {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 16px;
+  align-items: center;
+  padding: 16px;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 107, 0, 0.16);
+  background: linear-gradient(180deg, #ffffff 0%, #fff8f2 100%);
+}
+
+.specialist-request-card h3 {
+  margin: 10px 0 6px;
+  color: #1d1d1f;
+  font-size: 17px;
+  font-weight: 950;
+}
+
+.specialist-request-card p {
+  margin: 0;
+  color: #6e6e73;
+  line-height: 1.4;
+}
+
+.specialist-request-card small {
+  display: block;
+  margin-top: 8px;
+  color: #8a8a8e;
+  font-size: 12px;
+}
+
+.request-status {
+  width: fit-content;
+  display: inline-flex;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 950;
+}
+
+.request-status.status-pendente {
+  background: rgba(255, 149, 0, 0.12);
+  color: #8a4b00;
+}
+
+.request-status.status-aceita {
+  background: rgba(52, 199, 89, 0.12);
+  color: #166534;
+}
+
+.request-status.status-recusada {
+  background: rgba(255, 59, 48, 0.12);
+  color: #b42318;
+}
+
+.request-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.request-actions button {
+  min-height: 38px;
+  padding: 0 13px;
+  border-radius: 14px;
+  border: none;
+  background: #f2f2f7;
+  color: #8a8a8e;
+  font-weight: 900;
+  cursor: not-allowed;
+}
+
+.request-note {
+  margin: 14px 0 0;
+  color: #6e6e73;
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+@media (max-width: 720px) {
+  .specialist-request-card {
+    grid-template-columns: 1fr;
+  }
+
+  .request-actions {
+    width: 100%;
+  }
+
+  .request-actions button {
+    flex: 1;
+  }
+}
+
+
+/* SPECIALIST MENU NOTIFICATION BADGE */
+.specialist-menu-notification {
+  justify-content: space-between !important;
+}
+
+.specialist-menu-notification span {
+  display: inline-flex;
+  align-items: center;
+}
+
+.specialist-menu-notification em {
+  min-width: 22px;
+  height: 22px;
+  padding: 0 7px;
+  border-radius: 999px;
+  background: var(--apple-orange);
+  color: #ffffff;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 950;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+/* SPECIALIST OPERATION COMMUNICATION CLARITY */
+.operation-source-pill {
+  width: fit-content;
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 7px;
+  padding: 5px 9px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 950;
+}
+
+.operation-source-pill.client {
+  background: rgba(10, 102, 194, 0.10);
+  color: #0a66c2;
+}
+
+.operation-source-pill.specialist {
+  background: rgba(255, 107, 0, 0.10);
+  color: var(--apple-orange);
+}
+
+.operation-source-pill.platform {
+  background: rgba(52, 199, 89, 0.12);
+  color: #166534;
+}
+
+.operation-source-pill.admin {
+  background: rgba(88, 86, 214, 0.12);
+  color: #4f46e5;
+}
+
+.operation-request-preview {
+  display: grid;
+  gap: 10px;
+}
+
+.operation-request-preview article {
+  padding: 15px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 107, 0, 0.16);
+  background: linear-gradient(180deg, #ffffff 0%, #fff8f2 100%);
+}
+
+.operation-request-preview strong {
+  display: block;
+  color: #1d1d1f;
+  font-size: 15px;
+  font-weight: 950;
+}
+
+.operation-request-preview p {
+  margin: 6px 0 0;
+  color: #6e6e73;
+  line-height: 1.35;
+}
+
+.operation-request-preview small {
+  display: block;
+  margin-top: 8px;
+  color: #8a8a8e;
+  font-size: 12px;
+}

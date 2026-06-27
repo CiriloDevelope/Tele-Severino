@@ -752,33 +752,6 @@ confirmVideoButton?.addEventListener("click", () => {
 
 
 
-// Perfil público: modal fake de disponibilidade.
-const openScheduleModal = document.getElementById("openScheduleModal");
-const closeScheduleModal = document.getElementById("closeScheduleModal");
-const scheduleModal = document.getElementById("scheduleModal");
-const scheduleSuccess = document.getElementById("scheduleSuccess");
-
-openScheduleModal?.addEventListener("click", () => {
-  scheduleModal?.classList.remove("is-hidden");
-});
-
-closeScheduleModal?.addEventListener("click", () => {
-  scheduleModal?.classList.add("is-hidden");
-});
-
-document.querySelectorAll(".schedule-grid button").forEach((button) => {
-  button.addEventListener("click", () => {
-    document.querySelectorAll(".schedule-grid button").forEach((item) => {
-      item.classList.remove("active");
-    });
-
-    button.classList.add("active");
-    scheduleSuccess?.classList.remove("is-hidden");
-  });
-});
-
-
-
 // CALENDARIO_MENSAL_DISPONIBILIDADE
 (() => {
   const openScheduleModal = document.getElementById("openScheduleModal");
@@ -786,6 +759,10 @@ document.querySelectorAll(".schedule-grid button").forEach((button) => {
   const scheduleModal = document.getElementById("scheduleModal");
   const scheduleSuccess = document.getElementById("scheduleSuccess");
   const scheduleSlotPanel = document.getElementById("scheduleSlotPanel");
+  const confirmScheduleButton = document.getElementById("confirmScheduleButton");
+  const specialistId = scheduleModal?.dataset?.specialistId || "";
+
+  if (!scheduleModal || !scheduleSlotPanel) return;
 
   const cupons = {
     "PRIMEIRA10": "Cupom aplicado: 10% de desconto na primeira reserva.",
@@ -794,28 +771,41 @@ document.querySelectorAll(".schedule-grid button").forEach((button) => {
     "TESTE5": "Cupom aplicado: desconto de teste do protótipo."
   };
 
+  let selectedDayText = "";
+  let selectedSlot = "";
+
+  function resetarBotaoConfirmacao() {
+    if (!confirmScheduleButton) return;
+
+    confirmScheduleButton.disabled = true;
+    confirmScheduleButton.classList.remove("is-ready");
+    confirmScheduleButton.textContent = "Solicitar atendimento";
+  }
+
   function resetarPainel() {
+    selectedDayText = "";
+    selectedSlot = "";
+
     document.querySelectorAll(".schedule-day").forEach((item) => {
       item.classList.remove("active");
     });
 
-    if (scheduleSlotPanel) {
-      scheduleSlotPanel.innerHTML = `
-        <strong>Selecione um dia disponível</strong>
-        <p>Os horários liberados aparecerão aqui.</p>
-      `;
-    }
+    scheduleSlotPanel.innerHTML = `
+      <strong>Selecione um dia disponível</strong>
+      <p>Os horários liberados aparecerão aqui.</p>
+    `;
 
     scheduleSuccess?.classList.add("is-hidden");
+    resetarBotaoConfirmacao();
   }
 
   function abrirModal() {
-    scheduleModal?.classList.remove("is-hidden");
-    scheduleSuccess?.classList.add("is-hidden");
+    resetarPainel();
+    scheduleModal.classList.remove("is-hidden");
   }
 
   function fecharModal() {
-    scheduleModal?.classList.add("is-hidden");
+    scheduleModal.classList.add("is-hidden");
   }
 
   function montarHorarios(button) {
@@ -830,14 +820,16 @@ document.querySelectorAll(".schedule-grid button").forEach((button) => {
     const weekday = button.dataset.weekday;
     const slots = (button.dataset.slots || "").split(",").filter(Boolean);
 
+    selectedDayText = `${weekday}, dia ${day}`;
+    selectedSlot = "";
+
     document.querySelectorAll(".schedule-day").forEach((item) => {
       item.classList.remove("active");
     });
 
     button.classList.add("active");
     scheduleSuccess?.classList.add("is-hidden");
-
-    if (!scheduleSlotPanel) return;
+    resetarBotaoConfirmacao();
 
     scheduleSlotPanel.classList.add("is-changing");
 
@@ -857,8 +849,8 @@ document.querySelectorAll(".schedule-grid button").forEach((button) => {
       }).join("");
 
       scheduleSlotPanel.innerHTML = `
-        <strong>${weekday}, dia ${day}</strong>
-        <p>Escolha um horário livre para reservar sua videochamada.</p>
+        <strong>${selectedDayText}</strong>
+        <p>Escolha um horário livre para solicitar sua videochamada.</p>
 
         <div class="schedule-slots">
           ${slotButtons}
@@ -885,12 +877,18 @@ document.querySelectorAll(".schedule-grid button").forEach((button) => {
           });
 
           slotButton.classList.add("active");
+          selectedSlot = slotButton.dataset.slot || "";
 
           const couponArea = document.getElementById("couponArea");
           couponArea?.classList.remove("is-hidden");
 
-          scheduleSuccess?.classList.remove("is-hidden");
-          scheduleSuccess.textContent = `Horário ${slotButton.dataset.slot} reservado no protótipo. Você ainda pode aplicar um cupom antes de confirmar.`;
+          scheduleSuccess?.classList.add("is-hidden");
+
+          if (confirmScheduleButton) {
+            confirmScheduleButton.disabled = false;
+            confirmScheduleButton.classList.add("is-ready");
+            confirmScheduleButton.textContent = "Solicitar atendimento";
+          }
         });
       });
 
@@ -925,35 +923,86 @@ document.querySelectorAll(".schedule-grid button").forEach((button) => {
   document.querySelectorAll(".schedule-day:not(.locked)").forEach((button) => {
     button.addEventListener("click", () => montarHorarios(button));
   });
+
+  function mostrarPopupSolicitacao() {
+    const popup = document.createElement("div");
+    popup.className = "schedule-success-popup";
+    popup.innerHTML = `
+      <div>
+        <strong>Solicitação enviada com sucesso</strong>
+        <p>
+          Agora é necessário aguardar o retorno do especialista.
+          Ele poderá aceitar ou recusar sua solicitação de atendimento.
+        </p>
+        <button type="button">Entendi</button>
+      </div>
+    `;
+
+    document.body.appendChild(popup);
+
+    popup.querySelector("button")?.addEventListener("click", () => {
+      popup.remove();
+    });
+
+    setTimeout(() => {
+      popup.classList.add("is-visible");
+    }, 50);
+  }
+
+  confirmScheduleButton?.addEventListener("click", async () => {
+    if (confirmScheduleButton.disabled || !selectedSlot) return;
+
+    confirmScheduleButton.disabled = true;
+    confirmScheduleButton.textContent = "Enviando...";
+
+    try {
+      const response = await fetch("/api/solicitacoes-atendimento", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          id_especialista: specialistId,
+          dia_label: selectedDayText,
+          horario: selectedSlot
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.ok) {
+        throw new Error(data.erro || "Não foi possível enviar a solicitação.");
+      }
+
+      if (scheduleSuccess) {
+        scheduleSuccess.classList.remove("is-hidden");
+        scheduleSuccess.innerHTML = `
+          <strong>Solicitação enviada</strong>
+          <span>
+            Pedido registrado para ${selectedDayText}, às ${selectedSlot}.
+            Aguarde o aceite ou recusa do especialista.
+          </span>
+        `;
+      }
+
+      confirmScheduleButton.textContent = "Solicitação enviada";
+      confirmScheduleButton.classList.remove("is-ready");
+      mostrarPopupSolicitacao();
+    } catch (erro) {
+      if (scheduleSuccess) {
+        scheduleSuccess.classList.remove("is-hidden");
+        scheduleSuccess.innerHTML = `
+          <strong>Não foi possível enviar</strong>
+          <span>${erro.message}</span>
+        `;
+      }
+
+      confirmScheduleButton.disabled = false;
+      confirmScheduleButton.textContent = "Tentar novamente";
+      confirmScheduleButton.classList.add("is-ready");
+    }
+  });
 })();
-
-
-
-// Solicitação fake do Tele-Severino após seleção de horário.
-const confirmScheduleButton = document.getElementById("confirmScheduleButton");
-
-document.addEventListener("click", (event) => {
-  const freeSlot = event.target.closest(".schedule-slot.free");
-
-  if (freeSlot && confirmScheduleButton) {
-    confirmScheduleButton.disabled = false;
-    confirmScheduleButton.classList.add("is-ready");
-  }
-});
-
-confirmScheduleButton?.addEventListener("click", () => {
-  if (confirmScheduleButton.disabled) return;
-
-  const scheduleSuccess = document.getElementById("scheduleSuccess");
-
-  if (scheduleSuccess) {
-    scheduleSuccess.classList.remove("is-hidden");
-    scheduleSuccess.textContent = "Solicitação Tele-Severino enviada no protótipo. O especialista receberá o pedido de agendamento.";
-  }
-
-  confirmScheduleButton.textContent = "Solicitado";
-  confirmScheduleButton.disabled = true;
-});
 
 
 

@@ -1235,6 +1235,162 @@ def login_web(
     return response
 
 
+
+
+def garantir_tabela_solicitacoes_atendimento():
+    conexao = conectar_banco()
+    cursor = conexao.cursor()
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS solicitacoes_atendimento (
+            id_solicitacao INT AUTO_INCREMENT PRIMARY KEY,
+            id_cliente INT NOT NULL,
+            id_especialista INT NOT NULL,
+            dia_label VARCHAR(80) NOT NULL,
+            horario VARCHAR(20) NOT NULL,
+            status ENUM('PENDENTE','ACEITA','RECUSADA') NOT NULL DEFAULT 'PENDENTE',
+            observacao VARCHAR(255) NULL,
+            data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+
+    conexao.commit()
+    cursor.close()
+    conexao.close()
+
+
+def criar_solicitacao_atendimento(id_cliente: int, id_especialista: int, dia_label: str, horario: str):
+    garantir_tabela_solicitacoes_atendimento()
+
+    conexao = conectar_banco()
+    cursor = conexao.cursor()
+
+    cursor.execute("""
+        INSERT INTO solicitacoes_atendimento
+            (id_cliente, id_especialista, dia_label, horario, status, observacao)
+        VALUES
+            (%s, %s, %s, %s, 'PENDENTE', %s)
+    """, (
+        id_cliente,
+        id_especialista,
+        dia_label,
+        horario,
+        "Solicitação criada pelo cliente no perfil público do especialista."
+    ))
+
+    conexao.commit()
+    id_solicitacao = cursor.lastrowid
+
+    cursor.close()
+    conexao.close()
+
+    return id_solicitacao
+
+
+def consultar_solicitacoes_especialista(id_especialista: int, limite: int = 10):
+    garantir_tabela_solicitacoes_atendimento()
+
+    conexao = conectar_banco()
+    cursor = conexao.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT
+            s.id_solicitacao,
+            s.id_cliente,
+            s.id_especialista,
+            s.dia_label,
+            s.horario,
+            s.status,
+            s.observacao,
+            DATE_FORMAT(s.data_criacao, '%d/%m/%Y %H:%i') AS data_formatada,
+            u.nome AS cliente_nome,
+            u.email AS cliente_email
+        FROM solicitacoes_atendimento s
+        LEFT JOIN usuarios u
+            ON u.id_usuario = s.id_cliente
+        WHERE s.id_especialista = %s
+        ORDER BY s.data_criacao DESC
+        LIMIT %s
+    """, (id_especialista, limite))
+
+    solicitacoes = cursor.fetchall()
+
+    cursor.close()
+    conexao.close()
+
+    return solicitacoes
+
+
+def contar_solicitacoes_pendentes_especialista(id_especialista: int):
+    garantir_tabela_solicitacoes_atendimento()
+
+    conexao = conectar_banco()
+    cursor = conexao.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT COUNT(*) AS total
+        FROM solicitacoes_atendimento
+        WHERE id_especialista = %s
+          AND status = 'PENDENTE'
+    """, (id_especialista,))
+
+    resultado = cursor.fetchone() or {"total": 0}
+
+    cursor.close()
+    conexao.close()
+
+    return resultado["total"] or 0
+
+
+@app.post("/api/solicitacoes-atendimento")
+async def api_criar_solicitacao_atendimento(request: Request):
+    usuario = exigir_login(request)
+
+    if isinstance(usuario, RedirectResponse):
+        return JSONResponse(
+            {"ok": False, "erro": "Faça login para solicitar atendimento."},
+            status_code=401
+        )
+
+    if usuario["tipo"] != "CLIENTE":
+        return JSONResponse(
+            {"ok": False, "erro": "Somente clientes podem solicitar atendimento."},
+            status_code=403
+        )
+
+    try:
+        payload = await request.json()
+    except Exception:
+        return JSONResponse(
+            {"ok": False, "erro": "Dados inválidos para solicitação."},
+            status_code=400
+        )
+
+    id_especialista = int(payload.get("id_especialista") or 0)
+    dia_label = str(payload.get("dia_label") or "").strip()
+    horario = str(payload.get("horario") or "").strip()
+
+    if not id_especialista or not dia_label or not horario:
+        return JSONResponse(
+            {"ok": False, "erro": "Selecione um dia e horário antes de solicitar."},
+            status_code=400
+        )
+
+    id_solicitacao = criar_solicitacao_atendimento(
+        int(usuario["id"]),
+        id_especialista,
+        dia_label,
+        horario
+    )
+
+    return {
+        "ok": True,
+        "id_solicitacao": id_solicitacao,
+        "mensagem": "Solicitação enviada com sucesso. Aguarde o aceite ou recusa do especialista.",
+        "status": "PENDENTE"
+    }
+
+
 @app.get("/especialista/dashboard", name="specialist.dashboard")
 def especialista_dashboard(request: Request, usuario_id: int = 0):
     usuario = exigir_especialista(request)
@@ -1253,6 +1409,8 @@ def especialista_dashboard(request: Request, usuario_id: int = 0):
             "cadastro_complementar": consultar_cadastro_complementar(int(usuario["id"])),
             "cliente_atual": consultar_cliente_atual_para_layout(int(usuario["id"])),
             "especialista": consultar_especialista_por_usuario(int(usuario["id"])),
+            "solicitacoes_atendimento": consultar_solicitacoes_especialista(int(usuario["id"])),
+            "solicitacoes_pendentes": contar_solicitacoes_pendentes_especialista(int(usuario["id"])),
             "active_page": "resumo"
         }
     )
@@ -1759,6 +1917,8 @@ def render_especialista_page(request: Request, template_name: str, active_page: 
             "usuario_id": usuario["id"],
             "cadastro_complementar": consultar_cadastro_complementar(int(usuario["id"])),
             "especialista": consultar_especialista_por_usuario(int(usuario["id"])),
+            "solicitacoes_atendimento": consultar_solicitacoes_especialista(int(usuario["id"])),
+            "solicitacoes_pendentes": contar_solicitacoes_pendentes_especialista(int(usuario["id"])),
             "active_page": active_page
         }
     )

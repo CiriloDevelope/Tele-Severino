@@ -27,7 +27,16 @@
       <a class="{% if active_page == 'resumo' %}active{% endif %}" href="/especialista/dashboard">Visão geral</a>
       <a class="{% if active_page == 'financeiro' %}active{% endif %}" href="/especialista/financeiro">Financeiro</a>
       <a class="{% if active_page == 'operacao' %}active{% endif %}" href="/especialista/operacao">Operação</a>
+
+      <a class="specialist-menu-notification {% if active_page == 'notificacoes' %}active{% endif %}" href="/especialista/notificacoes">
+        <span>Notificações</span>
+        {% if solicitacoes_pendentes and solicitacoes_pendentes > 0 %}
+          <em>{{ solicitacoes_pendentes }}</em>
+        {% endif %}
+      </a>
+
       <a class="{% if active_page == 'perfil' %}active{% endif %}" href="/especialista/perfil">Perfil público</a>
+      <a class="{% if active_page == 'mensagens' %}active{% endif %}" href="/especialista/mensagens">Mensagens</a>
     </nav>
 
     <a class="specialist-logout" href="{{ url_for('auth.logout') }}">Sair</a>

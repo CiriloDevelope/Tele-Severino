@@ -109,13 +109,17 @@
       </button>
     </div>
 
-    <div class="payment-modal-backdrop is-hidden" id="scheduleModal">
+    <div
+      class="payment-modal-backdrop is-hidden"
+      id="scheduleModal"
+      data-specialist-id="{{ specialist.id }}"
+    >
       <div class="payment-modal schedule-modal">
-        <h2>Disponibilidade</h2>
+        <h2>Solicitar atendimento</h2>
 
         <p>
-          Plano {{ agenda.plano_label }}:
-          {{ agenda.regras }}
+          Escolha um dia e horário disponível para solicitar uma videochamada com este especialista.
+          Plano {{ agenda.plano_label }}: {{ agenda.regras }}
         </p>
 
         <div class="schedule-month-title">
@@ -144,7 +148,7 @@
         </div>
 
         <div class="payment-message payment-message-success is-hidden" id="scheduleSuccess">
-          Horário reservado no protótipo. O especialista será notificado na simulação.
+          Solicitação enviada. O especialista poderá confirmar o melhor horário para atendimento.
         </div>
 
         <div class="schedule-modal-actions">
@@ -153,7 +157,7 @@
           </button>
 
           <button type="button" class="primary-button schedule-request-button" id="confirmScheduleButton" disabled>
-            Solicitar Tele-Severino
+            Solicitar atendimento
           </button>
         </div>
       </div>

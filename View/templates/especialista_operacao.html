@@ -2,7 +2,7 @@
 
 {% block specialist_title %}Operação{% endblock %}
 {% block specialist_subtitle %}
-Gerencie agenda, mensagens e notificações do atendimento.
+Gerencie seus atendimentos, agenda, mensagens com clientes e avisos da plataforma.
 {% endblock %}
 
 {% block specialist_content %}
@@ -10,47 +10,66 @@ Gerencie agenda, mensagens e notificações do atendimento.
   <div class="apple-panel">
     <div class="section-header">
       <div>
-        <h2>Agenda</h2>
-        <p>Horários disponíveis e próximos atendimentos.</p>
+        <h2>Agenda de atendimentos</h2>
+        <p>Solicitações enviadas por clientes, horários disponíveis e próximos atendimentos.</p>
       </div>
-      <a class="small-link" href="#">Configurar agenda</a>
+      <a class="small-link" href="/especialista/agenda">Configurar agenda</a>
     </div>
 
-    <div class="timeline-list">
-      <div>
-        <span>14:00</span>
-        <strong>Horário disponível</strong>
-        <p>Aguardando solicitação de cliente.</p>
+    {% if solicitacoes_atendimento %}
+      <div class="operation-request-preview">
+        {% for solicitacao in solicitacoes_atendimento[:3] %}
+          <article>
+            <div>
+              <span class="operation-source-pill client">Cliente</span>
+              <strong>{{ solicitacao.cliente_nome or "Cliente" }} solicitou atendimento</strong>
+              <p>
+                Pedido para {{ solicitacao.dia_label }}, às {{ solicitacao.horario }}.
+              </p>
+              <small>Status: {{ solicitacao.status }} • Recebido em {{ solicitacao.data_formatada }}</small>
+            </div>
+          </article>
+        {% endfor %}
       </div>
-      <div>
-        <span>16:30</span>
-        <strong>Bloqueado</strong>
-        <p>Horário ocupado.</p>
+    {% else %}
+      <div class="timeline-list">
+        <div>
+          <span>14:00</span>
+          <strong>Horário disponível</strong>
+          <p>Aguardando solicitação de cliente.</p>
+        </div>
+        <div>
+          <span>16:30</span>
+          <strong>Bloqueado</strong>
+          <p>Horário ocupado.</p>
+        </div>
+        <div>
+          <span>18:00</span>
+          <strong>Disponível</strong>
+          <p>Atendimento por chamada, voz ou mensagem.</p>
+        </div>
       </div>
-      <div>
-        <span>18:00</span>
-        <strong>Disponível</strong>
-        <p>Atendimento por chamada, voz ou mensagem.</p>
-      </div>
-    </div>
+    {% endif %}
   </div>
 
   <div class="apple-panel">
     <div class="section-header">
       <div>
-        <h2>Mensagens</h2>
-        <p>Conversas com clientes antes ou depois do atendimento.</p>
+        <h2>Mensagens com clientes</h2>
+        <p>Conversas diretas com usuários antes ou depois do atendimento.</p>
       </div>
-      <a class="small-link" href="#">Nova mensagem</a>
+      <a class="small-link" href="/especialista/mensagens">Abrir mensagens</a>
     </div>
 
     <div class="message-list">
       <div>
+        <span class="operation-source-pill client">Cliente</span>
         <strong>Cliente teste</strong>
         <p>Tenho uma dúvida sobre instalação de tomada...</p>
         <span>Entrada • 10:32</span>
       </div>
       <div>
+        <span class="operation-source-pill specialist">Especialista</span>
         <strong>Mensagem enviada</strong>
         <p>Posso te orientar por chamada rápida.</p>
         <span>Enviada • ontem</span>
@@ -62,21 +81,36 @@ Gerencie agenda, mensagens e notificações do atendimento.
 <section class="apple-panel">
   <div class="section-header">
     <div>
-      <h2>Notificações</h2>
-      <p>Eventos importantes do seu perfil e operação.</p>
+      <h2>Avisos e notificações</h2>
+      <p>Pedidos de clientes, alertas do sistema e comunicados da plataforma.</p>
     </div>
+
+    <a class="small-link" href="/especialista/notificacoes">Ver notificações</a>
   </div>
 
   <div class="notification-list">
+    {% if solicitacoes_pendentes and solicitacoes_pendentes > 0 %}
+      <div>
+        <span class="operation-source-pill client">Cliente</span>
+        <strong>{{ solicitacoes_pendentes }} solicitação pendente</strong>
+        <p>Um cliente solicitou atendimento e está aguardando aceite ou recusa.</p>
+      </div>
+    {% endif %}
+
     <div>
+      <span class="operation-source-pill platform">Sistema</span>
       <strong>Perfil público</strong>
-      <p>Mantenha tags, descrição e valor por minuto atualizados.</p>
+      <p>Mantenha tags, descrição e valor por minuto atualizados para aparecer melhor na busca.</p>
     </div>
+
     <div>
-      <strong>Plano atual</strong>
-      <p>Você está no plano Free. Recursos pagos podem ser solicitados em assinatura.</p>
+      <span class="operation-source-pill admin">Admin</span>
+      <strong>Comunicado da plataforma</strong>
+      <p>Avisos do Admin ou Super Admin aparecerão aqui sem misturar com mensagens de clientes.</p>
     </div>
+
     <div>
+      <span class="operation-source-pill platform">Sistema</span>
       <strong>Recebimento</strong>
       <p>Confira seus dados bancários na área financeira.</p>
     </div>

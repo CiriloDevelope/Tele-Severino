@@ -2,10 +2,66 @@
 
 {% block specialist_title %}Notificações{% endblock %}
 {% block specialist_subtitle %}
-Acompanhe chamadas, mensagens, agenda, assinatura e oportunidades.
+Acompanhe chamadas, mensagens, agenda, assinatura e solicitações de atendimento.
 {% endblock %}
 
 {% block specialist_content %}
+<section class="apple-panel">
+  <div class="section-header">
+    <div>
+      <h2>Solicitações de atendimento</h2>
+      <p>Pedidos enviados pelos clientes para agendar uma videochamada.</p>
+    </div>
+
+    {% if solicitacoes_pendentes and solicitacoes_pendentes > 0 %}
+      <span class="notification-counter">{{ solicitacoes_pendentes }} pendente(s)</span>
+    {% endif %}
+  </div>
+
+  {% if solicitacoes_atendimento %}
+    <div class="specialist-request-list">
+      {% for solicitacao in solicitacoes_atendimento %}
+        <article class="specialist-request-card">
+          <div>
+            <span class="request-status status-{{ solicitacao.status|lower }}">
+              {{ solicitacao.status }}
+            </span>
+
+            <h3>Nova solicitação de {{ solicitacao.cliente_nome or "Cliente" }}</h3>
+
+            <p>
+              Cliente solicitou atendimento para
+              <strong>{{ solicitacao.dia_label }}</strong>,
+              às <strong>{{ solicitacao.horario }}</strong>.
+            </p>
+
+            <small>
+              Recebido em {{ solicitacao.data_formatada }}
+              {% if solicitacao.cliente_email %}
+                • {{ solicitacao.cliente_email }}
+              {% endif %}
+            </small>
+          </div>
+
+          <div class="request-actions">
+            <button type="button" disabled>Aceitar</button>
+            <button type="button" disabled>Recusar</button>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+
+    <p class="request-note">
+      Os botões de aceitar e recusar estão bloqueados neste momento porque a próxima etapa será implementar a alteração real de status.
+    </p>
+  {% else %}
+    <div class="empty-state-card">
+      <strong>Nenhuma solicitação recebida ainda</strong>
+      <p>Quando um cliente escolher um horário no seu perfil público, o pedido aparecerá aqui.</p>
+    </div>
+  {% endif %}
+</section>
+
 <section class="apple-panel">
   <div class="section-header">
     <div>
