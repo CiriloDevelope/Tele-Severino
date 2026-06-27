@@ -1248,7 +1248,7 @@ def garantir_tabela_solicitacoes_atendimento():
             id_especialista INT NOT NULL,
             dia_label VARCHAR(80) NOT NULL,
             horario VARCHAR(20) NOT NULL,
-            status ENUM('PENDENTE','ACEITA','RECUSADA') NOT NULL DEFAULT 'PENDENTE',
+            status ENUM('PENDENTE','ACEITA','RECUSADA','EXPIRADA') NOT NULL DEFAULT 'PENDENTE',
             observacao VARCHAR(255) NULL,
             data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
@@ -1269,14 +1269,131 @@ def garantir_tabela_solicitacoes_atendimento():
             ADD COLUMN cupom_desconto_percentual DECIMAL(5,2) NOT NULL DEFAULT 0 AFTER cupom_codigo
         """)
 
+
+    cursor.execute("""
+        ALTER TABLE solicitacoes_atendimento
+        MODIFY COLUMN status ENUM('PENDENTE','ACEITA','RECUSADA','EXPIRADA') NOT NULL DEFAULT 'PENDENTE'
+    """)
+
+    cursor.execute("SHOW COLUMNS FROM solicitacoes_atendimento LIKE 'data_expiracao'")
+    if not cursor.fetchone():
+        cursor.execute("""
+            ALTER TABLE solicitacoes_atendimento
+            ADD COLUMN data_expiracao DATETIME NULL AFTER horario
+        """)
+
     conexao.commit()
     cursor.close()
     conexao.close()
 
 
 
-def cupom_primeiro_atendimento_disponivel(id_cliente: int, id_especialista: int = 0):
+
+def atualizar_solicitacoes_expiradas():
     garantir_tabela_solicitacoes_atendimento()
+
+    conexao = conectar_banco()
+    cursor = conexao.cursor()
+
+    cursor.execute("""
+        UPDATE solicitacoes_atendimento
+        SET status = 'EXPIRADA',
+            observacao = 'Solicitação expirada automaticamente por falta de resposta do especialista.'
+        WHERE status = 'PENDENTE'
+          AND data_expiracao IS NOT NULL
+          AND data_expiracao <= NOW()
+    """)
+
+    conexao.commit()
+    cursor.close()
+    conexao.close()
+
+
+def existe_solicitacao_pendente_cliente_especialista(id_cliente: int, id_especialista: int):
+    atualizar_solicitacoes_expiradas()
+
+    conexao = conectar_banco()
+    cursor = conexao.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT COUNT(*) AS total
+        FROM solicitacoes_atendimento
+        WHERE id_cliente = %s
+          AND id_especialista = %s
+          AND status = 'PENDENTE'
+    """, (id_cliente, id_especialista))
+
+    resultado = cursor.fetchone() or {"total": 0}
+
+    cursor.close()
+    conexao.close()
+
+    return int(resultado["total"] or 0) > 0
+
+
+def consultar_solicitacoes_cliente(id_cliente: int, limite: int = 30):
+    atualizar_solicitacoes_expiradas()
+
+    conexao = conectar_banco()
+    cursor = conexao.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT
+            s.id_solicitacao,
+            s.id_cliente,
+            s.id_especialista,
+            s.dia_label,
+            s.horario,
+            s.status,
+            s.cupom_codigo,
+            s.cupom_desconto_percentual,
+            s.observacao,
+            s.data_criacao,
+            s.data_expiracao,
+            u.nome AS especialista_nome,
+            u.email AS especialista_email
+        FROM solicitacoes_atendimento s
+        LEFT JOIN usuarios u ON u.id_usuario = s.id_especialista
+        WHERE s.id_cliente = %s
+        ORDER BY s.data_criacao DESC
+        LIMIT %s
+    """, (id_cliente, limite))
+
+    solicitacoes = cursor.fetchall() or []
+
+    cursor.close()
+    conexao.close()
+
+    for solicitacao in solicitacoes:
+        data_criacao = solicitacao.get("data_criacao")
+        data_expiracao = solicitacao.get("data_expiracao")
+
+        solicitacao["data_criacao_formatada"] = data_criacao.strftime("%d/%m/%Y às %H:%M") if data_criacao else ""
+        solicitacao["data_expiracao_formatada"] = data_expiracao.strftime("%d/%m/%Y às %H:%M") if data_expiracao else ""
+
+        status = solicitacao.get("status")
+
+        if status == "PENDENTE":
+            solicitacao["status_titulo"] = "Aguardando resposta"
+            solicitacao["status_descricao"] = "O especialista tem até 2 horas para aceitar ou recusar. Se não responder, a solicitação expira e você poderá solicitar novamente."
+        elif status == "ACEITA":
+            solicitacao["status_titulo"] = "Atendimento confirmado"
+            solicitacao["status_descricao"] = "Aguarde o especialista iniciar a sala no horário combinado."
+        elif status == "RECUSADA":
+            solicitacao["status_titulo"] = "Solicitação recusada"
+            solicitacao["status_descricao"] = "Você pode escolher outro horário ou procurar outro especialista."
+        elif status == "EXPIRADA":
+            solicitacao["status_titulo"] = "Solicitação expirada"
+            solicitacao["status_descricao"] = "O especialista não respondeu dentro do prazo. Você pode solicitar novamente para este especialista ou escolher outro profissional."
+        else:
+            solicitacao["status_titulo"] = status or "Status"
+            solicitacao["status_descricao"] = ""
+
+    return solicitacoes
+
+
+def cupom_primeiro_atendimento_disponivel(id_cliente: int, id_especialista: int = 0):
+    atualizar_solicitacoes_expiradas()
 
     conexao = conectar_banco()
     cursor = conexao.cursor(dictionary=True)
@@ -1286,6 +1403,7 @@ def cupom_primeiro_atendimento_disponivel(id_cliente: int, id_especialista: int 
         FROM solicitacoes_atendimento
         WHERE id_cliente = %s
           AND cupom_codigo = 'PRIMEIRA5'
+          AND status = 'ACEITA'
     """, (id_cliente,))
 
     resultado = cursor.fetchone() or {"total": 0}
@@ -1316,13 +1434,14 @@ def criar_solicitacao_atendimento(
                 id_especialista,
                 dia_label,
                 horario,
+                data_expiracao,
                 status,
                 cupom_codigo,
                 cupom_desconto_percentual,
                 observacao
             )
         VALUES
-            (%s, %s, %s, %s, 'PENDENTE', %s, %s, %s)
+            (%s, %s, %s, %s, DATE_ADD(NOW(), INTERVAL 2 HOUR), 'PENDENTE', %s, %s, %s)
     """, (
         id_cliente,
         id_especialista,
@@ -1342,61 +1461,6 @@ def criar_solicitacao_atendimento(
     return id_solicitacao
 
 
-def consultar_solicitacoes_especialista(id_especialista: int, limite: int = 10):
-    garantir_tabela_solicitacoes_atendimento()
-
-    conexao = conectar_banco()
-    cursor = conexao.cursor(dictionary=True)
-
-    cursor.execute("""
-        SELECT
-            s.id_solicitacao,
-            s.id_cliente,
-            s.id_especialista,
-            s.dia_label,
-            s.horario,
-            s.status,
-            s.observacao,
-            DATE_FORMAT(s.data_criacao, '%d/%m/%Y %H:%i') AS data_formatada,
-            u.nome AS cliente_nome,
-            u.email AS cliente_email
-        FROM solicitacoes_atendimento s
-        LEFT JOIN usuarios u
-            ON u.id_usuario = s.id_cliente
-        WHERE s.id_especialista = %s
-        ORDER BY s.data_criacao DESC
-        LIMIT %s
-    """, (id_especialista, limite))
-
-    solicitacoes = cursor.fetchall()
-
-    cursor.close()
-    conexao.close()
-
-    return solicitacoes
-
-
-def contar_solicitacoes_pendentes_especialista(id_especialista: int):
-    garantir_tabela_solicitacoes_atendimento()
-
-    conexao = conectar_banco()
-    cursor = conexao.cursor(dictionary=True)
-
-    cursor.execute("""
-        SELECT COUNT(*) AS total
-        FROM solicitacoes_atendimento
-        WHERE id_especialista = %s
-          AND status = 'PENDENTE'
-    """, (id_especialista,))
-
-    resultado = cursor.fetchone() or {"total": 0}
-
-    cursor.close()
-    conexao.close()
-
-    return resultado["total"] or 0
-
-
 @app.get("/api/cupom-primeiro-atendimento/status")
 def api_status_cupom_primeiro_atendimento(request: Request, especialista_id: int = 0):
     usuario = exigir_login(request)
@@ -1413,16 +1477,7 @@ def api_status_cupom_primeiro_atendimento(request: Request, especialista_id: int
             status_code=403
         )
 
-    if not especialista_id:
-        return JSONResponse(
-            {"ok": False, "disponivel": False, "erro": "Especialista inválido."},
-            status_code=400
-        )
-
-    disponivel = cupom_primeiro_atendimento_disponivel(
-        int(usuario["id"]),
-        int(especialista_id)
-    )
+    disponivel = cupom_primeiro_atendimento_disponivel(int(usuario["id"]))
 
     return {
         "ok": True,
@@ -1435,6 +1490,8 @@ def api_status_cupom_primeiro_atendimento(request: Request, especialista_id: int
 
 @app.post("/api/solicitacoes-atendimento")
 async def api_criar_solicitacao_atendimento(request: Request):
+    atualizar_solicitacoes_expiradas()
+
     usuario = exigir_login(request)
 
     if isinstance(usuario, RedirectResponse):
@@ -1468,6 +1525,15 @@ async def api_criar_solicitacao_atendimento(request: Request):
             status_code=400
         )
 
+    if existe_solicitacao_pendente_cliente_especialista(int(usuario["id"]), id_especialista):
+        return JSONResponse(
+            {
+                "ok": False,
+                "erro": "Você já possui uma solicitação pendente para este especialista. Aguarde a resposta ou o prazo de expiração."
+            },
+            status_code=400
+        )
+
     cupom_desconto_percentual = 0
 
     if cupom_codigo:
@@ -1477,7 +1543,7 @@ async def api_criar_solicitacao_atendimento(request: Request):
                 status_code=400
             )
 
-        if not cupom_primeiro_atendimento_disponivel(int(usuario["id"]), id_especialista):
+        if not cupom_primeiro_atendimento_disponivel(int(usuario["id"])):
             return JSONResponse(
                 {"ok": False, "erro": "Você já utilizou o cupom PRIMEIRA5 no seu primeiro atendimento."},
                 status_code=400
@@ -1497,11 +1563,34 @@ async def api_criar_solicitacao_atendimento(request: Request):
     return {
         "ok": True,
         "id_solicitacao": id_solicitacao,
-        "mensagem": "Solicitação enviada com sucesso. Aguarde o aceite ou recusa do especialista.",
+        "mensagem": "Solicitação enviada com sucesso. O especialista tem até 2 horas para aceitar ou recusar.",
         "status": "PENDENTE",
+        "expira_em": "2 horas",
         "cupom_codigo": cupom_codigo or None,
         "cupom_desconto_percentual": cupom_desconto_percentual
     }
+
+
+@app.get("/cliente/solicitacoes")
+def cliente_solicitacoes(request: Request):
+    usuario = exigir_login(request)
+
+    if isinstance(usuario, RedirectResponse):
+        return usuario
+
+    if usuario["tipo"] != "CLIENTE":
+        return RedirectResponse(url="/login", status_code=303)
+
+    solicitacoes = consultar_solicitacoes_cliente(int(usuario["id"]))
+
+    return templates.TemplateResponse(
+        "cliente_solicitacoes.html",
+        {
+            "request": request,
+            "usuario": usuario,
+            "solicitacoes": solicitacoes
+        }
+    )
 
 
 @app.get("/especialista/dashboard", name="specialist.dashboard")
