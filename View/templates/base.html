@@ -4,12 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{% block title %}Tele Severino{% endblock %}</title>
-  <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}?v=cliente-perfil-link-fix-1">
+  <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}?v=schedule-success-popup-dark-fix-1">
   <link rel="icon" href="{{ url_for('static', path='/favicon.svg') }}" type="image/svg+xml">
 </head>
 <body class="{% block body_class %}{% endblock %}">
   {% block content %}{% endblock %}
-  <script src="{{ url_for('static', path='/script.js') }}?v=cliente-perfil-link-fix-1"></script>
+  <script src="{{ url_for('static', path='/script.js') }}?v=schedule-success-popup-dark-fix-1"></script>
 
 {% set current_path = request.url.path if request is defined else '' %}
 {% set is_client_flow = current_path.startswith('/perfil') or current_path.startswith('/chamada') or current_path.startswith('/pagamento') or current_path.startswith('/avaliacao') %}
@@ -69,15 +69,37 @@
     </nav>
 
     <div class="client-rail-bottom">
-      <button type="button" class="client-rail-item">
-        <span class="client-rail-icon icon-menu" aria-hidden="true"></span>
-        <span class="client-rail-label">Mais</span>
-      </button>
+      <div class="client-more-wrapper">
+        <button type="button" class="client-rail-item client-more-toggle" id="clientMoreToggle" aria-expanded="false">
+          <span class="client-rail-icon icon-menu" aria-hidden="true"></span>
+          <span class="client-rail-label">Mais</span>
+        </button>
 
-      <a href="/logout" class="client-rail-item">
-        <span class="client-rail-icon icon-logout" aria-hidden="true"></span>
-        <span class="client-rail-label">Sair</span>
-      </a>
+        <div class="client-more-menu" id="clientMoreMenu" aria-hidden="true">
+          <div class="client-more-header">
+            <strong>Preferências rápidas</strong>
+          </div>
+
+          <div class="client-more-section">
+            <span>Aparência</span>
+
+            <div class="client-theme-segment" role="group" aria-label="Selecionar tema">
+              <button type="button" data-client-theme="dark">Escuro</button>
+              <button type="button" data-client-theme="light">Claro</button>
+            </div>
+          </div>
+
+          <a href="{{ url_for('cliente_perfil_page') }}" class="client-more-row">
+            <span>Perfil</span>
+            <small>Meus dados</small>
+          </a>
+
+          <a href="/logout" class="client-more-row danger">
+            <span>Sair</span>
+            <small>Encerrar sessão</small>
+          </a>
+        </div>
+      </div>
     </div>
   </aside>
 

@@ -10515,3 +10515,2055 @@ body.modal-open {
     grid-template-columns: 1fr !important;
   }
 }
+
+
+
+
+
+/* CLIENT MORE MENU AND THEME */
+.client-more-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.client-more-menu {
+  position: absolute;
+  left: calc(100% + 14px);
+  bottom: 0;
+  width: 260px;
+  padding: 16px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 22px 55px rgba(0, 0, 0, 0.14);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  display: none;
+  flex-direction: column;
+  gap: 14px;
+  z-index: 999;
+}
+
+.client-more-menu.is-open {
+  display: flex !important;
+}
+
+.client-more-header {
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.client-more-header strong {
+  display: block;
+  color: #1d1d1f;
+  font-size: 18px;
+  font-weight: 950;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.client-more-header small {
+  display: block;
+  margin-top: 5px;
+  color: #6e6e73;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.client-more-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.client-more-section > span {
+  color: #ff6b00;
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: -0.01em;
+}
+
+.client-theme-segment {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 4px;
+  border-radius: 16px;
+  background: #f5f5f7;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  gap: 4px;
+}
+
+.client-theme-segment button {
+  height: 42px;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: #6e6e73;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 850;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.client-theme-segment button:hover {
+  color: #1d1d1f;
+}
+
+.client-theme-segment button.is-active {
+  background: #ffffff;
+  color: #ff6b00;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.client-theme-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 2px;
+}
+
+.client-theme-control {
+  display: grid;
+  grid-template-columns: 38px 1fr 38px;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 18px;
+  background: #f5f5f7;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.client-theme-control button {
+  width: 38px;
+  height: 38px;
+  border: 0;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #1d1d1f;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.client-theme-control button:hover {
+  color: #ff6b00;
+}
+
+.client-theme-control div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.client-theme-control strong {
+  color: #1d1d1f;
+  font-size: 14px;
+  font-weight: 900;
+  line-height: 1.1;
+}
+
+.client-theme-control small {
+  margin-top: 4px;
+  color: #6e6e73;
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1;
+}
+
+.client-more-row,
+.client-more-menu a.client-more-row {
+  width: 100%;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 16px;
+  background: #f5f5f7;
+  color: #1d1d1f;
+  text-decoration: none;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  box-sizing: border-box;
+  transition: all 0.18s ease;
+}
+
+.client-more-row:hover,
+.client-more-menu a.client-more-row:hover {
+  background: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.06);
+}
+
+.client-more-row span {
+  color: #1d1d1f;
+  font-size: 14px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.client-more-row small {
+  color: #6e6e73;
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1.2;
+}
+
+.client-more-row.danger {
+  background: rgba(255, 107, 0, 0.08);
+  border-color: rgba(255, 107, 0, 0.14);
+}
+
+.client-more-row.danger span {
+  color: #c2410c;
+}
+
+.client-more-row.danger small {
+  color: #9a3412;
+}
+
+.client-more-toggle.is-open {
+  background: rgba(255, 122, 26, 0.10) !important;
+  color: #ff6a00 !important;
+}
+
+.client-more-toggle.is-open .client-rail-icon {
+  background: rgba(255, 122, 26, 0.14) !important;
+  color: #ff6a00 !important;
+}
+
+
+/* CLIENT MORE MENU VISIBILITY FIX */
+.client-instagram-rail {
+  overflow: visible !important;
+  z-index: 120 !important;
+}
+
+.client-more-wrapper {
+  position: relative !important;
+  overflow: visible !important;
+}
+
+.client-more-menu {
+  z-index: 999 !important;
+  pointer-events: auto !important;
+}
+
+.client-more-menu.is-open {
+  display: flex !important;
+}
+
+
+/* CLIENT MORE MENU COMPACT POLISH */
+.client-more-menu {
+  width: 224px !important;
+  padding: 12px !important;
+  border-radius: 22px !important;
+  gap: 10px !important;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.13) !important;
+  max-height: calc(100vh - 40px) !important;
+  overflow-y: auto !important;
+}
+
+.client-more-header {
+  padding-bottom: 8px !important;
+}
+
+.client-more-header strong {
+  font-size: 16px !important;
+  line-height: 1.05 !important;
+  letter-spacing: -0.035em !important;
+}
+
+.client-more-section {
+  gap: 8px !important;
+}
+
+.client-more-section > span {
+  font-size: 12px !important;
+}
+
+.client-theme-segment {
+  padding: 3px !important;
+  border-radius: 14px !important;
+  gap: 3px !important;
+}
+
+.client-theme-segment button {
+  height: 36px !important;
+  border-radius: 11px !important;
+  font-size: 13px !important;
+  font-weight: 850 !important;
+}
+
+.client-theme-controls {
+  gap: 8px !important;
+  margin-top: 0 !important;
+}
+
+.client-theme-control {
+  grid-template-columns: 32px 1fr 32px !important;
+  gap: 8px !important;
+  padding: 8px 10px !important;
+  border-radius: 16px !important;
+}
+
+.client-theme-control button {
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 10px !important;
+  font-size: 20px !important;
+}
+
+.client-theme-control strong {
+  font-size: 12.5px !important;
+  line-height: 1.05 !important;
+}
+
+.client-theme-control small {
+  margin-top: 3px !important;
+  font-size: 10.5px !important;
+}
+
+.client-more-row,
+.client-more-menu a.client-more-row {
+  padding: 10px 12px !important;
+  border-radius: 15px !important;
+  gap: 3px !important;
+}
+
+.client-more-row span {
+  font-size: 13px !important;
+}
+
+.client-more-row small {
+  font-size: 11px !important;
+}
+
+.client-more-menu::-webkit-scrollbar {
+  width: 8px;
+}
+
+.client-more-menu::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.client-more-menu::-webkit-scrollbar-thumb {
+  background: rgba(255, 107, 0, 0.28);
+  border-radius: 999px;
+}
+
+@media (max-width: 860px) {
+  .client-more-menu {
+    width: min(232px, calc(100vw - 32px)) !important;
+  }
+}
+
+
+/* COUPON BUTTON ALIGNMENT FIX */
+.coupon-line {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 112px !important;
+  gap: 12px !important;
+  align-items: stretch !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.coupon-line input,
+.coupon-line button {
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+}
+
+.coupon-line input {
+  width: 100% !important;
+}
+
+.coupon-line button {
+  width: 100% !important;
+  height: auto !important;
+  min-height: 50px !important;
+  padding: 0 12px !important;
+  border-radius: 16px !important;
+  white-space: nowrap !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden !important;
+}
+
+@media (max-width: 460px) {
+  .coupon-line {
+    grid-template-columns: 1fr !important;
+  }
+
+  .coupon-line button {
+    width: 100% !important;
+  }
+}
+
+
+/* COUPON BUTTON COMPACT FIX */
+.coupon-line {
+  grid-template-columns: minmax(0, 1fr) 92px !important;
+  gap: 10px !important;
+  align-items: center !important;
+}
+
+.coupon-line input {
+  min-height: 44px !important;
+  height: 44px !important;
+  padding: 0 14px !important;
+  border-radius: 14px !important;
+  font-size: 13px !important;
+}
+
+.coupon-line button {
+  min-height: 44px !important;
+  height: 44px !important;
+  padding: 0 10px !important;
+  border-radius: 14px !important;
+  font-size: 13px !important;
+  font-weight: 900 !important;
+}
+
+@media (max-width: 460px) {
+  .coupon-line {
+    grid-template-columns: 1fr !important;
+  }
+
+  .coupon-line button {
+    width: 100% !important;
+  }
+}
+
+
+/* COUPON LINE FINAL ALIGNMENT */
+.coupon-line {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 82px !important;
+  gap: 10px !important;
+  align-items: center !important;
+  width: 100% !important;
+}
+
+.coupon-line input,
+.coupon-line button {
+  height: 42px !important;
+  min-height: 42px !important;
+  max-height: 42px !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+  align-self: center !important;
+}
+
+.coupon-line input {
+  width: 100% !important;
+  padding: 0 14px !important;
+  border-radius: 14px !important;
+  line-height: 42px !important;
+}
+
+.coupon-line button {
+  width: 82px !important;
+  padding: 0 !important;
+  border-radius: 14px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+}
+
+@media (max-width: 460px) {
+  .coupon-line {
+    grid-template-columns: 1fr !important;
+  }
+
+  .coupon-line button {
+    width: 100% !important;
+  }
+}
+
+
+/* SCHEDULE ACTION BUTTONS FINAL ALIGNMENT */
+.schedule-modal-actions {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 14px !important;
+  align-items: stretch !important;
+  width: 100% !important;
+}
+
+.schedule-modal-actions .secondary-button,
+.schedule-modal-actions .primary-button,
+.schedule-modal-actions .schedule-request-button,
+#confirmScheduleButton {
+  width: 100% !important;
+  min-width: 0 !important;
+  height: 52px !important;
+  min-height: 52px !important;
+  max-height: 52px !important;
+  padding: 0 14px !important;
+  border-radius: 16px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  line-height: 1.1 !important;
+  box-sizing: border-box !important;
+  white-space: normal !important;
+}
+
+@media (max-width: 460px) {
+  .schedule-modal-actions {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+
+/* SCHEDULE MODAL BUTTONS EQUAL SIZE LOCK */
+.schedule-modal-actions {
+  width: 100% !important;
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 12px !important;
+  align-items: stretch !important;
+  justify-content: stretch !important;
+}
+
+.schedule-modal-actions > button,
+.schedule-modal-actions #closeScheduleModal,
+.schedule-modal-actions #confirmScheduleButton {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  height: 52px !important;
+  min-height: 52px !important;
+  max-height: 52px !important;
+  margin: 0 !important;
+  padding: 0 12px !important;
+  border-radius: 16px !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  justify-self: stretch !important;
+  align-self: stretch !important;
+  text-align: center !important;
+  line-height: 1.1 !important;
+  white-space: normal !important;
+  flex: unset !important;
+}
+
+#closeScheduleModal,
+#confirmScheduleButton {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: none !important;
+}
+
+#confirmScheduleButton {
+  font-size: 14px !important;
+}
+
+#closeScheduleModal {
+  font-size: 14px !important;
+}
+
+@media (max-width: 460px) {
+  .schedule-modal-actions {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Controles avançados removidos do produto */
+.client-theme-controls,
+.client-theme-control {
+  display: none !important;
+}
+
+
+
+/* CLIENT DARK NATIVE FINAL MODE */
+
+/* Base geral */
+body.client-theme-dark {
+  background: #111114 !important;
+  color: #f5f5f7 !important;
+  color-scheme: dark;
+}
+
+.client-theme-controls,
+.client-theme-control {
+  display: none !important;
+}
+
+body.client-theme-dark main,
+body.client-theme-dark .screen,
+body.client-theme-dark .phone-page,
+body.client-theme-dark .home-shell,
+body.client-theme-dark .client-specialists-page,
+body.client-theme-dark .profile-page,
+body.client-theme-dark .client-requests-page,
+body.client-theme-dark .client-messages-page,
+body.client-theme-dark .client-profile-page {
+  background: #111114 !important;
+  color: #f5f5f7 !important;
+}
+
+/* Cards principais */
+body.client-theme-dark .floating-topbar,
+body.client-theme-dark .home-hero,
+body.client-theme-dark .home-card,
+body.client-theme-dark .home-section,
+body.client-theme-dark .category-card,
+body.client-theme-dark .client-search-panel,
+body.client-theme-dark .specialist-card,
+body.client-theme-dark .client-specialist-card,
+body.client-theme-dark .profile-hero,
+body.client-theme-dark .white-card,
+body.client-theme-dark .reviews-card,
+body.client-theme-dark .new-specialist-card,
+body.client-theme-dark .cost-estimator-card,
+body.client-theme-dark .client-requests-hero,
+body.client-theme-dark .client-request-card,
+body.client-theme-dark .client-requests-empty,
+body.client-theme-dark .client-messages-hero,
+body.client-theme-dark .client-messages-card,
+body.client-theme-dark .client-message-history-row,
+body.client-theme-dark .client-profile-hero,
+body.client-theme-dark .client-profile-preview,
+body.client-theme-dark .client-profile-card,
+body.client-theme-dark .client-message-panel {
+  background: #1c1c1e !important;
+  border-color: rgba(255, 255, 255, 0.10) !important;
+  color: #f5f5f7 !important;
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.28) !important;
+}
+
+/* Evita blocos internos brancos */
+body.client-theme-dark .home-shell > *,
+body.client-theme-dark .client-specialists-page > *,
+body.client-theme-dark .profile-page > *,
+body.client-theme-dark .client-messages-page > *,
+body.client-theme-dark .client-requests-page > *,
+body.client-theme-dark .client-profile-page > * {
+  border-color: rgba(255, 255, 255, 0.10) !important;
+}
+
+/* Texto principal */
+body.client-theme-dark h1,
+body.client-theme-dark h2,
+body.client-theme-dark h3,
+body.client-theme-dark h4,
+body.client-theme-dark strong,
+body.client-theme-dark .client-rail-label,
+body.client-theme-dark .client-rail-icon,
+body.client-theme-dark .floating-topbar,
+body.client-theme-dark .topbar-brand-text,
+body.client-theme-dark .category-card span,
+body.client-theme-dark .specialist-info strong,
+body.client-theme-dark .client-specialist-content strong,
+body.client-theme-dark .client-request-header h2,
+body.client-theme-dark .client-messages-hero h1,
+body.client-theme-dark .client-message-history-content strong,
+body.client-theme-dark .client-profile-preview h2,
+body.client-theme-dark .client-profile-card h3,
+body.client-theme-dark .profile-page h1,
+body.client-theme-dark .profile-page h2,
+body.client-theme-dark .profile-page h3 {
+  color: #f5f5f7 !important;
+}
+
+/* Texto secundário */
+body.client-theme-dark p,
+body.client-theme-dark small,
+body.client-theme-dark label,
+body.client-theme-dark .muted,
+body.client-theme-dark .floating-topbar small,
+body.client-theme-dark .home-hero p,
+body.client-theme-dark .specialist-info p,
+body.client-theme-dark .specialist-info small,
+body.client-theme-dark .client-specialist-content p,
+body.client-theme-dark .client-specialist-content small,
+body.client-theme-dark .client-request-body p,
+body.client-theme-dark .client-requests-hero p,
+body.client-theme-dark .client-messages-hero p,
+body.client-theme-dark .client-message-history-content p,
+body.client-theme-dark .client-profile-preview p,
+body.client-theme-dark .client-profile-card p,
+body.client-theme-dark .profile-page p {
+  color: #b8b8bf !important;
+}
+
+/* Inputs e campos */
+body.client-theme-dark input,
+body.client-theme-dark textarea,
+body.client-theme-dark select,
+body.client-theme-dark .home-hero input,
+body.client-theme-dark .home-hero textarea,
+body.client-theme-dark .client-search-panel input,
+body.client-theme-dark .client-profile-form input,
+body.client-theme-dark .client-profile-form textarea,
+body.client-theme-dark .client-photo-upload,
+body.client-theme-dark .client-profile-photo-preview,
+body.client-theme-dark .client-request-body {
+  background: #2c2c2e !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  color: #f5f5f7 !important;
+}
+
+body.client-theme-dark input::placeholder,
+body.client-theme-dark textarea::placeholder {
+  color: #8e8e93 !important;
+}
+
+/* Sidebar */
+body.client-theme-dark .client-instagram-rail {
+  background: rgba(28, 28, 30, 0.96) !important;
+  border-color: rgba(255, 255, 255, 0.10) !important;
+  color: #f5f5f7 !important;
+}
+
+body.client-theme-dark .client-rail-item.active,
+body.client-theme-dark .client-rail-item:hover,
+body.client-theme-dark .client-more-toggle.is-open {
+  background: rgba(255, 107, 0, 0.16) !important;
+  color: #ff8a2a !important;
+}
+
+body.client-theme-dark .client-rail-item.active .client-rail-icon,
+body.client-theme-dark .client-rail-item.active .client-rail-label,
+body.client-theme-dark .client-rail-item:hover .client-rail-icon,
+body.client-theme-dark .client-rail-item:hover .client-rail-label {
+  color: #ff8a2a !important;
+}
+
+/* Menu Mais: permanece claro, compacto e Apple */
+body.client-theme-dark .client-more-menu {
+  background: rgba(255, 255, 255, 0.96) !important;
+  color: #1d1d1f !important;
+  border-color: rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 22px 55px rgba(0, 0, 0, 0.32) !important;
+  filter: none !important;
+}
+
+body.client-theme-dark .client-more-menu strong,
+body.client-theme-dark .client-more-menu span {
+  color: #1d1d1f !important;
+}
+
+body.client-theme-dark .client-more-menu small {
+  color: #6e6e73 !important;
+}
+
+body.client-theme-dark .client-more-row,
+body.client-theme-dark .client-more-menu a.client-more-row,
+body.client-theme-dark .client-theme-segment {
+  background: #f5f5f7 !important;
+  color: #1d1d1f !important;
+  border-color: rgba(0, 0, 0, 0.06) !important;
+}
+
+body.client-theme-dark .client-theme-segment button {
+  color: #6e6e73 !important;
+}
+
+body.client-theme-dark .client-theme-segment button.is-active {
+  background: #ffffff !important;
+  color: #ff6b00 !important;
+}
+
+/* Filtros */
+body.client-theme-dark .apple-filter-tabs,
+body.client-theme-dark .status-filter-tabs,
+body.client-theme-dark .filter-tabs {
+  background: #2c2c2e !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+body.client-theme-dark .apple-filter-tabs button,
+body.client-theme-dark .status-filter-tabs button {
+  background: transparent !important;
+  border: 0 !important;
+  color: #b8b8bf !important;
+  box-shadow: none !important;
+}
+
+body.client-theme-dark .apple-filter-tabs button.active,
+body.client-theme-dark .status-filter-tabs button.active {
+  background: #ff6b00 !important;
+  color: #ffffff !important;
+  box-shadow: 0 8px 18px rgba(255, 107, 0, 0.24) !important;
+}
+
+/* Chips e tags */
+body.client-theme-dark .client-filter-chip,
+body.client-theme-dark .touch-category-filter .client-filter-chip,
+body.client-theme-dark .tag-pill,
+body.client-theme-dark .specialty-tag,
+body.client-theme-dark .client-tag-row span,
+body.client-theme-dark .client-request-status,
+body.client-theme-dark .client-request-meta span {
+  background: rgba(255, 107, 0, 0.13) !important;
+  border-color: rgba(255, 107, 0, 0.20) !important;
+  color: #ffb27a !important;
+}
+
+body.client-theme-dark .client-filter-chip.active,
+body.client-theme-dark .touch-category-filter .client-filter-chip.active {
+  background: #ff6b00 !important;
+  color: #ffffff !important;
+  border-color: transparent !important;
+}
+
+/* Status */
+body.client-theme-dark .status-pill.online,
+body.client-theme-dark .home-status-pill.online,
+body.client-theme-dark .status-online {
+  background: rgba(34, 197, 94, 0.16) !important;
+  color: #86efac !important;
+  border-color: rgba(34, 197, 94, 0.24) !important;
+}
+
+body.client-theme-dark .status-pill.offline,
+body.client-theme-dark .home-status-pill.offline,
+body.client-theme-dark .status-offline {
+  background: rgba(255, 255, 255, 0.10) !important;
+  color: #c7c7cc !important;
+}
+
+/* Botões */
+body.client-theme-dark .primary-button,
+body.client-theme-dark .client-profile-form button,
+body.client-theme-dark .client-request-actions a,
+body.client-theme-dark .specialist-card .small-button,
+body.client-theme-dark .client-specialist-card .small-button {
+  background: #ff6b00 !important;
+  color: #ffffff !important;
+  border-color: transparent !important;
+}
+
+body.client-theme-dark .secondary-button,
+body.client-theme-dark .small-button,
+body.client-theme-dark .client-profile-back,
+body.client-theme-dark .client-request-actions button,
+body.client-theme-dark .client-request-header > strong {
+  background: #2c2c2e !important;
+  color: #f5f5f7 !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+body.client-theme-dark button:disabled,
+body.client-theme-dark .primary-button:disabled {
+  background: rgba(255, 255, 255, 0.10) !important;
+  color: #8e8e93 !important;
+  border-color: rgba(255, 255, 255, 0.10) !important;
+}
+
+/* Mensagens flutuantes */
+body.client-theme-dark .client-message-pill,
+body.client-theme-dark .client-message-panel {
+  background: #1c1c1e !important;
+  border-color: rgba(255, 255, 255, 0.10) !important;
+  color: #f5f5f7 !important;
+}
+
+body.client-theme-dark .client-message-panel-header,
+body.client-theme-dark .client-message-list {
+  background: transparent !important;
+}
+
+body.client-theme-dark .client-message-row,
+body.client-theme-dark .client-message-panel a,
+body.client-theme-dark .client-message-panel button:not(.client-message-panel-header button) {
+  background: #2c2c2e !important;
+  border-color: rgba(255, 255, 255, 0.10) !important;
+  color: #f5f5f7 !important;
+}
+
+/* Modal Solicitar atendimento */
+body.client-theme-dark .payment-modal-backdrop:not(.is-hidden) {
+  background: rgba(0, 0, 0, 0.76) !important;
+  backdrop-filter: blur(18px) !important;
+  -webkit-backdrop-filter: blur(18px) !important;
+}
+
+body.client-theme-dark .schedule-modal,
+body.client-theme-dark .payment-modal.schedule-modal {
+  background: #1c1c1e !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #f5f5f7 !important;
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.55) !important;
+}
+
+body.client-theme-dark .schedule-modal h2,
+body.client-theme-dark .schedule-modal h3,
+body.client-theme-dark .schedule-modal strong,
+body.client-theme-dark .schedule-modal label {
+  color: #f5f5f7 !important;
+}
+
+body.client-theme-dark .schedule-modal p,
+body.client-theme-dark .schedule-modal small {
+  color: #b8b8bf !important;
+}
+
+body.client-theme-dark .schedule-calendar,
+body.client-theme-dark .schedule-slot-panel,
+body.client-theme-dark .coupon-area,
+body.client-theme-dark .coupon-area-used {
+  background: #202022 !important;
+  border-color: rgba(255, 255, 255, 0.10) !important;
+  color: #f5f5f7 !important;
+}
+
+body.client-theme-dark .schedule-day,
+body.client-theme-dark .schedule-slot,
+body.client-theme-dark .coupon-line input,
+body.client-theme-dark #couponInput {
+  background: #2c2c2e !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  color: #f5f5f7 !important;
+}
+
+body.client-theme-dark .schedule-day.active,
+body.client-theme-dark .schedule-slot.active,
+body.client-theme-dark .schedule-slot.free.active,
+body.client-theme-dark .schedule-slot.free:hover,
+body.client-theme-dark .coupon-line button,
+body.client-theme-dark #confirmScheduleButton:not(:disabled) {
+  background: #ff6b00 !important;
+  border-color: #ff6b00 !important;
+  color: #ffffff !important;
+}
+
+body.client-theme-dark .schedule-day.active *,
+body.client-theme-dark .schedule-slot.active * {
+  color: #ffffff !important;
+}
+
+body.client-theme-dark #confirmScheduleButton:disabled {
+  background: rgba(255, 255, 255, 0.10) !important;
+  color: #8e8e93 !important;
+  border-color: rgba(255, 255, 255, 0.10) !important;
+}
+
+
+/* CLIENT PROFILE DARK NATIVE FIX */
+body.client-theme-dark .phone-page.profile-page {
+  background: #111114 !important;
+  color: #f5f5f7 !important;
+}
+
+body.client-theme-dark .phone-page.profile-page .floating-topbar,
+body.client-theme-dark .phone-page.profile-page .profile-hero,
+body.client-theme-dark .phone-page.profile-page .white-card,
+body.client-theme-dark .phone-page.profile-page .reviews-card,
+body.client-theme-dark .phone-page.profile-page .first-consult-card,
+body.client-theme-dark .phone-page.profile-page .cost-estimator-card {
+  background: #1c1c1e !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #f5f5f7 !important;
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.30) !important;
+}
+
+body.client-theme-dark .phone-page.profile-page .floating-topbar h1,
+body.client-theme-dark .phone-page.profile-page .floating-topbar strong,
+body.client-theme-dark .phone-page.profile-page .profile-hero h1,
+body.client-theme-dark .phone-page.profile-page .profile-hero h2,
+body.client-theme-dark .phone-page.profile-page .white-card h2,
+body.client-theme-dark .phone-page.profile-page .white-card h3,
+body.client-theme-dark .phone-page.profile-page .white-card strong,
+body.client-theme-dark .phone-page.profile-page .first-consult-card h2,
+body.client-theme-dark .phone-page.profile-page .cost-estimator-card h2,
+body.client-theme-dark .phone-page.profile-page .cost-estimator-card h3 {
+  color: #f5f5f7 !important;
+}
+
+body.client-theme-dark .phone-page.profile-page .floating-topbar p,
+body.client-theme-dark .phone-page.profile-page .floating-topbar small,
+body.client-theme-dark .phone-page.profile-page .profile-hero p,
+body.client-theme-dark .phone-page.profile-page .profile-hero small,
+body.client-theme-dark .phone-page.profile-page .white-card p,
+body.client-theme-dark .phone-page.profile-page .white-card small,
+body.client-theme-dark .phone-page.profile-page .first-consult-card p,
+body.client-theme-dark .phone-page.profile-page .cost-estimator-card p,
+body.client-theme-dark .phone-page.profile-page .cost-estimator-card small {
+  color: #b8b8bf !important;
+}
+
+/* Preço do especialista */
+body.client-theme-dark .phone-page.profile-page .profile-price {
+  background: #0b0b0d !important;
+  border: 1px solid rgba(255, 107, 0, 0.22) !important;
+  color: #f5f5f7 !important;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.38) !important;
+}
+
+body.client-theme-dark .phone-page.profile-page .profile-price strong {
+  color: #ff6b00 !important;
+}
+
+body.client-theme-dark .phone-page.profile-page .profile-price span {
+  color: #b8b8bf !important;
+}
+
+/* Card Novo especialista */
+body.client-theme-dark .phone-page.profile-page .first-consult-badge {
+  background: rgba(255, 107, 0, 0.16) !important;
+  color: #ff8a2a !important;
+  border-color: rgba(255, 107, 0, 0.22) !important;
+}
+
+body.client-theme-dark .phone-page.profile-page .first-consult-list span {
+  background: #2c2c2e !important;
+  color: #f5f5f7 !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+}
+
+body.client-theme-dark .phone-page.profile-page .first-consult-list span::before {
+  color: #ff6b00 !important;
+}
+
+/* Especialidades */
+body.client-theme-dark .phone-page.profile-page .specialty-tag,
+body.client-theme-dark .phone-page.profile-page .tag-pill,
+body.client-theme-dark .phone-page.profile-page .white-card .perfil-category-line span {
+  background: rgba(255, 107, 0, 0.13) !important;
+  border: 1px solid rgba(255, 107, 0, 0.22) !important;
+  color: #ffb27a !important;
+}
+
+/* Calculadora */
+body.client-theme-dark .phone-page.profile-page .cost-estimator-header span {
+  color: #0a84ff !important;
+}
+
+body.client-theme-dark .phone-page.profile-page .cost-estimator-header > strong {
+  background: rgba(10, 132, 255, 0.14) !important;
+  color: #7cc2ff !important;
+  border: 1px solid rgba(10, 132, 255, 0.20) !important;
+}
+
+body.client-theme-dark .phone-page.profile-page .cost-estimator-options button {
+  background: #2c2c2e !important;
+  color: #f5f5f7 !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+}
+
+body.client-theme-dark .phone-page.profile-page .cost-estimator-options button.active {
+  background: rgba(255, 107, 0, 0.16) !important;
+  color: #ff8a2a !important;
+  border-color: rgba(255, 107, 0, 0.34) !important;
+}
+
+body.client-theme-dark .phone-page.profile-page .cost-estimator-result {
+  background: #2c2c2e !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #f5f5f7 !important;
+}
+
+body.client-theme-dark .phone-page.profile-page .cost-estimator-result span {
+  color: #b8b8bf !important;
+}
+
+body.client-theme-dark .phone-page.profile-page .cost-estimator-result > strong,
+body.client-theme-dark .phone-page.profile-page .cost-estimator-result span strong {
+  color: #f5f5f7 !important;
+}
+
+/* Botões do perfil */
+body.client-theme-dark .phone-page.profile-page .profile-bottom-action .primary-button,
+body.client-theme-dark .phone-page.profile-page .profile-bottom-action .chat-button {
+  min-height: 54px !important;
+  height: 54px !important;
+  border-radius: 18px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+}
+
+body.client-theme-dark .phone-page.profile-page .profile-bottom-action .primary-button {
+  background: #ff6b00 !important;
+  color: #ffffff !important;
+  border-color: transparent !important;
+}
+
+body.client-theme-dark .phone-page.profile-page .profile-bottom-action .chat-button {
+  background: #2c2c2e !important;
+  color: #f5f5f7 !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+}
+
+/* Alerta informativo abaixo do botão */
+body.client-theme-dark .phone-page.profile-page .schedule-info-message {
+  background: rgba(10, 132, 255, 0.12) !important;
+  border: 1px solid rgba(10, 132, 255, 0.22) !important;
+  color: #7cc2ff !important;
+}
+
+body.client-theme-dark .phone-page.profile-page .schedule-info-message * {
+  color: #7cc2ff !important;
+}
+
+
+/* PROFILE FLOATING TOPBAR DARK FIX */
+body.client-theme-dark .phone-page.profile-page > .floating-topbar,
+body.client-theme-dark main.phone-page.profile-page > .floating-topbar,
+body.client-theme-dark .profile-page .floating-topbar,
+body.client-theme-dark .floating-topbar {
+  background: rgba(28, 28, 30, 0.96) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #f5f5f7 !important;
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.34) !important;
+  backdrop-filter: blur(18px) !important;
+  -webkit-backdrop-filter: blur(18px) !important;
+}
+
+body.client-theme-dark .phone-page.profile-page > .floating-topbar *,
+body.client-theme-dark main.phone-page.profile-page > .floating-topbar *,
+body.client-theme-dark .profile-page .floating-topbar *,
+body.client-theme-dark .floating-topbar * {
+  color: #f5f5f7 !important;
+}
+
+body.client-theme-dark .floating-topbar .back-button,
+body.client-theme-dark .floating-topbar .topbar-icon-btn,
+body.client-theme-dark .floating-topbar a,
+body.client-theme-dark .floating-topbar button {
+  background: #2c2c2e !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #f5f5f7 !important;
+}
+
+body.client-theme-dark .floating-topbar .back-button:hover,
+body.client-theme-dark .floating-topbar .topbar-icon-btn:hover,
+body.client-theme-dark .floating-topbar a:hover,
+body.client-theme-dark .floating-topbar button:hover {
+  background: rgba(255, 107, 0, 0.16) !important;
+  color: #ff8a2a !important;
+}
+
+
+/* PROFILE PAGE HEADER DARK FIX */
+body.client-theme-dark .phone-page.profile-page > .page-header,
+body.client-theme-dark main.phone-page.profile-page > .page-header,
+body.client-theme-dark .profile-page .page-header {
+  background: rgba(28, 28, 30, 0.96) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #f5f5f7 !important;
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.34) !important;
+  backdrop-filter: blur(18px) !important;
+  -webkit-backdrop-filter: blur(18px) !important;
+}
+
+body.client-theme-dark .phone-page.profile-page > .page-header h1,
+body.client-theme-dark main.phone-page.profile-page > .page-header h1,
+body.client-theme-dark .profile-page .page-header h1 {
+  color: #f5f5f7 !important;
+}
+
+body.client-theme-dark .phone-page.profile-page > .page-header p,
+body.client-theme-dark main.phone-page.profile-page > .page-header p,
+body.client-theme-dark .profile-page .page-header p {
+  color: #b8b8bf !important;
+}
+
+body.client-theme-dark .phone-page.profile-page > .page-header .back-button,
+body.client-theme-dark main.phone-page.profile-page > .page-header .back-button,
+body.client-theme-dark .profile-page .page-header .back-button {
+  background: #2c2c2e !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #f5f5f7 !important;
+}
+
+body.client-theme-dark .phone-page.profile-page > .page-header .back-button:hover,
+body.client-theme-dark main.phone-page.profile-page > .page-header .back-button:hover,
+body.client-theme-dark .profile-page .page-header .back-button:hover {
+  background: rgba(255, 107, 0, 0.16) !important;
+  color: #ff8a2a !important;
+  border-color: rgba(255, 107, 0, 0.26) !important;
+}
+
+
+/* HOME AND SPECIALISTS DARK FIX */
+
+/* HOME */
+body.client-theme-dark .screen-home,
+body.client-theme-dark .screen-home .home-shell {
+  background: #111114 !important;
+  color: #f5f5f7 !important;
+}
+
+body.client-theme-dark .screen-home .floating-topbar,
+body.client-theme-dark .screen-home .hero-card,
+body.client-theme-dark .screen-home .home-section,
+body.client-theme-dark .screen-home .category-card,
+body.client-theme-dark .screen-home .specialist-card {
+  background: #1c1c1e !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  color: #f5f5f7 !important;
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.28) !important;
+}
+
+body.client-theme-dark .screen-home .hero-card h1,
+body.client-theme-dark .screen-home .home-section h2,
+body.client-theme-dark .screen-home .category-card,
+body.client-theme-dark .screen-home .category-card span,
+body.client-theme-dark .screen-home .category-card strong,
+body.client-theme-dark .screen-home .specialist-card strong,
+body.client-theme-dark .screen-home .specialist-info strong,
+body.client-theme-dark .screen-home .specialist-price strong {
+  color: #f5f5f7 !important;
+}
+
+body.client-theme-dark .screen-home .hero-card p,
+body.client-theme-dark .screen-home .specialist-info p,
+body.client-theme-dark .screen-home .specialist-info small,
+body.client-theme-dark .screen-home .specialist-price small {
+  color: #b8b8bf !important;
+}
+
+body.client-theme-dark .screen-home .hero-card form,
+body.client-theme-dark .screen-home .hero-card .hero-form,
+body.client-theme-dark .screen-home .hero-card .message-form {
+  background: #2c2c2e !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  color: #f5f5f7 !important;
+}
+
+body.client-theme-dark .screen-home .hero-card input,
+body.client-theme-dark .screen-home .hero-card textarea {
+  background: #1c1c1e !important;
+  color: #f5f5f7 !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+body.client-theme-dark .screen-home .hero-card input::placeholder,
+body.client-theme-dark .screen-home .hero-card textarea::placeholder {
+  color: #8e8e93 !important;
+}
+
+body.client-theme-dark .screen-home .hero-card button {
+  background: #ff6b00 !important;
+  color: #ffffff !important;
+  border-color: transparent !important;
+}
+
+body.client-theme-dark .screen-home .category-icon {
+  background: #2c2c2e !important;
+  color: #f5f5f7 !important;
+}
+
+body.client-theme-dark .screen-home .home-status-pill.online {
+  background: rgba(34, 197, 94, 0.16) !important;
+  color: #86efac !important;
+}
+
+/* ESPECIALISTAS */
+body.client-theme-dark .phone-page.client-specialists-page {
+  background: #111114 !important;
+  color: #f5f5f7 !important;
+}
+
+body.client-theme-dark .phone-page.client-specialists-page > .page-header,
+body.client-theme-dark main.phone-page.client-specialists-page > .page-header,
+body.client-theme-dark .client-specialists-page .page-header {
+  background: rgba(28, 28, 30, 0.96) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #f5f5f7 !important;
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.34) !important;
+  backdrop-filter: blur(18px) !important;
+  -webkit-backdrop-filter: blur(18px) !important;
+}
+
+body.client-theme-dark .phone-page.client-specialists-page > .page-header h1,
+body.client-theme-dark main.phone-page.client-specialists-page > .page-header h1,
+body.client-theme-dark .client-specialists-page .page-header h1 {
+  color: #f5f5f7 !important;
+}
+
+body.client-theme-dark .phone-page.client-specialists-page > .page-header p,
+body.client-theme-dark main.phone-page.client-specialists-page > .page-header p,
+body.client-theme-dark .client-specialists-page .page-header p {
+  color: #b8b8bf !important;
+}
+
+body.client-theme-dark .phone-page.client-specialists-page > .page-header .back-button,
+body.client-theme-dark main.phone-page.client-specialists-page > .page-header .back-button,
+body.client-theme-dark .client-specialists-page .page-header .back-button {
+  background: #2c2c2e !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #f5f5f7 !important;
+}
+
+body.client-theme-dark .client-specialists-page .client-search-panel,
+body.client-theme-dark .client-specialists-page .client-specialist-card {
+  background: #1c1c1e !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  color: #f5f5f7 !important;
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.28) !important;
+}
+
+body.client-theme-dark .client-specialists-page .client-search-panel input {
+  background: #2c2c2e !important;
+  color: #f5f5f7 !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+body.client-theme-dark .client-specialists-page .client-search-panel input::placeholder {
+  color: #8e8e93 !important;
+}
+
+body.client-theme-dark .client-specialists-page .client-search-panel button,
+body.client-theme-dark .client-specialists-page .client-specialist-card .small-button {
+  background: #ff6b00 !important;
+  color: #ffffff !important;
+  border-color: transparent !important;
+}
+
+body.client-theme-dark .client-specialists-page .client-specialist-content strong,
+body.client-theme-dark .client-specialists-page .client-specialist-side strong {
+  color: #f5f5f7 !important;
+}
+
+body.client-theme-dark .client-specialists-page .client-specialist-content p,
+body.client-theme-dark .client-specialists-page .client-specialist-content small,
+body.client-theme-dark .client-specialists-page .client-specialist-side small,
+body.client-theme-dark .client-specialists-page .search-result-counter {
+  color: #b8b8bf !important;
+}
+
+body.client-theme-dark .client-specialists-page .apple-filter-tabs,
+body.client-theme-dark .client-specialists-page .status-filter-tabs {
+  background: #2c2c2e !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+body.client-theme-dark .client-specialists-page .apple-filter-tabs button,
+body.client-theme-dark .client-specialists-page .status-filter-tabs button {
+  background: transparent !important;
+  color: #b8b8bf !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+body.client-theme-dark .client-specialists-page .apple-filter-tabs button.active,
+body.client-theme-dark .client-specialists-page .status-filter-tabs button.active {
+  background: #ff6b00 !important;
+  color: #ffffff !important;
+}
+
+body.client-theme-dark .client-specialists-page .client-filter-chip {
+  background: rgba(255, 107, 0, 0.13) !important;
+  border: 1px solid rgba(255, 107, 0, 0.22) !important;
+  color: #ffb27a !important;
+}
+
+body.client-theme-dark .client-specialists-page .client-filter-chip.active {
+  background: #ff6b00 !important;
+  color: #ffffff !important;
+  border-color: transparent !important;
+}
+
+
+/* HOME DARK FINE TUNING */
+
+/* Hero principal da home */
+body.client-theme-dark .screen-home .hero-card {
+  background: #1c1c1e !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  border-radius: 26px !important;
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.30) !important;
+}
+
+body.client-theme-dark .screen-home .hero-card h1 {
+  color: #f5f5f7 !important;
+}
+
+/* Remove aquela borda branca pesada do campo de mensagem */
+body.client-theme-dark .screen-home .hero-card form,
+body.client-theme-dark .screen-home .hero-card .hero-form,
+body.client-theme-dark .screen-home .hero-card .message-form,
+body.client-theme-dark .screen-home .hero-card form > div {
+  background: #111114 !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  border-radius: 22px !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
+}
+
+body.client-theme-dark .screen-home .hero-card input,
+body.client-theme-dark .screen-home .hero-card textarea {
+  background: #2c2c2e !important;
+  color: #f5f5f7 !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 18px !important;
+}
+
+body.client-theme-dark .screen-home .hero-card input::placeholder,
+body.client-theme-dark .screen-home .hero-card textarea::placeholder {
+  color: #9b9ba1 !important;
+}
+
+body.client-theme-dark .screen-home .hero-card button {
+  background: #ff6b00 !important;
+  color: #ffffff !important;
+  border: 0 !important;
+  border-radius: 18px !important;
+  box-shadow: 0 10px 24px rgba(255, 107, 0, 0.28) !important;
+}
+
+/* Seções da home sem bloco quadrado pesado */
+body.client-theme-dark .screen-home .home-section {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+body.client-theme-dark .screen-home .home-section h2 {
+  color: #f5f5f7 !important;
+}
+
+/* Categorias mais limpas */
+body.client-theme-dark .screen-home .category-card {
+  background: #1c1c1e !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  border-radius: 22px !important;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.24) !important;
+}
+
+body.client-theme-dark .screen-home .category-card:hover {
+  border-color: rgba(255, 107, 0, 0.28) !important;
+  box-shadow: 0 18px 36px rgba(255, 107, 0, 0.10) !important;
+}
+
+body.client-theme-dark .screen-home .category-icon {
+  background: #2c2c2e !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: #f5f5f7 !important;
+  box-shadow: none !important;
+}
+
+body.client-theme-dark .screen-home .category-card span,
+body.client-theme-dark .screen-home .category-card strong {
+  color: #f5f5f7 !important;
+}
+
+/* Lista de especialistas da home */
+body.client-theme-dark .screen-home .specialist-card {
+  background: #1c1c1e !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  border-radius: 22px !important;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.24) !important;
+}
+
+body.client-theme-dark .screen-home .specialist-card:hover {
+  border-color: rgba(255, 107, 0, 0.26) !important;
+}
+
+body.client-theme-dark .screen-home .specialist-info strong,
+body.client-theme-dark .screen-home .specialist-price strong {
+  color: #f5f5f7 !important;
+}
+
+body.client-theme-dark .screen-home .specialist-info p,
+body.client-theme-dark .screen-home .specialist-info small,
+body.client-theme-dark .screen-home .specialist-price small {
+  color: #b8b8bf !important;
+}
+
+
+/* HOME SEVERINO CHAT DARK FIX */
+body.client-theme-dark .screen-home .severino-chat-card {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+body.client-theme-dark .screen-home .severino-chat-box.empty {
+  display: none !important;
+}
+
+body.client-theme-dark .screen-home .severino-chat-form {
+  background: #111114 !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  border-radius: 22px !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
+  padding: 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+body.client-theme-dark .screen-home .severino-chat-form input,
+body.client-theme-dark .screen-home #severinoChatInput {
+  background: #2c2c2e !important;
+  color: #f5f5f7 !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 17px !important;
+  height: 48px !important;
+  box-shadow: none !important;
+}
+
+body.client-theme-dark .screen-home .severino-chat-form input::placeholder,
+body.client-theme-dark .screen-home #severinoChatInput::placeholder {
+  color: #9b9ba1 !important;
+}
+
+body.client-theme-dark .screen-home .severino-chat-form button {
+  background: #ff6b00 !important;
+  color: #ffffff !important;
+  border: 0 !important;
+  border-radius: 17px !important;
+  height: 48px !important;
+  min-width: 82px !important;
+  box-shadow: 0 10px 24px rgba(255, 107, 0, 0.26) !important;
+}
+
+
+/* CLIENT VISUAL POLISH FINAL */
+
+/* Remove controles antigos de ajuste visual */
+.client-theme-controls,
+.client-theme-control {
+  display: none !important;
+}
+
+/* HOME - hierarquia de títulos */
+body.client-theme-dark .screen-home .floating-topbar {
+  min-height: 66px !important;
+  padding: 18px 22px !important;
+  border-radius: 24px !important;
+  background: #1c1c1e !important;
+}
+
+body.client-theme-dark .screen-home .topbar-brand-text {
+  font-size: 20px !important;
+  font-weight: 950 !important;
+  letter-spacing: -0.04em !important;
+  color: #f5f5f7 !important;
+}
+
+body.client-theme-dark .screen-home .topbar-brand-dot {
+  width: 13px !important;
+  height: 13px !important;
+  box-shadow: 0 0 0 5px rgba(255, 107, 0, 0.10) !important;
+}
+
+body.client-theme-dark .screen-home .hero-card h1 {
+  font-size: 18px !important;
+  line-height: 1.12 !important;
+  letter-spacing: -0.04em !important;
+  margin-bottom: 16px !important;
+}
+
+body.client-theme-dark .screen-home .hero-card {
+  padding: 22px !important;
+}
+
+/* HOME - textos menores mais legíveis */
+body.client-theme-dark .screen-home .specialist-info p,
+body.client-theme-dark .screen-home .specialist-info small,
+body.client-theme-dark .screen-home .specialist-price span,
+body.client-theme-dark .screen-home .specialist-price small {
+  color: #c7c7cc !important;
+  font-size: 12px !important;
+  line-height: 1.25 !important;
+  font-weight: 650 !important;
+}
+
+body.client-theme-dark .screen-home .specialist-price strong {
+  color: #f5f5f7 !important;
+  font-size: 15px !important;
+  line-height: 1.05 !important;
+}
+
+body.client-theme-dark .screen-home .specialist-card {
+  min-height: 84px !important;
+}
+
+/* SOLICITAÇÕES - cores e status */
+body.client-theme-dark .client-requests-page .client-request-status {
+  background: rgba(255, 107, 0, 0.16) !important;
+  color: #ffb27a !important;
+  border: 1px solid rgba(255, 107, 0, 0.24) !important;
+  font-weight: 850 !important;
+}
+
+body.client-theme-dark .client-requests-page .client-request-header p {
+  color: #7cc2ff !important;
+  font-weight: 800 !important;
+}
+
+body.client-theme-dark .client-requests-page .client-request-meta span {
+  background: rgba(10, 132, 255, 0.14) !important;
+  color: #7cc2ff !important;
+  border: 1px solid rgba(10, 132, 255, 0.24) !important;
+}
+
+body.client-theme-dark .client-request-card.status-pendente .client-request-header > strong {
+  background: rgba(10, 132, 255, 0.16) !important;
+  color: #7cc2ff !important;
+  border: 1px solid rgba(10, 132, 255, 0.24) !important;
+}
+
+body.client-theme-dark .client-request-card.status-aceita .client-request-header > strong {
+  background: rgba(34, 197, 94, 0.16) !important;
+  color: #86efac !important;
+  border: 1px solid rgba(34, 197, 94, 0.24) !important;
+}
+
+body.client-theme-dark .client-request-card.status-recusada .client-request-header > strong,
+body.client-theme-dark .client-request-card.status-cancelada .client-request-header > strong {
+  background: rgba(239, 68, 68, 0.16) !important;
+  color: #fca5a5 !important;
+  border: 1px solid rgba(239, 68, 68, 0.26) !important;
+}
+
+body.client-theme-dark .client-request-card.status-expirada .client-request-header > strong {
+  background: rgba(245, 158, 11, 0.16) !important;
+  color: #fcd34d !important;
+  border: 1px solid rgba(245, 158, 11, 0.26) !important;
+}
+
+body.client-theme-dark .client-request-cancel-button {
+  background: rgba(239, 68, 68, 0.18) !important;
+  color: #fca5a5 !important;
+  border: 1px solid rgba(239, 68, 68, 0.36) !important;
+  box-shadow: 0 12px 28px rgba(239, 68, 68, 0.12) !important;
+}
+
+body.client-theme-dark .client-request-cancel-button:hover {
+  background: #ef4444 !important;
+  color: #ffffff !important;
+  border-color: #ef4444 !important;
+}
+
+/* MENSAGENS - arredondamento padrão */
+body.client-theme-dark .client-messages-page .client-messages-hero,
+body.client-theme-dark .client-messages-page .client-messages-card {
+  border-radius: 28px !important;
+}
+
+body.client-theme-dark .client-messages-page .client-message-history-row {
+  border-radius: 24px !important;
+  margin-bottom: 10px !important;
+}
+
+/* PERFIL ESPECIALISTA - remover quadrado pesado do hero */
+body.client-theme-dark .phone-page.profile-page .profile-hero {
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  padding-top: 26px !important;
+  padding-bottom: 18px !important;
+}
+
+body.client-theme-dark .phone-page.profile-page .profile-hero .avatar,
+body.client-theme-dark .phone-page.profile-page .profile-hero .avatar-xl {
+  border: 3px solid rgba(255, 255, 255, 0.16) !important;
+  box-shadow: 0 16px 34px rgba(255, 107, 0, 0.16) !important;
+}
+
+/* PERFIL ESPECIALISTA - preço mais bonito */
+body.client-theme-dark .phone-page.profile-page .profile-price {
+  background: linear-gradient(180deg, #2c2c2e, #171719) !important;
+  border: 1px solid rgba(255, 107, 0, 0.30) !important;
+  border-radius: 22px !important;
+  box-shadow: 0 16px 38px rgba(255, 107, 0, 0.14) !important;
+}
+
+body.client-theme-dark .phone-page.profile-page .profile-price strong {
+  color: #ff8a2a !important;
+  text-shadow: 0 0 18px rgba(255, 107, 0, 0.20) !important;
+}
+
+body.client-theme-dark .phone-page.profile-page .profile-price span {
+  color: #d1d1d6 !important;
+}
+
+/* PERFIL ESPECIALISTA - avaliações e tags no padrão */
+body.client-theme-dark .phone-page.profile-page .review-avatar {
+  background: #2c2c2e !important;
+  color: #f5f5f7 !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  box-shadow: none !important;
+}
+
+body.client-theme-dark .phone-page.profile-page .tag-list span,
+body.client-theme-dark .phone-page.profile-page .specialty-tag,
+body.client-theme-dark .phone-page.profile-page .tag-pill {
+  background: rgba(255, 107, 0, 0.13) !important;
+  color: #ffb27a !important;
+  border: 1px solid rgba(255, 107, 0, 0.24) !important;
+  border-radius: 14px !important;
+  font-weight: 800 !important;
+}
+
+/* MENU MAIS - no dark precisa ser dark também */
+body.client-theme-dark .client-more-menu {
+  background: #1c1c1e !important;
+  color: #f5f5f7 !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.42) !important;
+}
+
+body.client-theme-dark .client-more-header {
+  border-bottom-color: rgba(255, 255, 255, 0.10) !important;
+}
+
+body.client-theme-dark .client-more-menu strong,
+body.client-theme-dark .client-more-menu span,
+body.client-theme-dark .client-more-row span {
+  color: #f5f5f7 !important;
+}
+
+body.client-theme-dark .client-more-menu small,
+body.client-theme-dark .client-more-row small {
+  color: #b8b8bf !important;
+}
+
+body.client-theme-dark .client-theme-segment,
+body.client-theme-dark .client-more-row,
+body.client-theme-dark .client-more-menu a.client-more-row {
+  background: #2c2c2e !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  color: #f5f5f7 !important;
+}
+
+body.client-theme-dark .client-theme-segment button {
+  color: #b8b8bf !important;
+  background: transparent !important;
+}
+
+body.client-theme-dark .client-theme-segment button.is-active {
+  background: #ff6b00 !important;
+  color: #ffffff !important;
+  box-shadow: 0 10px 24px rgba(255, 107, 0, 0.22) !important;
+}
+
+body.client-theme-dark .client-more-row.danger {
+  background: rgba(239, 68, 68, 0.12) !important;
+  border-color: rgba(239, 68, 68, 0.22) !important;
+}
+
+body.client-theme-dark .client-more-row.danger span {
+  color: #fca5a5 !important;
+}
+
+body.client-theme-dark .client-more-row.danger small {
+  color: #fecaca !important;
+}
+
+
+/* CLIENT CARDS SPACING POLISH */
+
+/* Mantém o mesmo ritmo visual da Home nas telas internas */
+body.client-theme-dark .client-requests-page,
+body.client-theme-dark .client-messages-page {
+  gap: 18px !important;
+}
+
+/* SOLICITAÇÕES - card no padrão da Home */
+body.client-theme-dark .client-requests-page .client-requests-hero {
+  margin-bottom: 18px !important;
+}
+
+body.client-theme-dark .client-requests-page .client-requests-list {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 18px !important;
+}
+
+body.client-theme-dark .client-requests-page .client-request-card {
+  background: #1c1c1e !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  border-radius: 24px !important;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.26) !important;
+  padding: 18px !important;
+}
+
+body.client-theme-dark .client-requests-page .client-request-body {
+  background: #2c2c2e !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  border-radius: 18px !important;
+  color: #f5f5f7 !important;
+}
+
+/* Cores para facilitar leitura */
+body.client-theme-dark .client-requests-page .client-request-status {
+  background: rgba(255, 107, 0, 0.16) !important;
+  color: #ffb27a !important;
+  border: 1px solid rgba(255, 107, 0, 0.28) !important;
+}
+
+body.client-theme-dark .client-requests-page .client-request-header p {
+  color: #7cc2ff !important;
+  font-weight: 850 !important;
+}
+
+body.client-theme-dark .client-requests-page .client-request-header > strong {
+  background: rgba(10, 132, 255, 0.16) !important;
+  color: #7cc2ff !important;
+  border: 1px solid rgba(10, 132, 255, 0.28) !important;
+}
+
+/* Botões de solicitações com mesmo tamanho e alinhamento */
+body.client-theme-dark .client-requests-page .client-request-actions {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 10px !important;
+  align-items: stretch !important;
+}
+
+body.client-theme-dark .client-requests-page .client-request-actions a,
+body.client-theme-dark .client-requests-page .client-request-actions button,
+body.client-theme-dark .client-requests-page .client-request-actions form {
+  width: 100% !important;
+}
+
+body.client-theme-dark .client-requests-page .client-request-actions a,
+body.client-theme-dark .client-requests-page .client-request-actions button {
+  min-height: 50px !important;
+  height: 50px !important;
+  border-radius: 17px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+}
+
+/* Cancelar vermelho */
+body.client-theme-dark .client-requests-page .client-request-cancel-button {
+  background: rgba(239, 68, 68, 0.18) !important;
+  color: #fca5a5 !important;
+  border: 1px solid rgba(239, 68, 68, 0.38) !important;
+  box-shadow: 0 12px 28px rgba(239, 68, 68, 0.14) !important;
+}
+
+body.client-theme-dark .client-requests-page .client-request-cancel-button:hover {
+  background: #ef4444 !important;
+  color: #ffffff !important;
+  border-color: #ef4444 !important;
+}
+
+/* MENSAGENS - espaçamento igual Home */
+body.client-theme-dark .client-messages-page .client-messages-hero {
+  margin-bottom: 18px !important;
+}
+
+body.client-theme-dark .client-messages-page .client-messages-card {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 14px !important;
+}
+
+body.client-theme-dark .client-messages-page .client-message-history-row {
+  background: #1c1c1e !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  border-radius: 24px !important;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.24) !important;
+  margin: 0 !important;
+  padding: 16px !important;
+}
+
+body.client-theme-dark .client-messages-page .client-message-history-row:hover {
+  border-color: rgba(255, 107, 0, 0.26) !important;
+  box-shadow: 0 18px 38px rgba(255, 107, 0, 0.08) !important;
+}
+
+/* Textos menores mais legíveis */
+body.client-theme-dark .client-messages-page .client-message-history-content p,
+body.client-theme-dark .client-messages-page .client-message-history-content small,
+body.client-theme-dark .client-requests-page .client-request-body p,
+body.client-theme-dark .client-requests-page .client-request-meta span {
+  color: #c7c7cc !important;
+  font-weight: 650 !important;
+}
+
+
+/* PROFILE MATCH SPECIALISTS STYLE */
+
+/* Perfil do especialista no mesmo padrão visual da listagem */
+body.client-theme-dark .phone-page.profile-page .profile-hero {
+  background: #1c1c1e !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  border-radius: 28px !important;
+  box-shadow: 0 16px 38px rgba(0, 0, 0, 0.28) !important;
+  padding: 28px 22px 24px !important;
+  margin-top: 18px !important;
+  margin-bottom: 18px !important;
+}
+
+body.client-theme-dark .phone-page.profile-page .profile-hero .avatar,
+body.client-theme-dark .phone-page.profile-page .profile-hero .avatar-xl {
+  background: #ff6b00 !important;
+  color: #ffffff !important;
+  border: 3px solid rgba(255, 255, 255, 0.90) !important;
+  box-shadow: 0 12px 28px rgba(255, 107, 0, 0.20) !important;
+}
+
+body.client-theme-dark .phone-page.profile-page .profile-hero h1 {
+  color: #f5f5f7 !important;
+  font-size: 24px !important;
+  line-height: 1.08 !important;
+  font-weight: 950 !important;
+  letter-spacing: -0.045em !important;
+}
+
+body.client-theme-dark .phone-page.profile-page .profile-hero p,
+body.client-theme-dark .phone-page.profile-page .profile-meta-row,
+body.client-theme-dark .phone-page.profile-page .profile-meta-row span {
+  color: #c7c7cc !important;
+  font-weight: 650 !important;
+}
+
+/* Preço menos pesado, mais parecido com o card anterior */
+body.client-theme-dark .phone-page.profile-page .profile-price {
+  background: #241d18 !important;
+  border: 1px solid rgba(255, 107, 0, 0.22) !important;
+  border-radius: 20px !important;
+  box-shadow: none !important;
+  padding: 12px 22px !important;
+}
+
+body.client-theme-dark .phone-page.profile-page .profile-price strong {
+  color: #ff8a2a !important;
+  font-size: 25px !important;
+  line-height: 1 !important;
+  letter-spacing: -0.04em !important;
+  text-shadow: none !important;
+}
+
+body.client-theme-dark .phone-page.profile-page .profile-price span {
+  color: #d1d1d6 !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+}
+
+/* Cards internos no mesmo tom da listagem */
+body.client-theme-dark .phone-page.profile-page .reviews-card,
+body.client-theme-dark .phone-page.profile-page .white-card,
+body.client-theme-dark .phone-page.profile-page .first-consult-card,
+body.client-theme-dark .phone-page.profile-page .cost-estimator-card {
+  background: #1c1c1e !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  border-radius: 28px !important;
+  box-shadow: 0 16px 38px rgba(0, 0, 0, 0.26) !important;
+}
+
+/* Avaliações sem avatar branco */
+body.client-theme-dark .phone-page.profile-page .review-avatar {
+  background: #2c2c2e !important;
+  color: #f5f5f7 !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  box-shadow: none !important;
+}
+
+/* Tags no mesmo padrão da listagem de especialistas */
+body.client-theme-dark .phone-page.profile-page .tag-list span,
+body.client-theme-dark .phone-page.profile-page .specialty-tag,
+body.client-theme-dark .phone-page.profile-page .tag-pill {
+  background: rgba(255, 107, 0, 0.16) !important;
+  color: #ffb27a !important;
+  border: 1px solid rgba(255, 107, 0, 0.24) !important;
+  border-radius: 14px !important;
+  font-weight: 850 !important;
+}
+
+/* Calculadora mantendo padrão escuro */
+body.client-theme-dark .phone-page.profile-page .cost-estimator-header > strong {
+  background: rgba(10, 132, 255, 0.14) !important;
+  color: #7cc2ff !important;
+  border: 1px solid rgba(10, 132, 255, 0.22) !important;
+}
+
+body.client-theme-dark .phone-page.profile-page .cost-estimator-result {
+  background: #2c2c2e !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  border-radius: 18px !important;
+}
+
+
+/* PROFILE HERO TRANSPARENT FINAL */
+body.client-theme-dark .phone-page.profile-page .profile-hero {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  padding: 28px 22px 18px !important;
+  margin-top: 18px !important;
+  margin-bottom: 18px !important;
+}
+
+body.client-theme-dark .phone-page.profile-page .profile-hero .avatar,
+body.client-theme-dark .phone-page.profile-page .profile-hero .avatar-xl {
+  background: #ff6b00 !important;
+  color: #ffffff !important;
+  border: 3px solid rgba(255, 255, 255, 0.90) !important;
+  box-shadow: 0 12px 28px rgba(255, 107, 0, 0.20) !important;
+}
+
+body.client-theme-dark .phone-page.profile-page .profile-price {
+  background: #241d18 !important;
+  border: 1px solid rgba(255, 107, 0, 0.24) !important;
+  box-shadow: 0 12px 28px rgba(255, 107, 0, 0.10) !important;
+}
+
+
+/* SCHEDULE SUCCESS POPUP DARK FIX */
+body.client-theme-dark .schedule-success-popup {
+  background: rgba(0, 0, 0, 0.72) !important;
+  backdrop-filter: blur(18px) !important;
+  -webkit-backdrop-filter: blur(18px) !important;
+}
+
+body.client-theme-dark .schedule-success-popup > div {
+  background: #1c1c1e !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #f5f5f7 !important;
+  border-radius: 28px !important;
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.55) !important;
+}
+
+body.client-theme-dark .schedule-success-popup strong {
+  color: #f5f5f7 !important;
+  font-size: 18px !important;
+  line-height: 1.15 !important;
+  font-weight: 950 !important;
+  letter-spacing: -0.035em !important;
+}
+
+body.client-theme-dark .schedule-success-popup p {
+  color: #c7c7cc !important;
+  font-size: 14px !important;
+  line-height: 1.45 !important;
+  font-weight: 650 !important;
+}
+
+body.client-theme-dark .schedule-success-popup button {
+  background: #ff6b00 !important;
+  color: #ffffff !important;
+  border: 0 !important;
+  border-radius: 16px !important;
+  height: 48px !important;
+  font-weight: 900 !important;
+  box-shadow: 0 12px 28px rgba(255, 107, 0, 0.26) !important;
+}
+
+body.client-theme-dark .schedule-success-popup button:hover {
+  background: #ff7a1a !important;
+}

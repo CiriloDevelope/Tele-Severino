@@ -1674,3 +1674,84 @@ document.addEventListener("DOMContentLoaded", () => {
 
   updateEstimate(15);
 })();
+
+
+// CLIENT MORE MENU AND THEME
+(() => {
+  function initClientMoreMenu() {
+    const moreToggle = document.getElementById("clientMoreToggle");
+    const moreMenu = document.getElementById("clientMoreMenu");
+    const themeButtons = Array.from(document.querySelectorAll("[data-client-theme]"));
+
+    const savedTheme = localStorage.getItem("teleSeverinoTheme") || "light";
+
+    function applyTheme(theme) {
+      const normalizedTheme = theme === "dark" ? "dark" : "light";
+      const isDark = normalizedTheme === "dark";
+
+      document.body.classList.toggle("client-theme-dark", isDark);
+      localStorage.setItem("teleSeverinoTheme", normalizedTheme);
+
+      themeButtons.forEach((button) => {
+        const isActive = button.dataset.clientTheme === normalizedTheme;
+        button.classList.toggle("is-active", isActive);
+        button.setAttribute("aria-pressed", String(isActive));
+      });
+    }
+
+    applyTheme(savedTheme);
+
+    if (!moreToggle || !moreMenu) {
+      return;
+    }
+
+    function closeMenu() {
+      moreMenu.classList.remove("is-open");
+      moreToggle.classList.remove("is-open");
+      moreToggle.setAttribute("aria-expanded", "false");
+      moreMenu.setAttribute("aria-hidden", "true");
+    }
+
+    function openMenu() {
+      moreMenu.classList.add("is-open");
+      moreToggle.classList.add("is-open");
+      moreToggle.setAttribute("aria-expanded", "true");
+      moreMenu.setAttribute("aria-hidden", "false");
+    }
+
+    moreToggle.addEventListener("click", (event) => {
+      event.stopPropagation();
+
+      if (moreMenu.classList.contains("is-open")) {
+        closeMenu();
+      } else {
+        openMenu();
+      }
+    });
+
+    moreMenu.addEventListener("click", (event) => {
+      event.stopPropagation();
+    });
+
+    themeButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        applyTheme(button.dataset.clientTheme);
+      });
+    });
+
+    document.addEventListener("click", closeMenu);
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        closeMenu();
+      }
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initClientMoreMenu);
+  } else {
+    initClientMoreMenu();
+  }
+})();
+// END CLIENT MORE MENU AND THEME
