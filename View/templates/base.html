@@ -4,12 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{% block title %}Tele Severino{% endblock %}</title>
-  <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}?v=schedule-success-popup-dark-fix-1">
+  <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}?v=mobile-bottom-nav-lift-1">
   <link rel="icon" href="{{ url_for('static', path='/favicon.svg') }}" type="image/svg+xml">
 </head>
 <body class="{% block body_class %}{% endblock %}">
   {% block content %}{% endblock %}
-  <script src="{{ url_for('static', path='/script.js') }}?v=schedule-success-popup-dark-fix-1"></script>
+  <script src="{{ url_for('static', path='/script.js') }}?v=mobile-bottom-nav-lift-1"></script>
 
 {% set current_path = request.url.path if request is defined else '' %}
 {% set is_client_flow = current_path.startswith('/perfil') or current_path.startswith('/chamada') or current_path.startswith('/pagamento') or current_path.startswith('/avaliacao') %}

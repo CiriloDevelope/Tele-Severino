@@ -12567,3 +12567,310 @@ body.client-theme-dark .schedule-success-popup button {
 body.client-theme-dark .schedule-success-popup button:hover {
   background: #ff7a1a !important;
 }
+
+/* CLIENT MOBILE BOTTOM NAV FIX */
+@media (max-width: 860px) {
+  body:has(.client-instagram-rail) {
+    padding-bottom: 88px !important;
+  }
+
+  body:has(.client-instagram-rail) main,
+  body:has(.client-instagram-rail) .screen,
+  body:has(.client-instagram-rail) .phone-page,
+  body:has(.client-instagram-rail) .client-profile-page,
+  body:has(.client-instagram-rail) .client-requests-page,
+  body:has(.client-instagram-rail) .client-messages-page {
+    padding-bottom: 98px !important;
+  }
+
+  .client-instagram-rail {
+    display: flex !important;
+    position: fixed !important;
+    top: auto !important;
+    left: 50% !important;
+    right: auto !important;
+    bottom: 10px !important;
+    width: min(410px, calc(100vw - 18px)) !important;
+    height: 62px !important;
+    min-height: 62px !important;
+    transform: translateX(-50%) !important;
+    padding: 7px 8px !important;
+    border-radius: 22px !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 4 22px !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 4px !important;
+    overflow: visible !important;
+    z-index: 999 !important;
+    background: rgba(255, 255, 255, 0.92) !important;
+    border: 1px solid rgba(0, 0, 0, 0.10) !important;
+    box-shadow: 0 18px 46px rgba(0, 0, 0, 0.18) !important;
+    backdrop-filter: blur(22px) saturate(1.1) !important;
+  }
+
+  .client-instagram-rail:hover {
+    width: min(410px, calc(100vw - 18px)) !important;
+    align-items: center !important;
+    background: rgba(255, 255, 255, 0.94) !important;
+  }
+
+  .client-rail-nav {
+    order: 1 !important;
+    width: auto !important;
+    flex: 1 1 auto !important;
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 2px !important;
+    margin: 0 !important;
+  }
+
+  .client-rail-bottom {
+    order: 2 !important;
+    width: 44px !important;
+    flex: 0 0 44px !important;
+    height: 100% !important;
+    margin: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .client-more-wrapper {
+    width: 44px !important;
+    height: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .client-rail-profile {
+    order: 3 !important;
+    width: 44px !important;
+    min-width: 44px !important;
+    height: 100% !important;
+    flex: 0 0 44px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border-radius: 16px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: transparent !important;
+  }
+
+  .client-instagram-rail:hover .client-rail-profile {
+    justify-content: center !important;
+    padding: 0 !important;
+  }
+
+  .client-rail-profile img,
+  .client-rail-profile > span {
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    border-radius: 999px !important;
+    font-size: 12px !important;
+  }
+
+  .client-rail-profile::after,
+  .client-online-dot,
+  .client-rail-profile-info,
+  .client-rail-label {
+    display: none !important;
+  }
+
+  .client-rail-item,
+  .client-instagram-rail:not(:hover) .client-rail-item,
+  .client-instagram-rail:hover .client-rail-item {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 48px !important;
+    min-height: 48px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border-radius: 16px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0 !important;
+    background: transparent !important;
+  }
+
+  .client-rail-icon,
+  .client-instagram-rail:hover .client-rail-icon {
+    width: 34px !important;
+    min-width: 34px !important;
+    height: 34px !important;
+    border-radius: 15px !important;
+    color: #1d1d1f !important;
+    background: transparent !important;
+  }
+
+  .client-rail-icon::before {
+    width: 21px !important;
+    height: 21px !important;
+  }
+
+  .client-rail-item.active,
+  .client-instagram-rail:not(:hover) .client-rail-item.active,
+  .client-instagram-rail:hover .client-rail-item.active {
+    background: transparent !important;
+  }
+
+  .client-rail-item.active .client-rail-icon,
+  .client-instagram-rail:not(:hover) .client-rail-item.active .client-rail-icon,
+  .client-instagram-rail:hover .client-rail-item.active .client-rail-icon {
+    color: #ff6a00 !important;
+    background: rgba(255, 122, 26, 0.14) !important;
+  }
+
+  .client-rail-item:hover .client-rail-icon,
+  .client-instagram-rail:hover .client-rail-item:hover .client-rail-icon {
+    color: #ff6a00 !important;
+    background: rgba(255, 122, 26, 0.12) !important;
+  }
+
+  .client-message-dock {
+    display: none !important;
+  }
+
+  .client-more-menu {
+    position: fixed !important;
+    left: 50% !important;
+    right: auto !important;
+    bottom: 82px !important;
+    width: min(300px, calc(100vw - 28px)) !important;
+    max-height: calc(100vh - 112px) !important;
+    transform: translateX(-50%) !important;
+    z-index: 1000 !important;
+  }
+
+  body.client-theme-dark .client-instagram-rail {
+    background: rgba(18, 18, 22, 0.92) !important;
+    border-color: rgba(255, 255, 255, 0.12) !important;
+    box-shadow: 0 18px 46px rgba(0, 0, 0, 0.46) !important;
+  }
+
+  body.client-theme-dark .client-instagram-rail:hover {
+    background: rgba(18, 18, 22, 0.94) !important;
+  }
+
+  body.client-theme-dark .client-rail-icon {
+    color: #f5f5f7 !important;
+  }
+
+  body.client-theme-dark .client-rail-item.active .client-rail-icon,
+  body.client-theme-dark .client-rail-item:hover .client-rail-icon {
+    color: #ff8a3d !important;
+    background: rgba(255, 122, 26, 0.18) !important;
+  }
+}
+
+/* Ícone para Solicitações na barra inferior */
+.icon-requests {
+  --rail-icon: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 3h10a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Zm1.2 4.2a1 1 0 0 0 0 2h7.6a1 1 0 1 0 0-2H8.2Zm0 4a1 1 0 1 0 0 2h7.6a1 1 0 1 0 0-2H8.2Zm0 4a1 1 0 1 0 0 2h4.6a1 1 0 1 0 0-2H8.2Z' fill='black'/%3E%3C/svg%3E");
+}
+
+/* CLIENT MOBILE BOTTOM NAV NO EXPAND */
+@media (max-width: 860px) {
+  .client-instagram-rail,
+  .client-instagram-rail:hover,
+  .client-instagram-rail:focus,
+  .client-instagram-rail:focus-within {
+    width: min(410px, calc(100vw - 18px)) !important;
+    height: 62px !important;
+    min-height: 62px !important;
+    max-height: 62px !important;
+    padding: 7px 8px !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important;
+    overflow: visible !important;
+  }
+
+  .client-instagram-rail:hover .client-rail-logo,
+  .client-instagram-rail:hover .client-rail-logo strong,
+  .client-instagram-rail:hover .client-rail-label,
+  .client-instagram-rail:hover .client-rail-profile-info,
+  .client-instagram-rail:focus-within .client-rail-label,
+  .client-instagram-rail:focus-within .client-rail-profile-info {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    width: 0 !important;
+    max-width: 0 !important;
+  }
+
+  .client-instagram-rail:hover .client-rail-nav,
+  .client-instagram-rail:focus-within .client-rail-nav {
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: auto !important;
+    flex: 1 1 auto !important;
+    margin: 0 !important;
+  }
+
+  .client-instagram-rail:hover .client-rail-item,
+  .client-instagram-rail:focus-within .client-rail-item,
+  .client-instagram-rail:hover .client-more-toggle,
+  .client-instagram-rail:focus-within .client-more-toggle {
+    width: 100% !important;
+    height: 48px !important;
+    min-height: 48px !important;
+    padding: 0 !important;
+    justify-content: center !important;
+    gap: 0 !important;
+  }
+
+  .client-instagram-rail:hover .client-rail-profile,
+  .client-instagram-rail:focus-within .client-rail-profile {
+    width: 44px !important;
+    min-width: 44px !important;
+    height: 100% !important;
+    padding: 0 !important;
+    justify-content: center !important;
+    background: transparent !important;
+  }
+
+  .client-instagram-rail:hover .client-rail-bottom,
+  .client-instagram-rail:focus-within .client-rail-bottom {
+    width: 44px !important;
+    flex: 0 0 44px !important;
+    margin: 0 !important;
+  }
+}
+
+/* CLIENT MOBILE BOTTOM NAV HEIGHT POSITION */
+@media (max-width: 860px) {
+  body:has(.client-instagram-rail) {
+    padding-bottom: 104px !important;
+  }
+
+  body:has(.client-instagram-rail) main,
+  body:has(.client-instagram-rail) .screen,
+  body:has(.client-instagram-rail) .phone-page,
+  body:has(.client-instagram-rail) .client-profile-page,
+  body:has(.client-instagram-rail) .client-requests-page,
+  body:has(.client-instagram-rail) .client-messages-page {
+    padding-bottom: 112px !important;
+  }
+
+  .client-instagram-rail,
+  .client-instagram-rail:hover,
+  .client-instagram-rail:focus,
+  .client-instagram-rail:focus-within {
+    bottom: 18px !important;
+  }
+
+  .client-more-menu {
+    bottom: 92px !important;
+  }
+}
