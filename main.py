@@ -1656,6 +1656,85 @@ def cliente_solicitacoes(request: Request):
     )
 
 
+
+
+def consultar_solicitacoes_especialista(id_especialista: int):
+    """
+    Lista as solicitações recebidas pelo especialista.
+    Usa id_especialista como id_usuario do especialista, conforme fluxo atual do sistema.
+    """
+    conexao = None
+    cursor = None
+
+    try:
+        conexao = conectar_banco()
+        cursor = conexao.cursor(dictionary=True)
+
+        cursor.execute("""
+            SELECT
+                s.*,
+                COALESCE(u.nome, 'Cliente') AS cliente_nome
+            FROM solicitacoes_atendimento s
+            LEFT JOIN usuarios u
+                ON u.id_usuario = s.id_cliente
+            WHERE s.id_especialista = %s
+            ORDER BY s.data_criacao DESC
+            LIMIT 50
+        """, (id_especialista,))
+
+        solicitacoes = cursor.fetchall() or []
+
+        for item in solicitacoes:
+            item["status"] = (item.get("status") or "PENDENTE").upper()
+            item["cliente_nome"] = item.get("cliente_nome") or "Cliente"
+            item["dia_label"] = item.get("dia_label") or "Data não informada"
+            item["horario"] = item.get("horario") or "Horário não informado"
+
+        return solicitacoes
+
+    except Exception as erro:
+        print(f"Erro ao consultar solicitações do especialista: {erro}")
+        return []
+
+    finally:
+        if cursor:
+            cursor.close()
+        if conexao:
+            conexao.close()
+
+
+def contar_solicitacoes_pendentes_especialista(id_especialista: int):
+    """
+    Conta solicitações pendentes recebidas pelo especialista.
+    """
+    conexao = None
+    cursor = None
+
+    try:
+        conexao = conectar_banco()
+        cursor = conexao.cursor(dictionary=True)
+
+        cursor.execute("""
+            SELECT COUNT(*) AS total
+            FROM solicitacoes_atendimento
+            WHERE id_especialista = %s
+              AND status = 'PENDENTE'
+        """, (id_especialista,))
+
+        resultado = cursor.fetchone() or {}
+        return int(resultado.get("total") or 0)
+
+    except Exception as erro:
+        print(f"Erro ao contar solicitações pendentes do especialista: {erro}")
+        return 0
+
+    finally:
+        if cursor:
+            cursor.close()
+        if conexao:
+            conexao.close()
+
+
 @app.get("/especialista/dashboard", name="specialist.dashboard")
 def especialista_dashboard(request: Request, usuario_id: int = 0):
     usuario = exigir_especialista(request)
