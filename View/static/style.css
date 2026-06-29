@@ -13734,3 +13734,52 @@ html.client-theme-dark body .client-home-main-question {
   font-weight: 900 !important;
   letter-spacing: -0.04em !important;
 }
+
+/* HOME DARK VISUAL WEIGHT BALANCE FINAL */
+body.client-theme-dark .screen-home .floating-topbar,
+html.client-theme-dark body .screen-home .floating-topbar {
+  min-height: 58px !important;
+  padding: 0 18px !important;
+}
+
+body.client-theme-dark .screen-home .topbar-brand-text,
+html.client-theme-dark body .screen-home .topbar-brand-text {
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.02em !important;
+}
+
+body.client-theme-dark .screen-home .hero-card,
+html.client-theme-dark body .screen-home .hero-card {
+  padding: 24px 22px !important;
+}
+
+body.client-theme-dark .screen-home .client-home-main-question,
+html.client-theme-dark body .screen-home .client-home-main-question {
+  font-size: 23px !important;
+  line-height: 1.14 !important;
+  font-weight: 850 !important;
+  letter-spacing: -0.035em !important;
+}
+
+body.client-theme-dark .screen-home .severino-chat-form,
+html.client-theme-dark body .screen-home .severino-chat-form {
+  min-height: 62px !important;
+  padding: 8px !important;
+}
+
+body.client-theme-dark .screen-home .severino-chat-form input,
+html.client-theme-dark body .screen-home .severino-chat-form input {
+  height: 46px !important;
+  font-size: 13px !important;
+  font-weight: 750 !important;
+  padding: 0 18px !important;
+}
+
+body.client-theme-dark .screen-home .severino-chat-form button,
+html.client-theme-dark body .screen-home .severino-chat-form button {
+  height: 46px !important;
+  min-width: 82px !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+}
