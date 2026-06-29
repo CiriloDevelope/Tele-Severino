@@ -1,4 +1,3 @@
-import hashlib
 import sys
 from pathlib import Path
 
@@ -7,17 +6,15 @@ if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
 from Model.database import conectar_banco
+from Model.usuario_model import senha_hash
 
 
 SENHA_PADRAO = "123456"
 
 
-def hash_senha(senha: str) -> str:
-    return hashlib.sha256(senha.encode()).hexdigest()
-
 
 def garantir_usuario(cursor, nome, email, senha, tipo):
-    senha_hash = hash_senha(senha)
+    senha_criptografada = senha_hash(senha)
 
     cursor.execute(
         "SELECT id_usuario FROM usuarios WHERE email = %s",
@@ -35,7 +32,7 @@ def garantir_usuario(cursor, nome, email, senha, tipo):
                    tipo = %s
              WHERE id_usuario = %s
             """,
-            (nome, senha_hash, tipo, id_usuario),
+            (nome, senha_criptografada, tipo, id_usuario),
         )
         print(f"Atualizado: {email}")
         return id_usuario
@@ -45,7 +42,7 @@ def garantir_usuario(cursor, nome, email, senha, tipo):
         INSERT INTO usuarios (nome, email, senha, tipo)
         VALUES (%s, %s, %s, %s)
         """,
-        (nome, email, senha_hash, tipo),
+        (nome, email, senha_criptografada, tipo),
     )
     id_usuario = cursor.lastrowid
     print(f"Criado: {email}")

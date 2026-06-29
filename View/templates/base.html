@@ -4,12 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{% block title %}Tele Severino{% endblock %}</title>
-  <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}?v=mobile-bottom-nav-lift-1">
+  <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}?v=message-micro-fix-icon-badge-reply-1">
   <link rel="icon" href="{{ url_for('static', path='/favicon.svg') }}" type="image/svg+xml">
 </head>
 <body class="{% block body_class %}{% endblock %}">
   {% block content %}{% endblock %}
-  <script src="{{ url_for('static', path='/script.js') }}?v=mobile-bottom-nav-lift-1"></script>
+  <script src="{{ url_for('static', path='/script.js') }}?v=message-micro-fix-icon-badge-reply-1"></script>
 
 {% set current_path = request.url.path if request is defined else '' %}
 {% set is_client_flow = current_path.startswith('/perfil') or current_path.startswith('/chamada') or current_path.startswith('/pagamento') or current_path.startswith('/avaliacao') %}
@@ -47,14 +47,9 @@
         <span class="client-rail-label">Página inicial</span>
       </a>
 
-      <a href="{{ url_for('specialist.especialistas') }}" class="client-rail-item {% if is_client_flow or (current_path.startswith('/especialistas') and request.query_params.get('status') != 'online') %}active{% endif %}">
+      <a href="{{ url_for('specialist.especialistas') }}" class="client-rail-item {% if is_client_flow or current_path.startswith('/especialistas') %}active{% endif %}">
         <span class="client-rail-icon icon-search" aria-hidden="true"></span>
         <span class="client-rail-label">Pesquisar</span>
-      </a>
-
-      <a href="{{ url_for('specialist.especialistas') }}?status=online" class="client-rail-item {% if current_path.startswith('/especialistas') and request.query_params.get('status') == 'online' %}active{% endif %}">
-        <span class="client-rail-icon icon-online" aria-hidden="true"></span>
-        <span class="client-rail-label">Online agora</span>
       </a>
 
       <a href="/cliente/solicitacoes" class="client-rail-item {% if current_path.startswith('/cliente/solicitacoes') %}active{% endif %}">
@@ -104,46 +99,67 @@
   </aside>
 
   <section class="client-message-dock" id="clientMessageDock" aria-label="Mensagens">
-    <button type="button" class="client-message-pill" id="clientMessagePill">
-      <span>✉</span>
+    <button type="button" class="client-message-pill" id="clientMessagePill" aria-expanded="false">
+      <span class="client-message-main-icon">✉</span>
       <strong>Mensagens</strong>
-      <small>Severino</small>
+
+      <div class="client-message-preview-avatars" aria-hidden="false">
+        <i data-preview-thread="severino" data-badge="+1">S</i>
+        <i data-preview-thread="diego" data-badge="+2">DF</i>
+        <i data-preview-thread="juliana" data-badge="+1">JM</i>
+      </div>
     </button>
 
     <div class="client-message-panel" id="clientMessagePanel">
       <div class="client-message-panel-header">
         <div>
           <strong>Mensagens</strong>
-          <span>Atendimento Tele-Severino</span>
+          <span>Combinações e alinhamentos com especialistas</span>
         </div>
 
-        <button type="button" id="clientCloseMessages">×</button>
+        <button type="button" id="clientCloseMessages" aria-label="Fechar mensagens">×</button>
       </div>
 
-      <div class="client-message-list">
-        <button type="button" class="client-message-row client-focus-severino">
+      <div class="client-message-list" data-floating-message-list>
+        <button type="button" class="client-message-row client-message-preview-row" data-floating-message-preview="severino">
           <span class="client-message-avatar">S</span>
           <span>
             <strong>Severino</strong>
-            <small>Me conte o que você precisa resolver hoje.</small>
+            <small>Severino: Me diga o assunto e eu indico o melhor especialista.</small>
           </span>
         </button>
 
-        <a href="{{ url_for('specialist.especialistas') }}?status=online" class="client-message-row">
-          <span class="client-message-avatar online">ON</span>
+        <button type="button" class="client-message-row client-message-preview-row" data-floating-message-preview="diego">
+          <span class="client-message-avatar">DF</span>
           <span>
-            <strong>Especialistas online</strong>
-            <small>Veja quem pode atender agora.</small>
+            <strong>Diego Faculdade</strong>
+            <small>Diego: Consigo revisar seu trabalho hoje às 19h.</small>
           </span>
-        </a>
+        </button>
 
-        <a href="{{ url_for('specialist.especialistas') }}" class="client-message-row">
-          <span class="client-message-avatar">+</span>
+        <button type="button" class="client-message-row client-message-preview-row" data-floating-message-preview="juliana">
+          <span class="client-message-avatar">JM</span>
           <span>
-            <strong>Nova solicitação</strong>
-            <small>Buscar especialista por categoria.</small>
+            <strong>Juliana Matemática</strong>
+            <small>Juliana: Me manda o exercício que eu calculo com você.</small>
           </span>
-        </a>
+        </button>
+
+        <button type="button" class="client-message-row client-message-preview-row" data-floating-message-preview="mateus">
+          <span class="client-message-avatar">MC</span>
+          <span>
+            <strong>Mateus Churrasco</strong>
+            <small>Mateus: Para 20 pessoas, eu sugiro 6kg de carne.</small>
+          </span>
+        </button>
+
+        <button type="button" class="client-message-row client-message-preview-row" data-floating-message-preview="helena">
+          <span class="client-message-avatar">HR</span>
+          <span>
+            <strong>Helena Receitas</strong>
+            <small>Helena: Posso montar um cardápio simples para você.</small>
+          </span>
+        </button>
       </div>
     </div>
   </section>

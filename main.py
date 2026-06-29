@@ -1643,13 +1643,15 @@ def cliente_solicitacoes(request: Request):
         return RedirectResponse(url="/login", status_code=303)
 
     solicitacoes = consultar_solicitacoes_cliente(int(usuario["id"]))
+    cliente_atual = consultar_cliente_atual_para_layout(int(usuario["id"]))
 
     return templates.TemplateResponse(
         "cliente_solicitacoes.html",
         {
             "request": request,
             "usuario": usuario,
-            "solicitacoes": solicitacoes
+            "solicitacoes": solicitacoes,
+            "cliente_atual": cliente_atual
         }
     )
 
@@ -1746,13 +1748,16 @@ def home(request: Request):
             status_code=303
         )
 
+    cliente_atual = consultar_cliente_atual_para_layout(int(usuario["id"]))
+
     return templates.TemplateResponse(
         "home.html",
         {
             "request": request,
             "categories": montar_categorias_dinamicas(get_db_specialists()),
             "specialists": get_db_specialists(),
-            "cadastro_complementar": consultar_cadastro_complementar(int(usuario["id"]))
+            "cadastro_complementar": consultar_cadastro_complementar(int(usuario["id"])),
+            "cliente_atual": cliente_atual
         }
     )
 
@@ -2723,31 +2728,98 @@ def cliente_mensagens_page(request: Request):
 
     cliente_atual = consultar_cliente_atual_para_layout(int(usuario["id"]))
 
-    especialistas = get_db_specialists()
-
     conversas = [
         {
+            "id": "severino",
             "tipo": "severino",
             "nome": "Severino",
             "subtitulo": "Assistente Tele-Severino",
-            "mensagem": "Me conte o que você precisa resolver hoje.",
+            "mensagem": "Você: Pode me ajudar a escolher o melhor especialista?",
             "iniciais": "S",
             "status": "online",
-            "url": "/home"
+            "mensagens": [
+                ("me", "Preciso resolver uma dúvida rápida."),
+                ("them", "Claro. Me diga o assunto e eu indico o melhor especialista."),
+                ("me", "É sobre trabalho da faculdade."),
+                ("them", "Então o Diego Faculdade pode te ajudar com roteiro, revisão e apresentação.")
+            ]
+        },
+        {
+            "id": "diego",
+            "tipo": "especialista",
+            "nome": "Diego Faculdade",
+            "subtitulo": "Trabalhos de faculdade",
+            "mensagem": "Diego: Consigo revisar seu trabalho hoje às 19h.",
+            "iniciais": "DF",
+            "status": "online",
+            "mensagens": [
+                ("me", "Diego, preciso revisar uma apresentação."),
+                ("them", "Consigo sim. É para qual matéria?"),
+                ("me", "Projeto integrador. Preciso deixar mais claro para apresentar."),
+                ("them", "Fechado. Em 25 minutos consigo revisar roteiro, ordem dos slides e fala principal.")
+            ]
+        },
+        {
+            "id": "juliana",
+            "tipo": "especialista",
+            "nome": "Juliana Matemática",
+            "subtitulo": "Matemática e lógica",
+            "mensagem": "Juliana: Me manda o exercício que eu calculo com você.",
+            "iniciais": "JM",
+            "status": "online",
+            "mensagens": [
+                ("me", "Juliana, consegue me ajudar com lógica?"),
+                ("them", "Consigo. Me manda o enunciado."),
+                ("me", "É sobre condição e matriz."),
+                ("them", "Boa. A gente resolve passo a passo e eu te explico o motivo da resposta.")
+            ]
+        },
+        {
+            "id": "mateus",
+            "tipo": "especialista",
+            "nome": "Mateus Churrasco",
+            "subtitulo": "Churrasco e preparo de carnes",
+            "mensagem": "Mateus: Para 20 pessoas, eu sugiro 6kg de carne.",
+            "iniciais": "MC",
+            "status": "online",
+            "mensagens": [
+                ("me", "Mateus, vou fazer churrasco para 20 pessoas."),
+                ("them", "Beleza. Vai ter criança e acompanhamento?"),
+                ("me", "Sim, arroz, vinagrete e pão de alho."),
+                ("them", "Então dá para calcular perto de 6kg de carne, separando linguiça, frango e bovina.")
+            ]
+        },
+        {
+            "id": "helena",
+            "tipo": "especialista",
+            "nome": "Helena Receitas",
+            "subtitulo": "Receitas simples e rápidas",
+            "mensagem": "Helena: Posso montar um cardápio simples para você.",
+            "iniciais": "HR",
+            "status": "online",
+            "mensagens": [
+                ("me", "Helena, preciso de uma receita rápida para jantar."),
+                ("them", "Você tem frango, arroz ou macarrão em casa?"),
+                ("me", "Tenho frango e macarrão."),
+                ("them", "Perfeito. Dá para fazer um macarrão cremoso com frango em menos de 30 minutos.")
+            ]
+        },
+        {
+            "id": "larissa",
+            "tipo": "especialista",
+            "nome": "Larissa Apps",
+            "subtitulo": "Celular e aplicativos",
+            "mensagem": "Larissa: Te ajudo a configurar o aplicativo no celular.",
+            "iniciais": "LA",
+            "status": "online",
+            "mensagens": [
+                ("me", "Larissa, meu app não está notificando."),
+                ("them", "Vamos conferir permissões, internet e configurações do sistema."),
+                ("me", "Pode ser no Android?"),
+                ("them", "Pode sim. Em 15 minutos a gente revisa passo a passo.")
+            ]
         }
     ]
-
-    for especialista in especialistas[:8]:
-        conversas.append({
-            "tipo": "especialista",
-            "nome": especialista.get("name"),
-            "subtitulo": especialista.get("role"),
-            "mensagem": "Histórico de atendimento e solicitações do cliente.",
-            "iniciais": especialista.get("initials"),
-            "foto": especialista.get("foto_perfil"),
-            "status": "online" if especialista.get("is_online") else "offline",
-            "url": f"/perfil/{especialista.get('id')}"
-        })
 
     return templates.TemplateResponse(
         "cliente_mensagens.html",

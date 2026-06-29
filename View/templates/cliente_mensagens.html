@@ -6,13 +6,13 @@
     <a href="{{ url_for('home') }}" class="client-profile-back">‹</a>
     <div>
       <h1>Mensagens</h1>
-      <p>Histórico de conversas e atendimentos do cliente.</p>
+      <p>Conversas sobre combinações, dúvidas e alinhamento do atendimento com especialistas.</p>
     </div>
   </section>
 
-  <section class="client-messages-card">
+  <section class="client-messages-card" data-page-message-list>
     {% for conversa in conversas %}
-      <a href="{{ conversa.url }}" class="client-message-history-row">
+      <button type="button" class="client-message-history-row" data-open-page-thread="page-thread-{{ conversa.id }}">
         <div class="client-message-history-avatar {{ conversa.status }}">
           {% if conversa.foto %}
             <img src="{{ conversa.foto }}" alt="{{ conversa.nome }}">
@@ -32,8 +32,31 @@
           <p>{{ conversa.subtitulo }}</p>
           <span>{{ conversa.mensagem }}</span>
         </div>
-      </a>
+      </button>
     {% endfor %}
   </section>
+
+  {% for conversa in conversas %}
+    <section class="client-page-thread is-hidden" id="page-thread-{{ conversa.id }}" data-page-thread>
+      <button type="button" class="client-thread-back" data-page-thread-back>‹ Voltar para conversas</button>
+
+      <div class="client-page-thread-header">
+        <div class="client-message-history-avatar {{ conversa.status }}">
+          <span>{{ conversa.iniciais }}</span>
+        </div>
+
+        <div>
+          <h2>{{ conversa.nome }}</h2>
+          <p>{{ conversa.subtitulo }}</p>
+        </div>
+      </div>
+
+      <div class="client-thread-bubbles">
+        {% for autor, texto in conversa.mensagens %}
+          <span class="{{ autor }}">{{ texto }}</span>
+        {% endfor %}
+      </div>
+    </section>
+  {% endfor %}
 </main>
 {% endblock %}

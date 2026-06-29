@@ -1568,59 +1568,527 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-// CLIENT MESSAGE DOCK JS
-document.addEventListener("DOMContentLoaded", () => {
-  const dock = document.getElementById("clientMessageDock");
-  const pill = document.getElementById("clientMessagePill");
-  const openFromRail = document.getElementById("clientOpenMessages");
-  const closeButton = document.getElementById("clientCloseMessages");
-  const focusSeverinoButtons = document.querySelectorAll(".client-focus-severino");
+// CLIENT MESSAGE SYSTEM SINGLE SOURCE FINAL
+(() => {
+  const QUICK_REPLY_STORAGE = "teleSeverinoQuickReplyMessages";
+  const HIDDEN_STORAGE = "teleSeverinoHiddenPreviewThreads";
+  const READ_STORAGE = "teleSeverinoReadPreviewThreads";
 
-  if (!dock || !pill) {
-    return;
+  function safeParse(value, fallback) {
+    try {
+      return JSON.parse(value || "");
+    } catch {
+      return fallback;
+    }
   }
 
-  const openDock = () => {
+  function getReplies() {
+    return safeParse(localStorage.getItem(QUICK_REPLY_STORAGE), {});
+  }
+
+  function setReplies(data) {
+    try {
+      localStorage.setItem(QUICK_REPLY_STORAGE, JSON.stringify(data));
+    } catch {}
+  }
+
+  function getHiddenThreads() {
+    return new Set(safeParse(localStorage.getItem(HIDDEN_STORAGE), []));
+  }
+
+  function setHiddenThreads(data) {
+    try {
+      localStorage.setItem(HIDDEN_STORAGE, JSON.stringify(Array.from(data)));
+    } catch {}
+  }
+
+  function getReadThreads() {
+    return new Set(safeParse(localStorage.getItem(READ_STORAGE), []));
+  }
+
+  function setReadThreads(data) {
+    try {
+      localStorage.setItem(READ_STORAGE, JSON.stringify(Array.from(data)));
+    } catch {}
+  }
+
+  function getEls() {
+    return {
+      dock: document.getElementById("clientMessageDock"),
+      pill: document.getElementById("clientMessagePill"),
+      panel: document.getElementById("clientMessagePanel"),
+      list: document.querySelector("[data-floating-message-list]")
+    };
+  }
+
+  function removeQuickReply() {
+    document.querySelectorAll(".client-quick-reply").forEach((item) => item.remove());
+    document.querySelectorAll(".client-message-row.is-selected").forEach((row) => {
+      row.classList.remove("is-selected");
+    });
+  }
+
+  function getVisibleUnreadRows() {
+    return Array.from(document.querySelectorAll("[data-floating-message-preview]")).filter((row) => {
+      return row.style.display !== "none" && !row.classList.contains("is-quick-replied");
+    });
+  }
+
+  function applyHiddenRows() {
+    const hidden = getHiddenThreads();
+
+    document.querySelectorAll("[data-floating-message-preview]").forEach((row) => {
+      const id = row.getAttribute("data-floating-message-preview");
+      const shouldHide = hidden.has(id);
+
+      row.classList.toggle("is-quick-replied", shouldHide);
+      row.style.display = shouldHide ? "none" : "";
+    });
+
+    refreshEmptyState();
+  }
+
+  function applyReadState() {
+    const read = getReadThreads();
+
+    document.querySelectorAll("[data-preview-thread]").forEach((avatar) => {
+      const id = avatar.getAttribute("data-preview-thread");
+      avatar.classList.toggle("is-read", read.has(id));
+    });
+  }
+
+  function refreshEmptyState() {
+    const { dock, list } = getEls();
+
+    if (!dock || !list) {
+      return;
+    }
+
+    const visible = getVisibleUnreadRows();
+    let empty = list.querySelector(".client-message-empty-state");
+
+    if (visible.length > 0) {
+      dock.classList.remove("no-unread");
+
+      if (empty) {
+        empty.remove();
+      }
+
+      return;
+    }
+
+    dock.classList.add("no-unread");
+
+    if (!empty) {
+      empty = document.createElement("div");
+      empty.className = "client-message-empty-state";
+      empty.innerHTML = `
+        <strong>Nenhuma mensagem nova</strong>
+        <span>Use os atalhos abaixo para abrir conversas recentes.</span>
+      `;
+      list.appendChild(empty);
+    }
+  }
+
+  function openPanel() {
+    const { dock, pill, list } = getEls();
+
+    if (!dock || !pill || !list) {
+      return;
+    }
+
+    removeQuickReply();
+    applyHiddenRows();
+
     dock.classList.add("open");
-  };
+    pill.setAttribute("aria-expanded", "true");
+    list.classList.remove("is-hidden");
 
-  const closeDock = () => {
+    refreshEmptyState();
+  }
+
+  function closePanel() {
+    const { dock, pill, list } = getEls();
+
+    if (!dock || !pill || !list) {
+      return;
+    }
+
+    removeQuickReply();
+
     dock.classList.remove("open");
-  };
+    pill.setAttribute("aria-expanded", "false");
+    list.classList.remove("is-hidden");
+  }
 
-  pill.addEventListener("click", () => {
-    dock.classList.toggle("open");
-  });
+  function markRead(id) {
+    const normalizedId = String(id || "").replace("dock-thread-", "");
+    const read = getReadThreads();
 
-  openFromRail?.addEventListener("click", openDock);
-  closeButton?.addEventListener("click", closeDock);
+    read.add(normalizedId);
+    setReadThreads(read);
 
-  focusSeverinoButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      const severinoCard = document.querySelector(".severino-chat-card");
-      const severinoInput = document.getElementById("severinoChatInput");
+    document.querySelectorAll("[data-preview-thread]").forEach((avatar) => {
+      const avatarId = String(avatar.getAttribute("data-preview-thread") || "").replace("dock-thread-", "");
+      avatar.classList.toggle("is-read", avatarId === normalizedId);
+    });
 
-      if (severinoCard) {
-        closeDock();
-        severinoCard.scrollIntoView({ behavior: "smooth", block: "center" });
+    const { dock } = getEls();
 
-        setTimeout(() => {
-          severinoInput?.focus();
-        }, 450);
+    if (dock && getVisibleUnreadRows().length > 0) {
+      dock.classList.remove("no-unread");
+      dock.classList.remove("notifications-read");
+    }
+  }
 
+  function hideUnreadRow(id) {
+    const hidden = getHiddenThreads();
+
+    hidden.add(id);
+    setHiddenThreads(hidden);
+
+    document.querySelectorAll(`[data-floating-message-preview="${id}"]`).forEach((row) => {
+      row.classList.add("is-quick-replied");
+      row.style.display = "none";
+    });
+
+    refreshEmptyState();
+  }
+
+  function saveReply(id, text) {
+    const data = getReplies();
+
+    if (!data[id]) {
+      data[id] = [];
+    }
+
+    data[id].push({
+      text,
+      createdAt: new Date().toISOString()
+    });
+
+    setReplies(data);
+  }
+
+  function syncPreviewRows() {
+    const data = getReplies();
+
+    Object.entries(data).forEach(([id, messages]) => {
+      if (!Array.isArray(messages) || messages.length === 0) {
         return;
       }
 
-      window.location.href = "/home";
+      const last = messages[messages.length - 1];
+
+      document.querySelectorAll(`[data-open-page-thread="page-thread-${id}"] .client-message-history-content span`).forEach((item) => {
+        item.textContent = `Você: ${last.text}`;
+      });
     });
-  });
+  }
+
+  function syncPageThreads() {
+    const data = getReplies();
+
+    Object.entries(data).forEach(([id, messages]) => {
+      const bubbles = document.querySelector(`#page-thread-${id} .client-thread-bubbles`);
+
+      if (!bubbles || !Array.isArray(messages)) {
+        return;
+      }
+
+      bubbles.querySelectorAll("[data-local-quick-reply]").forEach((item) => item.remove());
+
+      messages.forEach((message) => {
+        const bubble = document.createElement("span");
+        bubble.className = "me";
+        bubble.dataset.localQuickReply = "true";
+        bubble.textContent = message.text;
+        bubbles.appendChild(bubble);
+      });
+    });
+  }
+
+  function openFullConversation(id) {
+    window.location.href = `/cliente/mensagens?conversa=${encodeURIComponent(id)}`;
+  }
+
+  function openQuickReply(id) {
+    const row = document.querySelector(`[data-floating-message-preview="${id}"]`);
+
+    if (!row) {
+      return;
+    }
+
+    openPanel();
+    removeQuickReply();
+
+    row.classList.add("is-selected");
+    markRead(id);
+
+    const reply = document.createElement("div");
+    reply.className = "client-quick-reply";
+    reply.dataset.replyTo = id;
+    reply.innerHTML = `
+      <form class="client-quick-reply-form">
+        <input type="text" placeholder="Responder rápido..." autocomplete="off">
+        <button type="submit" aria-label="Enviar resposta rápida">Enviar</button>
+      </form>
+      <div class="client-quick-reply-feedback" role="status">
+        Mensagem enviada.
+      </div>
+    `;
+
+    row.insertAdjacentElement("afterend", reply);
+
+    setTimeout(() => {
+      reply.querySelector("input")?.focus();
+    }, 100);
+  }
+
+  function preparePageThreadComposer(thread) {
+    if (!thread || thread.querySelector(".client-page-reply-form")) {
+      return;
+    }
+
+    const id = thread.id.replace("page-thread-", "");
+
+    const form = document.createElement("form");
+    form.className = "client-page-reply-form";
+    form.innerHTML = `
+      <input type="text" placeholder="Digite uma mensagem..." autocomplete="off">
+      <button type="submit" aria-label="Enviar mensagem">Enviar</button>
+    `;
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const input = form.querySelector("input");
+      const value = input?.value?.trim();
+
+      if (!value) {
+        input?.focus();
+        return;
+      }
+
+      saveReply(id, value);
+      syncPreviewRows();
+      syncPageThreads();
+
+      input.value = "";
+      input.focus();
+    });
+
+    thread.appendChild(form);
+  }
+
+  function openPageThread(threadId, row) {
+    const thread = document.getElementById(threadId);
+
+    if (!thread || !row) {
+      return;
+    }
+
+    document.querySelectorAll("[data-page-thread]").forEach((item) => {
+      item.classList.add("is-hidden");
+      item.classList.remove("inline-thread");
+    });
+
+    thread.classList.remove("is-hidden");
+    thread.classList.add("inline-thread");
+
+    row.insertAdjacentElement("afterend", thread);
+    preparePageThreadComposer(thread);
+    syncPageThreads();
+
+    thread.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function openThreadFromQuery() {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("conversa");
+
+    if (!id) {
+      return;
+    }
+
+    const row = document.querySelector(`[data-open-page-thread="page-thread-${id}"]`);
+
+    if (row) {
+      setTimeout(() => row.click(), 100);
+    }
+  }
+
+  document.addEventListener("click", (event) => {
+    const target = event.target;
+
+    if (!(target instanceof Element)) {
+      return;
+    }
+
+    const { dock } = getEls();
+
+    const closeButton = target.closest("#clientCloseMessages");
+    const pill = target.closest("#clientMessagePill");
+    const avatar = target.closest("[data-preview-thread]");
+    const row = target.closest("[data-floating-message-preview]");
+    const quickReply = target.closest(".client-quick-reply");
+    const pageRow = target.closest("[data-open-page-thread]");
+    const pageBack = target.closest("[data-page-thread-back]");
+
+    if (closeButton) {
+      event.preventDefault();
+      event.stopPropagation();
+      closePanel();
+      return;
+    }
+
+    if (avatar) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      const id = avatar.getAttribute("data-preview-thread");
+
+      if (!id) {
+        return;
+      }
+
+      if (dock?.classList.contains("no-unread")) {
+        openFullConversation(id);
+      } else {
+        openQuickReply(id);
+      }
+
+      return;
+    }
+
+    if (row) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      const id = row.getAttribute("data-floating-message-preview");
+
+      if (id) {
+        openQuickReply(id);
+      }
+
+      return;
+    }
+
+    if (pill) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      if (dock?.classList.contains("open")) {
+        closePanel();
+      } else {
+        openPanel();
+      }
+
+      return;
+    }
+
+    if (quickReply) {
+      event.stopPropagation();
+      return;
+    }
+
+    if (pageRow) {
+      event.preventDefault();
+
+      const threadId = pageRow.getAttribute("data-open-page-thread");
+      openPageThread(threadId, pageRow);
+      return;
+    }
+
+    if (pageBack) {
+      event.preventDefault();
+
+      document.querySelectorAll("[data-page-thread]").forEach((thread) => {
+        thread.classList.add("is-hidden");
+        thread.classList.remove("inline-thread");
+      });
+
+      return;
+    }
+
+    if (dock?.classList.contains("open") && !target.closest("#clientMessageDock")) {
+      closePanel();
+    }
+  }, true);
+
+  document.addEventListener("submit", (event) => {
+    const target = event.target;
+
+    if (!(target instanceof Element)) {
+      return;
+    }
+
+    const form = target.closest(".client-quick-reply-form");
+
+    if (!form) {
+      return;
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    const reply = form.closest(".client-quick-reply");
+    const id = reply?.dataset.replyTo;
+    const input = form.querySelector("input");
+    const value = input?.value?.trim();
+
+    if (!reply || !id || !value) {
+      input?.focus();
+      return;
+    }
+
+    saveReply(id, value);
+    syncPreviewRows();
+    syncPageThreads();
+
+    input.value = "";
+    input.blur();
+
+    reply.classList.add("sent");
+
+    setTimeout(() => {
+      hideUnreadRow(id);
+      reply.remove();
+
+      document.querySelectorAll(".client-message-row.is-selected").forEach((item) => {
+        item.classList.remove("is-selected");
+      });
+    }, 1200);
+  }, true);
 
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") {
-      closeDock();
+      closePanel();
     }
   });
-});
+
+  function init() {
+    applyReadState();
+    applyHiddenRows();
+    syncPreviewRows();
+    syncPageThreads();
+
+    document.querySelectorAll("[data-page-thread]").forEach((thread) => {
+      preparePageThreadComposer(thread);
+    });
+
+    openThreadFromQuery();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+
+  window.addEventListener("pageshow", init);
+})();
+// END CLIENT MESSAGE SYSTEM SINGLE SOURCE FINAL
 
 
 
@@ -1755,3 +2223,64 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 })();
 // END CLIENT MORE MENU AND THEME
+
+/* CLIENT CLOSE MODALS ON OUTSIDE CLICK FINAL */
+document.addEventListener("click", function (event) {
+  const target = event.target;
+
+  if (!(target instanceof Element)) {
+    return;
+  }
+
+  const clickInside = function (selector) {
+    const element = document.querySelector(selector);
+    return element && element.contains(target);
+  };
+
+  const closeByButton = function (container) {
+    const closeButton = container.querySelector(
+      '[data-close-modal], .modal-close, .payment-modal-close, .client-modal-close, .photo-modal-close, .schedule-modal-close, #clientCloseMessages, #closePaymentModal, #closePhotoModal'
+    );
+
+    if (closeButton) {
+      closeButton.click();
+      return true;
+    }
+
+    return false;
+  };
+
+  document.querySelectorAll(
+    '.payment-modal-backdrop:not(.is-hidden), .modal-backdrop:not(.is-hidden), .client-modal-backdrop:not(.is-hidden), .photo-modal-backdrop:not(.is-hidden), .schedule-modal-backdrop:not(.is-hidden)'
+  ).forEach(function (backdrop) {
+    if (target === backdrop) {
+      if (!closeByButton(backdrop)) {
+        backdrop.classList.add("is-hidden");
+        backdrop.setAttribute("aria-hidden", "true");
+        document.body.classList.remove("modal-open");
+      }
+    }
+  });
+
+  const messageDock = document.getElementById("clientMessageDock");
+  if (messageDock && messageDock.classList.contains("open") && !messageDock.contains(target)) {
+    messageDock.classList.remove("open");
+  }
+
+  const moreMenu = document.getElementById("clientMoreMenu");
+  const moreToggle = document.getElementById("clientMoreToggle");
+
+  if (
+    moreMenu &&
+    moreToggle &&
+    moreMenu.getAttribute("aria-hidden") === "false" &&
+    !moreMenu.contains(target) &&
+    !moreToggle.contains(target)
+  ) {
+    moreMenu.setAttribute("aria-hidden", "true");
+    moreToggle.setAttribute("aria-expanded", "false");
+  }
+});
+
+
+
