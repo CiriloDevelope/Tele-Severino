@@ -13652,3 +13652,85 @@ body.client-theme-dark .client-message-list-item {
     color: #ffffff !important;
   }
 }
+
+/* CLIENT TYPOGRAPHY LIGHT DARK CONSISTENCY FINAL */
+@media (min-width: 861px) {
+  body .client-home-hero h1,
+  body .client-hero h1,
+  body h1.client-hero-title,
+  body .client-dashboard-hero h1 {
+    font-size: 25px !important;
+    line-height: 1.12 !important;
+  }
+
+  body .specialist-profile-hero h1,
+  body .specialist-profile h1,
+  body .profile-hero h1,
+  body .client-specialist-profile h1 {
+    font-size: 26px !important;
+    line-height: 1.12 !important;
+  }
+
+  body.client-theme-dark .client-home-hero h1,
+  body.client-theme-dark .client-hero h1,
+  body.client-theme-dark h1.client-hero-title,
+  body.client-theme-dark .client-dashboard-hero h1 {
+    font-size: 25px !important;
+    line-height: 1.12 !important;
+  }
+
+  body.client-theme-dark .specialist-profile-hero h1,
+  body.client-theme-dark .specialist-profile h1,
+  body.client-theme-dark .profile-hero h1,
+  body.client-theme-dark .client-specialist-profile h1 {
+    font-size: 26px !important;
+    line-height: 1.12 !important;
+  }
+}
+
+@media (max-width: 860px) {
+  body .client-home-hero h1,
+  body .client-hero h1,
+  body h1.client-hero-title,
+  body .client-dashboard-hero h1 {
+    font-size: 24px !important;
+    line-height: 1.15 !important;
+  }
+
+  body .specialist-profile-hero h1,
+  body .specialist-profile h1,
+  body .profile-hero h1,
+  body .client-specialist-profile h1 {
+    font-size: 24px !important;
+    line-height: 1.15 !important;
+  }
+}
+
+/* GLOBAL H1 LIGHT DARK SIZE CONSISTENCY FINAL */
+@media (min-width: 861px) {
+  body h1 {
+    font-size: 25px !important;
+    line-height: 1.12 !important;
+  }
+
+  body:not(.client-theme-dark) h1 {
+    font-size: 25px !important;
+    line-height: 1.12 !important;
+  }
+
+  body.client-theme-dark h1 {
+    font-size: 25px !important;
+    line-height: 1.12 !important;
+  }
+}
+
+/* HOME MAIN QUESTION TITLE CONSISTENCY FINAL */
+body .client-home-main-question,
+body:not(.client-theme-dark) .client-home-main-question,
+body.client-theme-dark .client-home-main-question,
+html.client-theme-dark body .client-home-main-question {
+  font-size: 25px !important;
+  line-height: 1.12 !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.04em !important;
+}
